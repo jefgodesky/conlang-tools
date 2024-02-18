@@ -55,3 +55,41 @@ class Vowel:
     openness: VowelOpenness
     location: VowelLocation
     rounded: bool
+
+
+def get_vowels() -> List[Vowel]:
+    return [
+        Vowel("i", VowelOpenness("close"), VowelLocation("front"), False),
+        Vowel("y", VowelOpenness("close"), VowelLocation("front"), True),
+        Vowel("ɨ", VowelOpenness("close"), VowelLocation("central"), False),
+        Vowel("ʉ", VowelOpenness("close"), VowelLocation("central"), True),
+        Vowel("ɯ", VowelOpenness("close"), VowelLocation("back"), False),
+        Vowel("u", VowelOpenness("close"), VowelLocation("back"), True),
+        Vowel("ɪ", VowelOpenness("near-close"), VowelLocation("front"), False),
+        Vowel("ʏ", VowelOpenness("near-close"), VowelLocation("front"), True),
+        Vowel("ʊ", VowelOpenness("near-close"), VowelLocation("back"), True),
+        Vowel("e", VowelOpenness("close-mid"), VowelLocation("front"), False),
+        Vowel("ø", VowelOpenness("close-mid"), VowelLocation("front"), True),
+        Vowel("ɘ", VowelOpenness("close-mid"), VowelLocation("central"), False),
+        Vowel("ɵ", VowelOpenness("close-mid"), VowelLocation("central"), True),
+        Vowel("ɤ", VowelOpenness("close-mid"), VowelLocation("back"), False),
+        Vowel("o", VowelOpenness("close-mid"), VowelLocation("back"), True),
+        Vowel("e̞", VowelOpenness("mid"), VowelLocation("front"), False),
+        Vowel("ø̞̞", VowelOpenness("mid"), VowelLocation("front"), True),
+        Vowel("ə", VowelOpenness("mid"), VowelLocation("front"), False),
+        Vowel("ɤ̞", VowelOpenness("mid"), VowelLocation("back"), False),
+        Vowel("o̞", VowelOpenness("mid"), VowelLocation("back"), True),
+        Vowel("ɛ", VowelOpenness("open-mid"), VowelLocation("front"), False),
+        Vowel("œ", VowelOpenness("open-mid"), VowelLocation("front"), True),
+        Vowel("ɜ", VowelOpenness("open-mid"), VowelLocation("central"), False),
+        Vowel("ɞ", VowelOpenness("open-mid"), VowelLocation("central"), True),
+        Vowel("ʌ", VowelOpenness("open-mid"), VowelLocation("back"), False),
+        Vowel("ɔ", VowelOpenness("open-mid"), VowelLocation("back"), True),
+        Vowel("æ", VowelOpenness("near-open"), VowelLocation("front"), False),
+        Vowel("ɐ", VowelOpenness("near-open"), VowelLocation("central"), False),
+        Vowel("a", VowelOpenness("open"), VowelLocation("front"), False),
+        Vowel("ɶ", VowelOpenness("open"), VowelLocation("front"), True),
+        Vowel("ä", VowelOpenness("open"), VowelLocation("central"), False),
+        Vowel("ɑ", VowelOpenness("open"), VowelLocation("back"), False),
+        Vowel("ɒ", VowelOpenness("open"), VowelLocation("back"), True),
+    ]

@@ -1,5 +1,12 @@
 import pytest
-from phonemes.vowels import Vowel, VowelLocation, VowelOpenness
+from phonemes.vowels import Vowel, VowelLocation, VowelOpenness, get_vowels
+
+
+class TestGetVowels:
+    def test_get_vowels(self):
+        vowels = get_vowels()
+        assert len(vowels) == 33
+        assert all(isinstance(vowel, Vowel) for vowel in vowels)
 
 
 class TestVowel:
