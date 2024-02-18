@@ -88,6 +88,9 @@ class Language:
             index = -3 if len(syllables) > 2 else 0
         elif self.phonology.stress == "random":
             index = random.randrange(0, len(syllables))
+        elif self.phonology.stress == "heavy":
+            weights = Language.weigh_syllables(syllables)
+            index = weights.index(max(weights))
         else:
             index = 0
 

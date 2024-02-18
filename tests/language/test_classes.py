@@ -87,6 +87,12 @@ class TestLanguage:
         lang = Language(phonology=Phonology(stress="antepenultimate"))
         assert ".".join(lang.apply_stress(["ba", "ba"])) == "ˈba.ba"
 
+    def test_apply_stress_heavy(self):
+        lang = Language(phonology=Phonology(stress="heavy"))
+        assert ".".join(lang.apply_stress(["ba", "ba:", "ba"])) == "ba.ˈba:.ba"
+        assert ".".join(lang.apply_stress(["ba", "bab", "ba"])) == "ba.ˈbab.ba"
+        assert ".".join(lang.apply_stress(["ba:", "ba:b", "bab"])) == "ba:.ˈba:b.bab"
+
     def test_apply_stress_random(self):
         lang = Language(phonology=Phonology(stress="random"))
         possibilities = ["ˈba.ba", "ba.ˈba"]
