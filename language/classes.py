@@ -97,6 +97,12 @@ class Language:
         syllables[index] = "ˈ" + syllables[index]
         return syllables
 
+    def generate_word(self, num_syllables: int = 1):
+        syllables = [self.generate_syllable() for _ in range(num_syllables)]
+        stressed = self.apply_stress(syllables)
+        return f"/{'.'.join(stressed)}/"
+
+
     @classmethod
     def load(cls, name: str) -> "Language":
         with open(f"{languages_directory}{name}.yaml", "r") as yaml_file:

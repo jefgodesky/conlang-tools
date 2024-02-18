@@ -114,6 +114,16 @@ class TestLanguage:
         weights = Language.weigh_syllables(["ba", "ba:", "bab", "ba:b"])
         assert weights == [0, 1, 1, 2]
 
+    def test_generate_monosyllabic_word(self, example_language):
+        word = example_language.generate_word()
+        possibilities = ["/ba/", "/bac/"]
+        assert word in possibilities
+
+    def test_generate_bisyllabic_word(self, example_language):
+        word = example_language.generate_word(num_syllables=2)
+        possibilities = ["/ˈba.ba/", "/ˈba.bac/", "/ˈbac.ba/", "/ˈbac.bac/",]
+        assert word in possibilities
+
 
 class TestPhonology:
     def test_creates_phonology(self):
