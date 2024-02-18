@@ -1,5 +1,12 @@
 import pytest
-from phonemes.consonants import Consonant, ConsonantManner, ConsonantPlace
+from phonemes.consonants import Consonant, ConsonantManner, ConsonantPlace, get_consonants
+
+
+class TestGetConsonants:
+    def test_get_vowels(self):
+        consonants = get_consonants()
+        assert len(consonants) == 72
+        assert all(isinstance(consonant, Consonant) for consonant in consonants)
 
 
 class TestConsonant:
