@@ -1,5 +1,48 @@
 import pytest
-from phonemes.vowels import VowelOpenness
+from phonemes.vowels import VowelLocation, VowelOpenness
+
+
+class TestVowelLocation:
+    def test_creates_vowel_location(self):
+        location = VowelLocation()
+        assert isinstance(location, VowelLocation)
+
+    def test_defaults_front(self):
+        location = VowelLocation()
+        assert location == "front"
+
+    def test_can_set_front(self):
+        location = VowelLocation("front")
+        assert location == "front"
+
+    def test_can_set_central(self):
+        location = VowelLocation("central")
+        assert location == "central"
+
+    def test_can_set_back(self):
+        location = VowelLocation("back")
+        assert location == "back"
+
+    def test_rejects_other(self):
+        with pytest.raises(TypeError):
+            location = VowelLocation("other")
+            assert location != "other"
+
+    def test_returns_types(self):
+        expected = "front, central, back"
+        assert ", ".join(VowelLocation.types()) == expected
+
+    def test_islocation_front_true(self):
+        assert VowelLocation.islocation("front") is True
+
+    def test_islocation_central_true(self):
+        assert VowelLocation.islocation("central") is True
+
+    def test_islocation_back_true(self):
+        assert VowelLocation.islocation("back") is True
+
+    def test_islocation_other_false(self):
+        assert VowelLocation.islocation("other") is False
 
 
 class TestVowelOpenness:
