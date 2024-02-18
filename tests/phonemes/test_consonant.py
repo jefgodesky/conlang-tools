@@ -1,5 +1,22 @@
 import pytest
-from phonemes.consonants import ConsonantManner, ConsonantPlace
+from phonemes.consonants import Consonant, ConsonantManner, ConsonantPlace
+
+
+class TestConsonant:
+    def test_creates_consonant(self):
+        p = Consonant("p", ConsonantManner("stop"), ConsonantPlace("labial"), False)
+        assert isinstance(p, Consonant)
+        assert p.symbol == "p"
+        assert p.manner == "stop"
+        assert isinstance(p.manner, ConsonantManner)
+        assert p.place == "labial"
+        assert isinstance(p.place, ConsonantPlace)
+        assert p.voiced is False
+        assert p.category == "obstruent"
+
+    def test_repr(self):
+        p = Consonant("p", ConsonantManner("stop"), ConsonantPlace("labial"), False)
+        assert str(p) == "[p]"
 
 
 class TestConsonantManner:

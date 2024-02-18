@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import List, Literal, Optional
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
@@ -58,3 +59,18 @@ class ConsonantPlace:
     @classmethod
     def isplace(cls, candidate: str) -> bool:
         return candidate in cls.types()
+
+
+@dataclass(frozen=True, order=True)
+class Consonant:
+    symbol: str
+    manner: ConsonantManner
+    place: ConsonantPlace
+    voiced: bool
+
+    @property
+    def category(self):
+        return ConsonantManner.category(self.manner.value)
+
+    def __repr__(self):
+        return f"[{self.symbol}]"
