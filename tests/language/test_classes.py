@@ -138,6 +138,11 @@ class TestLanguage:
         assert len(example_language.generated) == 2
         assert w1 != w2
 
+    def test_generate_new_words(self, example_language):
+        new_words = example_language.generate_new_words(3)
+        assert len(new_words) == 3
+        assert len(example_language.generated) == 3
+
 
 class TestPhonology:
     def test_creates_phonology(self):
