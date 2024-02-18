@@ -76,6 +76,24 @@ class Language:
         is_open = random.random() < self.phonology.openness
         return open_syllable if is_open else closed_syllable
 
+    def apply_stress(self, syllables: List[str]):
+        if len(syllables) < 2:
+            return syllables
+
+        if self.phonology.stress == "final":
+            index = -1
+        elif self.phonology.stress == "penultimate":
+            index = -2
+        elif self.phonology.stress == "antepenultimate":
+            index = -3 if len(syllables) > 2 else 0
+        elif self.phonology.stress == "random":
+            index = random.randrange(0, len(syllables))
+        else:
+            index = 0
+
+        syllables[index] = "ˈ" + syllables[index]
+        return syllables
+
     @classmethod
     def load(cls, name: str) -> "Language":
         with open(f"{languages_directory}{name}.yaml", "r") as yaml_file:

@@ -55,6 +55,43 @@ class TestLanguage:
     def test_generate_syllable(self, example_language):
         assert example_language.generate_syllable() in ["ba", "bac"]
 
+    def test_apply_stress_monosyllabic(self):
+        lang = Language()
+        assert ".".join(lang.apply_stress(["ba"])) == "ba"
+
+    def test_apply_stress_initial(self):
+        lang = Language(phonology=Phonology(stress="initial"))
+        assert ".".join(lang.apply_stress(["ba", "ba"])) == "ˈba.ba"
+
+    def test_apply_stress_final(self):
+        lang = Language(phonology=Phonology(stress="final"))
+        assert ".".join(lang.apply_stress(["ba", "ba"])) == "ba.ˈba"
+
+    def test_apply_stress_penultimate3(self):
+        lang = Language(phonology=Phonology(stress="penultimate"))
+        assert ".".join(lang.apply_stress(["ba", "ba", "ba"])) == "ba.ˈba.ba"
+
+    def test_apply_stress_penultimate2(self):
+        lang = Language(phonology=Phonology(stress="penultimate"))
+        assert ".".join(lang.apply_stress(["ba", "ba"])) == "ˈba.ba"
+
+    def test_apply_stress_antepenultimate4(self):
+        lang = Language(phonology=Phonology(stress="antepenultimate"))
+        assert ".".join(lang.apply_stress(["ba", "ba", "ba", "ba"])) == "ba.ˈba.ba.ba"
+
+    def test_apply_stress_antepenultimate3(self):
+        lang = Language(phonology=Phonology(stress="antepenultimate"))
+        assert ".".join(lang.apply_stress(["ba", "ba", "ba"])) == "ˈba.ba.ba"
+
+    def test_apply_stress_antepenultimate2(self):
+        lang = Language(phonology=Phonology(stress="antepenultimate"))
+        assert ".".join(lang.apply_stress(["ba", "ba"])) == "ˈba.ba"
+
+    def test_apply_stress_random(self):
+        lang = Language(phonology=Phonology(stress="random"))
+        possibilities = ["ˈba.ba", "ba.ˈba"]
+        assert ".".join(lang.apply_stress(["ba", "ba"])) in possibilities
+
 
 class TestPhonology:
     def test_creates_phonology(self):
