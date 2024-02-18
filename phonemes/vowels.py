@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import List, Literal, Optional
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
@@ -46,3 +47,11 @@ class VowelOpenness:
     @classmethod
     def isopenness(cls, candidate: str) -> bool:
         return candidate in cls.types()
+
+
+@dataclass(frozen=True, order=True)
+class Vowel:
+    symbol: str
+    openness: VowelOpenness
+    location: VowelLocation
+    rounded: bool

@@ -1,5 +1,17 @@
 import pytest
-from phonemes.vowels import VowelLocation, VowelOpenness
+from phonemes.vowels import Vowel, VowelLocation, VowelOpenness
+
+
+class TestVowel:
+    def test_creates_vowel(self):
+        i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False)
+        assert isinstance(i, Vowel)
+        assert i.symbol == "i"
+        assert i.openness == "close"
+        assert isinstance(i.openness, VowelOpenness)
+        assert i.location == "front"
+        assert isinstance(i.location, VowelLocation)
+        assert i.rounded is False
 
 
 class TestVowelLocation:
