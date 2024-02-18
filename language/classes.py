@@ -43,3 +43,14 @@ class Stress:
     def isstress(cls, candidate: str) -> bool:
         return candidate in cls.types()
 
+
+class Language:
+    def __init__(
+            self,
+            phonotactics: Optional[Phonotactics] = None,
+            phonology: Optional[Phonology] = None,
+            words: Optional[List[str]] = None,
+    ):
+        self.phonotactics = phonotactics if phonotactics is not None else Phonotactics()
+        self.phonology = phonology if phonology is not None else Phonology()
+        self.words: List[str] = words if words is not None else []

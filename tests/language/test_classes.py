@@ -1,5 +1,38 @@
 import pytest
-from language.classes import Phonology, Phonotactics, Stress
+from language.classes import Language, Phonology, Phonotactics, Stress
+
+
+class TestLanguage:
+    def test_creates_language(self):
+        lang = Language()
+        assert isinstance(lang, Language)
+
+    def test_has_phonotactics(self):
+        lang = Language()
+        assert isinstance(lang.phonotactics, Phonotactics)
+
+    def test_can_take_phonotactics(self):
+        tactics = Phonotactics(onset={"a": 1})
+        lang = Language(phonotactics=tactics)
+        assert lang.phonotactics.onset["a"] == 1
+
+    def test_has_phonology(self):
+        lang = Language()
+        assert isinstance(lang.phonology, Phonology)
+
+    def test_can_take_phonology(self):
+        phones = Phonology(stress="antepenultimate")
+        lang = Language(phonology=phones)
+        assert lang.phonology.stress == "antepenultimate"
+
+    def test_has_words(self):
+        lang = Language()
+        assert len(lang.words) == 0
+
+    def test_can_take_words(self):
+        lang = Language(words=["/ba/"])
+        assert len(lang.words) == 1
+        assert lang.words[0] == "/ba/"
 
 
 class TestPhonology:
