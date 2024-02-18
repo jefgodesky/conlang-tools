@@ -1,0 +1,12 @@
+phonotactics:
+  onset:
+    b: 1
+  nucleus:
+    a: 1
+  coda:
+    c: 1
+phonology:
+  stress: initial
+  openness: 0.5
+words:
+  - /ba/
