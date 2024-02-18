@@ -127,3 +127,7 @@ class Language:
             weight += 1
 
         return weight
+
+    @staticmethod
+    def weigh_syllables(syllables: List[str]) -> List[int]:
+        return [Language.weigh_syllable(syllable) for syllable in syllables]

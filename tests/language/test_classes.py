@@ -104,6 +104,10 @@ class TestLanguage:
     def test_weigh_syllable_superheavy_2(self):
         assert Language.weigh_syllable("ba:b") == 2
 
+    def test_weigh_syllables(self):
+        weights = Language.weigh_syllables(["ba", "ba:", "bab", "ba:b"])
+        assert weights == [0, 1, 1, 2]
+
 
 class TestPhonology:
     def test_creates_phonology(self):
