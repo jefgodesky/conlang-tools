@@ -245,37 +245,29 @@ class TestStress:
         assert isinstance(stress, Stress)
 
     def test_defaults_initial(self):
-        stress = Stress()
-        assert stress == "initial"
+        assert Stress() == "initial"
 
     def test_can_set_initial(self):
-        stress = Stress("initial")
-        assert stress == "initial"
+        assert Stress("initial") == "initial"
 
     def test_can_set_final(self):
-        stress = Stress("final")
-        assert stress == "final"
+        assert Stress("final") == "final"
 
     def test_can_set_penultimate(self):
-        stress = Stress("penultimate")
-        assert stress == "penultimate"
+        assert Stress("penultimate") == "penultimate"
 
     def test_can_set_antepenultimate(self):
-        stress = Stress("antepenultimate")
-        assert stress == "antepenultimate"
+        assert Stress("antepenultimate") == "antepenultimate"
 
     def test_can_set_heavy(self):
-        stress = Stress("heavy")
-        assert stress == "heavy"
+        assert Stress("heavy") == "heavy"
 
     def test_can_set_random(self):
-        stress = Stress("random")
-        assert stress == "random"
+        assert Stress("random") == "random"
 
     def test_rejects_other(self):
         with pytest.raises(TypeError):
-            stress = Stress("other")
-            assert stress != "other"
+            assert Stress("other") != "other"
 
     def test_returns_types(self):
         expected = "initial, final, penultimate, antepenultimate, heavy, random"

@@ -46,25 +46,20 @@ class TestVowelLocation:
         assert isinstance(location, VowelLocation)
 
     def test_defaults_front(self):
-        location = VowelLocation()
-        assert location == "front"
+        assert VowelLocation() == "front"
 
     def test_can_set_front(self):
-        location = VowelLocation("front")
-        assert location == "front"
+        assert VowelLocation("front") == "front"
 
     def test_can_set_central(self):
-        location = VowelLocation("central")
-        assert location == "central"
+        assert VowelLocation("central") == "central"
 
     def test_can_set_back(self):
-        location = VowelLocation("back")
-        assert location == "back"
+        assert VowelLocation("back") == "back"
 
     def test_rejects_other(self):
         with pytest.raises(TypeError):
-            location = VowelLocation("other")
-            assert location != "other"
+            assert VowelLocation("other") != "other"
 
     def test_returns_types(self):
         expected = "front, central, back"
@@ -89,41 +84,32 @@ class TestVowelOpenness:
         assert isinstance(openness, VowelOpenness)
 
     def test_defaults_close(self):
-        openness = VowelOpenness()
-        assert openness == "close"
+        assert VowelOpenness() == "close"
 
     def test_can_set_open(self):
-        openness = VowelOpenness("open")
-        assert openness == "open"
+        assert VowelOpenness("open") == "open"
 
     def test_can_set_near_open(self):
-        openness = VowelOpenness("near-open")
-        assert openness == "near-open"
+        assert VowelOpenness("near-open") == "near-open"
 
     def test_can_set_open_mid(self):
-        openness = VowelOpenness("open-mid")
-        assert openness == "open-mid"
+        assert VowelOpenness("open-mid") == "open-mid"
 
     def test_can_set_mid(self):
-        openness = VowelOpenness("mid")
-        assert openness == "mid"
+        assert VowelOpenness("mid") == "mid"
 
     def test_can_set_close_mid(self):
-        openness = VowelOpenness("close-mid")
-        assert openness == "close-mid"
+        assert VowelOpenness("close-mid") == "close-mid"
 
     def test_can_set_near_close(self):
-        openness = VowelOpenness("near-close")
-        assert openness == "near-close"
+        assert VowelOpenness("near-close") == "near-close"
 
     def test_can_set_close(self):
-        openness = VowelOpenness("close")
-        assert openness == "close"
+        assert VowelOpenness("close") == "close"
 
     def test_rejects_other(self):
         with pytest.raises(TypeError):
-            openness = VowelOpenness("other")
-            assert openness == "other"
+            assert VowelOpenness("other") == "other"
 
     def test_returns_types(self):
         expected = "close, near-close, close-mid, mid, open-mid, near-open, open"
