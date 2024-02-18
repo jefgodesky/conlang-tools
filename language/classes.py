@@ -1,4 +1,4 @@
-from typing import List, Literal, Optional
+from typing import Dict, List, Literal, Optional
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
 # sure you update Stress.types to match!
@@ -9,6 +9,18 @@ class Phonology:
     def __init__(self, stress: Optional[StressTypes] = None, openness: float = 0.5):
         self.stress = Stress(stress)
         self.openness = openness
+
+
+class Phonotactics:
+    def __init__(
+            self,
+            onset: Optional[Dict[str, int]] = None,
+            nucleus: Optional[Dict[str, int]] = None,
+            coda: Optional[Dict[str, int]] = None
+    ):
+        self.onset = onset if onset is not None else {}
+        self.nucleus = nucleus if nucleus is not None else {}
+        self.coda = coda if coda is not None else {}
 
 
 class Stress:

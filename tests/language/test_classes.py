@@ -1,5 +1,5 @@
 import pytest
-from language.classes import Phonology, Stress
+from language.classes import Phonology, Phonotactics, Stress
 
 
 class TestPhonology:
@@ -46,6 +46,36 @@ class TestPhonology:
     def test_can_set_openness(self):
         phones = Phonology(openness=0.75)
         assert phones.openness == 0.75
+
+
+class TestPhonotactics:
+    def test_creates_phonotactics(self):
+        phones = Phonotactics()
+        assert isinstance(phones, Phonotactics)
+
+    def test_initializes_empty_onset(self):
+        phones = Phonotactics()
+        assert str(phones.onset) == "{}"
+
+    def test_can_set_onset(self):
+        phones = Phonotactics(onset={"a": 1})
+        assert phones.onset["a"] == 1
+
+    def test_initializes_empty_nucleus(self):
+        phones = Phonotactics()
+        assert str(phones.nucleus) == "{}"
+
+    def test_can_set_nucleus(self):
+        phones = Phonotactics(nucleus={"a": 1})
+        assert phones.nucleus["a"] == 1
+
+    def test_initializes_empty_coda(self):
+        phones = Phonotactics()
+        assert str(phones.coda) == "{}"
+
+    def test_can_set_coda(self):
+        phones = Phonotactics(coda={"a": 1})
+        assert phones.coda["a"] == 1
 
 
 class TestStress:
