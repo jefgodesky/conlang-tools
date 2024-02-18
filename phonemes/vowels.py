@@ -56,6 +56,9 @@ class Vowel:
     location: VowelLocation
     rounded: bool
 
+    def __repr__(self):
+        return f"[{self.symbol}]"
+
 
 def get_vowels() -> List[Vowel]:
     return [

@@ -20,6 +20,10 @@ class TestVowel:
         assert isinstance(i.location, VowelLocation)
         assert i.rounded is False
 
+    def test_repr(self):
+        i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False)
+        assert str(i) == "[i]"
+
 
 class TestVowelLocation:
     def test_creates_vowel_location(self):
