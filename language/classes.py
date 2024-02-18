@@ -1,8 +1,10 @@
 from typing import Dict, List, Literal, Optional
+import yaml
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
 # sure you update Stress.types to match!
 StressTypes = Literal["initial", "final", "penultimate", "antepenultimate", "heavy", "random"]
+languages_directory = "languages/"
 
 
 class Phonology:
@@ -54,3 +56,18 @@ class Language:
         self.phonotactics = phonotactics if phonotactics is not None else Phonotactics()
         self.phonology = phonology if phonology is not None else Phonology()
         self.words: List[str] = words if words is not None else []
+
+    @classmethod
+    def load(cls, name: str) -> "Language":
+        with open(f"{languages_directory}{name}.yaml", "r") as yaml_file:
+            data = yaml.safe_load(yaml_file)
+            phonotactics = Phonotactics(
+                onset=data["phonotactics"]["onset"],
+                nucleus=data["phonotactics"]["nucleus"],
+                coda=data["phonotactics"]["coda"]
+            )
+            phonology = Phonology(
+                stress=data["phonology"]["stress"],
+                openness=data["phonology"]["openness"]
+            )
+            return cls(phonotactics=phonotactics, phonology=phonology, words=data["words"])

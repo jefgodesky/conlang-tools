@@ -34,6 +34,17 @@ class TestLanguage:
         assert len(lang.words) == 1
         assert lang.words[0] == "/ba/"
 
+    def test_load(self):
+        lang = Language.load("example")
+        assert isinstance(lang, Language)
+        assert lang.phonotactics.onset["b"] == 1
+        assert lang.phonology.stress == "initial"
+        assert "/ba/" in lang.words
+
+    def test_load_fail(self):
+        with pytest.raises(FileNotFoundError):
+            Language.load("thislanguagedoesnotexist")
+
 
 class TestPhonology:
     def test_creates_phonology(self):
