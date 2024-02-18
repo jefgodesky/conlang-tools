@@ -1,4 +1,5 @@
 from typing import Dict, List, Literal, Optional
+import random
 import yaml
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
@@ -23,6 +24,13 @@ class Phonotactics:
         self.onset = onset if onset is not None else {}
         self.nucleus = nucleus if nucleus is not None else {}
         self.coda = coda if coda is not None else {}
+
+    def choices(self, element: str = "nucleus") -> List[str]:
+        elements = ["onset", "nucleus", "coda"]
+        elem = element if element in elements else "nucleus"
+        dicts = {"onset": self.onset, "nucleus": self.nucleus, "coda": self.coda}
+        dictionary = dicts[elem]
+        return [key for key, value in dictionary.items() for _ in range(value)]
 
 
 class Stress:

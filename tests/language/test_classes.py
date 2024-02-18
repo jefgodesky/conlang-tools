@@ -121,6 +121,18 @@ class TestPhonotactics:
         phones = Phonotactics(coda={"a": 1})
         assert phones.coda["a"] == 1
 
+    def test_build_choices(self):
+        phones = Phonotactics(onset={"b": 2, "c": 1})
+        assert ", ".join(phones.choices("onset")) == "b, b, c"
+
+    def test_build_choices_defaults_to_nucleus(self):
+        phones = Phonotactics(nucleus={"a": 2, "e": 1})
+        assert ", ".join(phones.choices()) == "a, a, e"
+
+    def test_build_choices_other_to_nucleus(self):
+        phones = Phonotactics(nucleus={"a": 2, "e": 1})
+        assert ", ".join(phones.choices("other")) == "a, a, e"
+
 
 class TestStress:
     def test_creates_stress(self):
