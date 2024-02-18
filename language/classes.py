@@ -1,6 +1,8 @@
-from typing import Dict, List, Literal, Optional
+from typing import Dict, List, Literal, Optional, Union
 import random
 import yaml
+from phonemes.consonants import Consonant, get_consonants
+from phonemes.vowels import Vowel, get_vowels
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
 # sure you update Stress.types to match!
@@ -12,6 +14,23 @@ class Phonology:
     def __init__(self, stress: Optional[StressTypes] = None, openness: float = 0.5):
         self.stress = Stress(stress)
         self.openness = openness
+
+    @staticmethod
+    def get_phonemes(syllable: str) -> List[Union[Consonant, Vowel]]:
+        phonemes = get_consonants() + get_vowels()
+        phonemes.sort(key=lambda phoneme: len(phoneme.symbol), reverse=True)
+        breakdown: List[Union[Consonant, Vowel]] = []
+
+        while syllable:
+            for phoneme in phonemes:
+                if syllable.startswith(phoneme.symbol):
+                    breakdown.append(phoneme)
+                    syllable = syllable[len(phoneme.symbol):]
+                    break
+            else:
+                raise ValueError(f"Unrecognized IPA sequence at the start of: {syllable}")
+
+        return breakdown
 
 
 class Phonotactics:
