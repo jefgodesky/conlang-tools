@@ -108,3 +108,22 @@ class Language:
                 openness=data["phonology"]["openness"]
             )
             return cls(phonotactics=phonotactics, phonology=phonology, words=data["words"])
+
+    @staticmethod
+    def weigh_syllable(syllable: str) -> int:
+        vowels = "iyɨʉɯuɪʏʊeøɘɵɤoe̞ø̞əəɤ̞o̞ɛœɜɞʌɔæɐɐaɶäɑɒ"
+        symbols = ":/.ˈ"
+
+        # Long vowels increase syllable weight
+        long_vowels = [f"{vowel}:" for vowel in [*vowels]]
+        weight = 0
+        for long_vowel in long_vowels:
+            if long_vowel in syllable:
+                weight += 1
+
+        # Ending in a consonant increases syllable weight
+        ending = syllable[-1]
+        if ending not in vowels and ending not in symbols:
+            weight += 1
+
+        return weight

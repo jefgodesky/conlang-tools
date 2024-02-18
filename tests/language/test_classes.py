@@ -92,6 +92,18 @@ class TestLanguage:
         possibilities = ["ˈba.ba", "ba.ˈba"]
         assert ".".join(lang.apply_stress(["ba", "ba"])) in possibilities
 
+    def test_weigh_syllable_normal_0(self):
+        assert Language.weigh_syllable("ba") == 0
+
+    def test_weigh_syllable_long_vowel_1(self):
+        assert Language.weigh_syllable("ba:") == 1
+
+    def test_weigh_syllable_consonant_coda_1(self):
+        assert Language.weigh_syllable("bab") == 1
+
+    def test_weigh_syllable_superheavy_2(self):
+        assert Language.weigh_syllable("ba:b") == 2
+
 
 class TestPhonology:
     def test_creates_phonology(self):
