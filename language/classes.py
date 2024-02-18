@@ -5,6 +5,12 @@ from typing import List, Literal, Optional
 StressTypes = Literal["initial", "final", "penultimate", "antepenultimate", "heavy", "random"]
 
 
+class Phonology:
+    def __init__(self, stress: Optional[StressTypes] = None, openness: float = 0.5):
+        self.stress = Stress(stress)
+        self.openness = openness
+
+
 class Stress:
     def __init__(self, value: Optional[StressTypes] = None):
         types = Stress.types()

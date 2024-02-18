@@ -1,5 +1,51 @@
 import pytest
-from language.classes import Stress
+from language.classes import Phonology, Stress
+
+
+class TestPhonology:
+    def test_creates_phonology(self):
+        phones = Phonology()
+        assert isinstance(phones, Phonology)
+
+    def test_defaults_stress_to_initial(self):
+        phones = Phonology()
+        assert phones.stress == "initial"
+
+    def test_can_set_stress_initial(self):
+        phones = Phonology(stress="initial")
+        assert phones.stress == "initial"
+
+    def test_can_set_stress_final(self):
+        phones = Phonology(stress="final")
+        assert phones.stress == "final"
+
+    def test_can_set_stress_penultimate(self):
+        phones = Phonology(stress="penultimate")
+        assert phones.stress == "penultimate"
+
+    def test_can_set_stress_antepenultimate(self):
+        phones = Phonology(stress="antepenultimate")
+        assert phones.stress == "antepenultimate"
+
+    def test_can_set_stress_heavy(self):
+        phones = Phonology(stress="heavy")
+        assert phones.stress == "heavy"
+
+    def test_can_set_stress_random(self):
+        phones = Phonology(stress="random")
+        assert phones.stress == "random"
+
+    def test_cannot_set_stress_other(self):
+        with pytest.raises(TypeError):
+            Phonology(stress="other")
+
+    def test_defaults_openness_50(self):
+        phones = Phonology()
+        assert phones.openness == 0.5
+
+    def test_can_set_openness(self):
+        phones = Phonology(openness=0.75)
+        assert phones.openness == 0.75
 
 
 class TestStress:
