@@ -1,5 +1,5 @@
 import pytest
-from phonemes.vowels import Vowel, VowelLocation, VowelOpenness, get_vowels
+from phonemes.vowels import Vowel, VowelLocation, VowelOpenness, get_vowels, get_vowel
 
 
 class TestGetVowels:
@@ -7,6 +7,21 @@ class TestGetVowels:
         vowels = get_vowels()
         assert len(vowels) == 33
         assert all(isinstance(vowel, Vowel) for vowel in vowels)
+
+
+class TestGetVowel:
+    def test_get_vowel(self):
+        i = get_vowel("i")
+        assert isinstance(i, Vowel)
+        assert i.symbol == "i"
+        assert i.openness == "close"
+        assert isinstance(i.openness, VowelOpenness)
+        assert i.location == "front"
+        assert isinstance(i.location, VowelLocation)
+        assert i.rounded is False
+
+    def test_returns_none_if_not_found(self):
+        assert get_vowel("@") is None
 
 
 class TestVowel:

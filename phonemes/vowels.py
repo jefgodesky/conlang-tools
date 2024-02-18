@@ -96,3 +96,13 @@ def get_vowels() -> List[Vowel]:
         Vowel("ɑ", VowelOpenness("open"), VowelLocation("back"), False),
         Vowel("ɒ", VowelOpenness("open"), VowelLocation("back"), True),
     ]
+
+
+def get_vowel(symbol: str) -> Optional[Vowel]:
+    vowels = get_vowels()
+    symbols = [vowel.symbol for vowel in vowels]
+    try:
+        index = symbols.index(symbol)
+        return vowels[index]
+    except ValueError:
+        return None
