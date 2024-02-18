@@ -156,3 +156,13 @@ def get_consonants() -> List[Consonant]:
         Consonant("ʀ̥", ConsonantManner("liquid"), ConsonantPlace("uvular"), False),
         Consonant("ʀ", ConsonantManner("liquid"), ConsonantPlace("uvular"), True),
     ]
+
+
+def get_consonant(symbol: str) -> Optional[Consonant]:
+    consonants = get_consonants()
+    symbols = [consonant.symbol for consonant in consonants]
+    try:
+        index = symbols.index(symbol)
+        return consonants[index]
+    except ValueError:
+        return None

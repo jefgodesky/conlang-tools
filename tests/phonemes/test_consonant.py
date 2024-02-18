@@ -1,5 +1,5 @@
 import pytest
-from phonemes.consonants import Consonant, ConsonantManner, ConsonantPlace, get_consonants
+from phonemes.consonants import Consonant, ConsonantManner, ConsonantPlace, get_consonants, get_consonant
 
 
 class TestGetConsonants:
@@ -7,6 +7,22 @@ class TestGetConsonants:
         consonants = get_consonants()
         assert len(consonants) == 72
         assert all(isinstance(consonant, Consonant) for consonant in consonants)
+
+
+class TestGetConsonant:
+    def test_get_consonant(self):
+        p = get_consonant("p")
+        assert isinstance(p, Consonant)
+        assert p.symbol == "p"
+        assert p.manner == "stop"
+        assert isinstance(p.manner, ConsonantManner)
+        assert p.place == "labial"
+        assert isinstance(p.place, ConsonantPlace)
+        assert p.voiced is False
+        assert p.category == "obstruent"
+
+    def test_returns_none_if_not_found(self):
+        assert get_consonant("@") is None
 
 
 class TestConsonant:
