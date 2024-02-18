@@ -36,6 +36,10 @@ class TestLanguage:
         lang = Language()
         assert len(lang.words) == 0
 
+    def test_tracks_generated(self):
+        lang = Language()
+        assert len(lang.generated) == 0
+
     def test_can_take_words(self):
         lang = Language(words=["/ba/"])
         assert len(lang.words) == 1
@@ -123,6 +127,16 @@ class TestLanguage:
         word = example_language.generate_word(num_syllables=2)
         possibilities = ["/ˈba.ba/", "/ˈba.bac/", "/ˈbac.ba/", "/ˈbac.bac/",]
         assert word in possibilities
+
+    def test_generate_new_word(self, example_language):
+        word = example_language.generate_new_word()
+        assert word not in example_language.words
+
+    def test_generate_new_word_does_not_repeat(self, example_language):
+        w1 = example_language.generate_new_word()
+        w2 = example_language.generate_new_word()
+        assert len(example_language.generated) == 2
+        assert w1 != w2
 
 
 class TestPhonology:

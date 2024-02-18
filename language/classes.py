@@ -64,6 +64,7 @@ class Language:
         self.phonotactics = phonotactics if phonotactics is not None else Phonotactics()
         self.phonology = phonology if phonology is not None else Phonology()
         self.words: List[str] = words if words is not None else []
+        self.generated: List[str] = []
 
     def generate_syllable(self):
         onset = random.choice(self.phonotactics.choices("onset"))
@@ -101,6 +102,14 @@ class Language:
         syllables = [self.generate_syllable() for _ in range(num_syllables)]
         stressed = self.apply_stress(syllables)
         return f"/{'.'.join(stressed)}/"
+
+    def generate_new_word(self, num_syllables: int = 1):
+        for _ in range(10):
+            word = self.generate_word(num_syllables)
+            if word not in self.words and word not in self.generated:
+                self.generated.append(word)
+                return word
+        return self.generate_new_word(num_syllables + 1)
 
 
     @classmethod
