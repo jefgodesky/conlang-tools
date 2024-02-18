@@ -114,7 +114,6 @@ class Language:
     def generate_new_words(self, num_words: int = 1, num_syllables: int = 1):
         return [self.generate_new_word(num_syllables=num_syllables) for _ in range(num_words)]
 
-
     @classmethod
     def load(cls, name: str) -> "Language":
         with open(f"{languages_directory}{name}.yaml", "r") as yaml_file:

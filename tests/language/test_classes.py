@@ -239,7 +239,6 @@ class TestStress:
 
     def test_defaults_initial(self):
         stress = Stress()
-        print(stress)
         assert stress == "initial"
 
     def test_can_set_initial(self):
