@@ -65,6 +65,17 @@ class Language:
         self.phonology = phonology if phonology is not None else Phonology()
         self.words: List[str] = words if words is not None else []
 
+    def generate_syllable(self):
+        onset = random.choice(self.phonotactics.choices("onset"))
+        nucleus = random.choice(self.phonotactics.choices("nucleus"))
+        coda = random.choice(self.phonotactics.choices("coda"))
+
+        open_syllable = onset + nucleus
+        closed_syllable = onset + nucleus + coda
+
+        is_open = random.random() < self.phonology.openness
+        return open_syllable if is_open else closed_syllable
+
     @classmethod
     def load(cls, name: str) -> "Language":
         with open(f"{languages_directory}{name}.yaml", "r") as yaml_file:

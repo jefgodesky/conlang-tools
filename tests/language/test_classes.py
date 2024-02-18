@@ -3,6 +3,13 @@ from language.classes import Language, Phonology, Phonotactics, Stress
 
 
 class TestLanguage:
+    @pytest.fixture
+    def example_language(self):
+        tactics = Phonotactics(onset={"b": 2}, nucleus={"a": 1}, coda={"c": 1})
+        logy = Phonology(stress="initial", openness=0.5)
+        words = ["/ba/"]
+        return Language(phonotactics=tactics, phonology=logy, words=words)
+
     def test_creates_language(self):
         lang = Language()
         assert isinstance(lang, Language)
@@ -44,6 +51,9 @@ class TestLanguage:
     def test_load_fail(self):
         with pytest.raises(FileNotFoundError):
             Language.load("thislanguagedoesnotexist")
+
+    def test_generate_syllable(self, example_language):
+        assert example_language.generate_syllable() in ["ba", "bac"]
 
 
 class TestPhonology:
