@@ -76,6 +76,7 @@ class Vowel:
 
 
 def get_vowels() -> List[Vowel]:
+    # fmt: off
     short = [
         Vowel("i", VowelOpenness("close"), VowelLocation("front"), False),
         Vowel("y", VowelOpenness("close"), VowelLocation("front"), True),
@@ -111,6 +112,7 @@ def get_vowels() -> List[Vowel]:
         Vowel("ɑ", VowelOpenness("open"), VowelLocation("back"), False),
         Vowel("ɒ", VowelOpenness("open"), VowelLocation("back"), True),
     ]
+    # fmt: on
 
     long = [
         Vowel(v.symbol + ":", v.openness, v.location, v.rounded, long=True)
