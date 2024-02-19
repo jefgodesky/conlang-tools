@@ -15,23 +15,6 @@ class Phonology:
         self.stress = Stress(stress)
         self.openness = openness
 
-    @staticmethod
-    def get_phonemes(syllable: str) -> List[Union[Consonant, Vowel]]:
-        phonemes = get_consonants() + get_vowels()
-        phonemes.sort(key=lambda phoneme: len(phoneme.symbol), reverse=True)
-        breakdown: List[Union[Consonant, Vowel]] = []
-
-        while syllable:
-            for phoneme in phonemes:
-                if syllable.startswith(phoneme.symbol):
-                    breakdown.append(phoneme)
-                    syllable = syllable[len(phoneme.symbol):]
-                    break
-            else:
-                raise ValueError(f"Unrecognized IPA sequence at the start of: {syllable}")
-
-        return breakdown
-
 
 class Phonotactics:
     def __init__(

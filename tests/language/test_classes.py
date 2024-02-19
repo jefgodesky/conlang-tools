@@ -189,13 +189,6 @@ class TestPhonology:
         phones = Phonology(openness=0.75)
         assert phones.openness == 0.75
 
-    def test_get_phonemes(self):
-        phonemes = Phonology.get_phonemes("ʤuʤ")
-        assert len(phonemes) == 3
-        assert "-".join([phoneme.symbol for phoneme in phonemes]) == "ʤ-u-ʤ"
-        assert phonemes[0].place == "palatal"
-        assert phonemes[0].manner == "affricate"
-
 
 class TestPhonotactics:
     def test_creates_phonotactics(self):
