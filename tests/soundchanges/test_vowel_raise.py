@@ -1,6 +1,6 @@
 import pytest
 from language.classes import Phonology, Phonotactics, Language
-from soundchanges.vowel_raise import vowel_raise, create_vowel_raise_mapping
+from soundchanges.vowel_raise import vowel_raise
 
 
 class TestVowelRaise:
@@ -9,12 +9,6 @@ class TestVowelRaise:
         pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1, "e": 1, "i": 1}, coda={})
         pl = Phonology(stress="initial", openness=1)
         return Language(phonotactics=pt, phonology=pl, words=["/ˈba.be/", "/ˈbe.bi/"])
-
-    def test_create_vowel_raise_mapping(self, example_language):
-        mapping = create_vowel_raise_mapping(example_language)
-        assert mapping["e"].symbol == "i"
-        assert mapping["a"].symbol == "e"
-        assert mapping["i"].symbol == "i"
 
     def test_vowel_raise(self, example_language):
         description, words = vowel_raise(example_language, syllables="all")

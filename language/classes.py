@@ -2,7 +2,7 @@ from typing import Dict, List, Literal, Optional, Tuple
 import random
 import yaml
 from phonemes.consonants import Consonant
-from phonemes.vowels import Vowel
+from phonemes.vowels import Vowel, VowelOpenness
 from phonemes.roots import Syllable
 from utils.methods import get_choices, weigh_syllables
 
@@ -90,6 +90,32 @@ class Language:
         vowels = list(set(vowels))
 
         return consonants, vowels
+
+    def vowel_height_mapping(self, rise: bool = True) -> Dict[str, Vowel]:
+        _, vowels = self.take_inventory()
+        heights = VowelOpenness.types()
+        location_order = {"front": 0, "central": 1, "back": 2}
+        sorted_vowels = sorted(
+            vowels,
+            key=lambda v: (
+                location_order[v.location.value],
+                v.rounded,
+                heights.index(v.openness.value),
+            ),
+            reverse=rise,
+        )
+        mapping: Dict[str, Vowel] = {}
+
+        for i, vowel in enumerate(sorted_vowels):
+            mapping[vowel.symbol] = vowel
+            for next_vowel in sorted_vowels[i + 1 :]:
+                same_location = vowel.location == next_vowel.location
+                same_roundedness = vowel.rounded == next_vowel.rounded
+                if same_location and same_roundedness:
+                    mapping[vowel.symbol] = next_vowel
+                    break
+
+        return mapping
 
     def generate_syllable(self):
         onset = random.choice(self.phonotactics.choices("onset"))

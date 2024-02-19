@@ -10,6 +10,13 @@ class TestLanguage:
         words = ["/ba/"]
         return Language(phonotactics=tactics, phonology=logy, words=words)
 
+    @pytest.fixture
+    def vowel_change_example(self):
+        nucleus = {"a": 1, "e": 1, "i": 1, "o": 1, "u": 1}
+        pt = Phonotactics(onset={"b": 1}, nucleus=nucleus, coda={})
+        pl = Phonology(stress="initial", openness=1)
+        return Language(phonotactics=pt, phonology=pl, words=[])
+
     def test_creates_language(self):
         lang = Language()
         assert isinstance(lang, Language)
@@ -116,6 +123,23 @@ class TestLanguage:
             "/ˈbac.bac/",
         ]
         assert word in possibilities
+
+    def test_vowel_raise_mapping(self, vowel_change_example):
+        mapping = vowel_change_example.vowel_height_mapping()
+        print(mapping)
+        assert mapping["a"].symbol == "e"
+        assert mapping["e"].symbol == "i"
+        assert mapping["i"].symbol == "i"
+        assert mapping["o"].symbol == "u"
+        assert mapping["u"].symbol == "u"
+
+    def test_vowel_lower_mapping(self, vowel_change_example):
+        mapping = vowel_change_example.vowel_height_mapping(rise=False)
+        assert mapping["a"].symbol == "a"
+        assert mapping["e"].symbol == "a"
+        assert mapping["i"].symbol == "e"
+        assert mapping["o"].symbol == "o"
+        assert mapping["u"].symbol == "o"
 
     def test_generate_new_word(self, example_language):
         word = example_language.generate_new_word()
