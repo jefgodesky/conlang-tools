@@ -1,6 +1,6 @@
 import pytest
 from language.classes import Phonology, Phonotactics, Language
-from soundchanges.vowel_raise import vowel_raise
+from soundchanges.changes import vowel_raise
 
 
 class TestVowelRaise:
