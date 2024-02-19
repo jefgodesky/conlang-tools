@@ -148,6 +148,15 @@ class TestLanguage:
         assert len(new_words) == 3
         assert len(example_language.generated) == 3
 
+    def test_take_inventory(self):
+        tactics = Phonotactics(onset={"bb": 2}, nucleus={"a": 1}, coda={})
+        logy = Phonology(stress="initial", openness=1)
+        lang = Language(phonotactics=tactics, phonology=logy, words=["/bba/"])
+        consonants, vowels = lang.take_inventory()
+        assert len(consonants) == 1
+        assert consonants[0].symbol == "b"
+        assert len(vowels) == 1
+
 
 class TestPhonology:
     def test_creates_phonology(self):

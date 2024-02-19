@@ -1,4 +1,4 @@
-from typing import Dict, List, Literal, Optional
+from typing import Dict, List, Literal, Optional, Tuple
 import random
 import yaml
 from phonemes.consonants import Consonant
@@ -72,6 +72,22 @@ class Language:
         self.phonology = phonology if phonology is not None else Phonology()
         self.words: List[str] = words if words is not None else []
         self.generated: List[str] = []
+
+    def take_inventory(self) -> Tuple[List[Consonant], List[Vowel]]:
+        onset = [Syllable(key) for key in self.phonotactics.onset.keys()]
+        nucleus = [Syllable(key) for key in self.phonotactics.nucleus.keys()]
+        coda = [Syllable(key) for key in self.phonotactics.coda.keys()]
+
+        analyses = onset + nucleus + coda
+        phonemes = [p for a in analyses for p in a.phonemes]
+
+        consonants = [p for p in phonemes if isinstance(p, Consonant)]
+        consonants = list(set(consonants))
+
+        vowels = [p for p in phonemes if isinstance(p, Vowel)]
+        vowels = list(set(vowels))
+
+        return consonants, vowels
 
     def generate_syllable(self):
         onset = random.choice(self.phonotactics.choices("onset"))
