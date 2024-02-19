@@ -5,14 +5,18 @@ from phonemes.roots import Root
 from utils.methods import oxford_comma, get_choices
 
 
+def get_affected_syllables(syllables: Optional[str] = None) -> str:
+    rand_all = "all" if random.random() < 0.1 else "stressed"
+    return syllables if syllables is not None else rand_all
+
+
 def vowel_change(
     lang: Language,
     map_type: str = "height",
     syllables: Optional[str] = None,
     reverse: bool = True,
 ) -> Tuple[str, List[str]]:
-    rand_all = "all" if random.random() < 0.1 else "stressed"
-    affected = syllables if syllables is not None else rand_all
+    affected = get_affected_syllables(syllables)
     mapping = lang.vowel_mapping(map_type, reverse=reverse)
     affected_keys = [key for key in mapping.keys() if key != mapping[key].symbol]
     changes = [f"/{key}/ became /{mapping[key].symbol}/" for key in affected_keys]

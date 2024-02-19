@@ -2,11 +2,23 @@ import pytest
 from language.classes import Phonology, Phonotactics, Language
 from soundchanges.changes import (
     change,
+    get_affected_syllables,
     vowel_backing,
     vowel_fronting,
     vowel_lowering,
     vowel_raising,
 )
+
+
+class TestGetAffectedSyllables:
+    def test_all(self):
+        assert get_affected_syllables("all") == "all"
+
+    def test_stressed(self):
+        assert get_affected_syllables("stressed") == "stressed"
+
+    def test_random(self):
+        assert get_affected_syllables() in ["all", "stressed"]
 
 
 class TestVowelBacking:
