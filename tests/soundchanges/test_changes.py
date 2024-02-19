@@ -6,8 +6,10 @@ from soundchanges.changes import (
     get_affected_syllables,
     vowel_backing,
     vowel_fronting,
+    vowel_lengthening,
     vowel_lowering,
     vowel_raising,
+    vowel_shortening,
 )
 
 
@@ -136,6 +138,41 @@ class TestVowelFronting:
         assert stressed_syllables or all_syllables
 
 
+class TestVowelLengthening:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a:": 1, "a": 1}, coda={})
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈba.ba/", "/ba/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_vowel_lengthening(self, example_language):
+        description, words = vowel_lengthening(example_language, syllables="all")
+        exdesc_title = "**Vowel Lengthening:** "
+        exdesc_changes = "/a/ became /a:/"
+        exdesc_syllables = " in all syllables."
+        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
+        assert description == expected_desc
+        assert words[0] == "/ˈba:.ba:/"
+        assert words[1] == "/ba:/"
+
+    def test_vowel_lengthening_stressed(self, example_language):
+        description, words = vowel_lengthening(example_language, syllables="stressed")
+        exdesc_title = "**Vowel Lengthening:** "
+        exdesc_changes = "/a/ became /a:/"
+        exdesc_syllables = " in stressed syllables."
+        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
+        assert description == expected_desc
+        assert words[0] == "/ˈba:.ba/"
+        assert words[1] == "/ba:/"
+
+    def test_vowel_lengthening_randomized(self, example_language):
+        description, _ = vowel_lengthening(example_language)
+        stressed_syllables = "stressed syllables" in description
+        all_syllables = "all syllables" in description
+        assert stressed_syllables or all_syllables
+
+
 class TestVowelLowering:
     @pytest.fixture
     def example_language(self):
@@ -205,6 +242,41 @@ class TestVowelRaising:
 
     def test_vowel_raising_randomized(self, example_language):
         description, _ = vowel_raising(example_language)
+        stressed_syllables = "stressed syllables" in description
+        all_syllables = "all syllables" in description
+        assert stressed_syllables or all_syllables
+
+
+class TestVowelShortening:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a:": 1, "a": 1}, coda={})
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈba:.ba:/", "/ba:/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_vowel_shortening(self, example_language):
+        description, words = vowel_shortening(example_language, syllables="all")
+        exdesc_title = "**Vowel Shortening:** "
+        exdesc_changes = "/a:/ became /a/"
+        exdesc_syllables = " in all syllables."
+        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
+        assert description == expected_desc
+        assert words[0] == "/ˈba.ba/"
+        assert words[1] == "/ba/"
+
+    def test_vowel_shortening_stressed(self, example_language):
+        description, words = vowel_shortening(example_language, syllables="stressed")
+        exdesc_title = "**Vowel Shortening:** "
+        exdesc_changes = "/a:/ became /a/"
+        exdesc_syllables = " in stressed syllables."
+        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
+        assert description == expected_desc
+        assert words[0] == "/ˈba.ba:/"
+        assert words[1] == "/ba/"
+
+    def test_vowel_shortening_randomized(self, example_language):
+        description, _ = vowel_shortening(example_language)
         stressed_syllables = "stressed syllables" in description
         all_syllables = "all syllables" in description
         assert stressed_syllables or all_syllables

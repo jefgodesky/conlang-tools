@@ -2,7 +2,7 @@ from typing import Dict, List, Optional, Tuple
 import random
 from language.classes import Language
 from phonemes.roots import Root
-from phonemes.vowels import Vowel
+from phonemes.vowels import Vowel, get_vowel
 from utils.methods import oxford_comma, get_choices
 
 
@@ -75,6 +75,54 @@ def vowel_backing(
     lang: Language, syllables: Optional[str] = None
 ) -> Tuple[str, List[str]]:
     return vowel_change(lang, "location", syllables, reverse=False)
+
+
+def vowel_lengthening(
+    lang: Language, syllables: Optional[str] = None
+) -> Tuple[str, List[str]]:
+    _, vowels = lang.take_inventory()
+    mapping = {v.symbol: v if v.long else get_vowel(v.symbol + ":") for v in vowels}
+    description, affected, affected_keys = describe_vowel_change(
+        mapping, "Lengthening", syllables
+    )
+
+    new_words: List[str] = []
+    for original in lang.words:
+        analysis = Root(original)
+        for syllable in analysis.syllables:
+            if affected == "all" or syllable.stressed or len(analysis.syllables) < 2:
+                for index, phoneme in enumerate(syllable.phonemes):
+                    if phoneme.symbol in affected_keys:
+                        syllable.phonemes[index] = mapping[phoneme.symbol]
+        analysis.rebuild()
+        new_words.append(analysis.ipa)
+
+    return description, new_words
+
+
+def vowel_shortening(
+    lang: Language, syllables: Optional[str] = None
+) -> Tuple[str, List[str]]:
+    _, vowels = lang.take_inventory()
+    mapping = {
+        v.symbol: v if not v.long else get_vowel(v.symbol.strip(":")) for v in vowels
+    }
+    description, affected, affected_keys = describe_vowel_change(
+        mapping, "Shortening", syllables
+    )
+
+    new_words: List[str] = []
+    for original in lang.words:
+        analysis = Root(original)
+        for syllable in analysis.syllables:
+            if affected == "all" or syllable.stressed or len(analysis.syllables) < 2:
+                for index, phoneme in enumerate(syllable.phonemes):
+                    if phoneme.symbol in affected_keys:
+                        syllable.phonemes[index] = mapping[phoneme.symbol]
+        analysis.rebuild()
+        new_words.append(analysis.ipa)
+
+    return description, new_words
 
 
 def change(lang: Language) -> Tuple[str, List[str]]:
