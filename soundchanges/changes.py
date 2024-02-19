@@ -1,8 +1,23 @@
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 import random
 from language.classes import Language
 from phonemes.roots import Root
+from phonemes.vowels import Vowel
 from utils.methods import oxford_comma, get_choices
+
+
+def describe_vowel_change(
+    mapping: Dict[str, Vowel], name: str, syllables: Optional[str] = None
+) -> Tuple[str, str, List[str]]:
+    affected = get_affected_syllables(syllables)
+    affected_keys = [key for key in mapping.keys() if key != mapping[key].symbol]
+    changes = [f"/{key}/ became /{mapping[key].symbol}/" for key in affected_keys]
+    title = f"**Vowel {name}:**"
+    affects_desc = f"{oxford_comma(changes)} in {affected} syllables."
+    no_changes = len(affected_keys) < 1
+    affects = "No changes." if no_changes else affects_desc
+    description = f"{title} {affects}"
+    return description, affected, affected_keys
 
 
 def get_affected_syllables(syllables: Optional[str] = None) -> str:
@@ -16,18 +31,13 @@ def vowel_change(
     syllables: Optional[str] = None,
     reverse: bool = True,
 ) -> Tuple[str, List[str]]:
-    affected = get_affected_syllables(syllables)
     mapping = lang.vowel_mapping(map_type, reverse=reverse)
-    affected_keys = [key for key in mapping.keys() if key != mapping[key].symbol]
-    changes = [f"/{key}/ became /{mapping[key].symbol}/" for key in affected_keys]
-    height_direction = "Lowering" if reverse is False else "Raising"
-    loc_direction = "Backing" if reverse is False else "Fronting"
-    direction = loc_direction if map_type == "location" else height_direction
-    title = f"**Vowel {direction}:**"
-    affects_desc = f"{oxford_comma(changes)} in {affected} syllables."
-    no_changes = len(affected_keys) < 1
-    affects = "No changes." if no_changes else affects_desc
-    description = f"{title} {affects}"
+    height = "Lowering" if reverse is False else "Raising"
+    direction = "Backing" if reverse is False else "Fronting"
+    name = direction if map_type == "location" else height
+    description, affected, affected_keys = describe_vowel_change(
+        mapping, name, syllables
+    )
 
     new_words: List[str] = []
     for original in lang.words:

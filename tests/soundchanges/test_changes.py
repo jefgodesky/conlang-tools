@@ -2,12 +2,51 @@ import pytest
 from language.classes import Phonology, Phonotactics, Language
 from soundchanges.changes import (
     change,
+    describe_vowel_change,
     get_affected_syllables,
     vowel_backing,
     vowel_fronting,
     vowel_lowering,
     vowel_raising,
 )
+
+
+class TestDescribeVowelChange:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1, "e": 1}, coda={})
+        pl = Phonology(stress="initial", openness=1)
+        return Language(phonotactics=pt, phonology=pl, words=["/ba/"])
+
+    def test_all(self, example_language):
+        mapping = example_language.vowel_mapping("height")
+        description, affected, affected_keys = describe_vowel_change(
+            mapping, "Lowering", "all"
+        )
+        assert description == "**Vowel Lowering:** /a/ became /e/ in all syllables."
+        assert affected == "all"
+        assert len(affected_keys) == 1
+        assert affected_keys[0] == "a"
+
+    def test_stressed(self, example_language):
+        mapping = example_language.vowel_mapping("height")
+        description, affected, affected_keys = describe_vowel_change(
+            mapping, "Lowering", "stressed"
+        )
+        assert (
+            description == "**Vowel Lowering:** /a/ became /e/ in stressed syllables."
+        )
+        assert affected == "stressed"
+        assert len(affected_keys) == 1
+        assert affected_keys[0] == "a"
+
+    def test_random(self, example_language):
+        mapping = example_language.vowel_mapping("height")
+        description, affected, _ = describe_vowel_change(mapping, "Lowering")
+        is_all = "all syllables" in description
+        is_stressed = "stressed syllables" in description
+        assert is_all or is_stressed
+        assert affected in ["all", "stressed"]
 
 
 class TestGetAffectedSyllables:
