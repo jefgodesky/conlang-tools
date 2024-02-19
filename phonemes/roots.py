@@ -38,6 +38,12 @@ class Syllable:
 
         return breakdown
 
+    def rebuild(self):
+        self.ipa = "".join([p.symbol for p in self.phonemes])
+        if self.stressed:
+            self.ipa = "ˈ" + self.ipa
+        self.ipa = f"/{self.ipa}/"
+
 
 class Root:
     def __init__(self, ipa: str):

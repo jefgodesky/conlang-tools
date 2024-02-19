@@ -1,3 +1,4 @@
+from phonemes.phonemes import get_phoneme
 from phonemes.roots import Root, Syllable
 
 
@@ -47,3 +48,9 @@ class TestSyllable:
     def test_unmarked_ipa(self):
         syllable = Syllable("/ˈba/")
         assert syllable.unmarked == "ba"
+
+    def test_rebuild(self):
+        syllable = Syllable("/ˈba/")
+        syllable.phonemes[0] = get_phoneme("k")
+        syllable.rebuild()
+        assert syllable.ipa == "/ˈka/"
