@@ -17,6 +17,13 @@ class TestLanguage:
         pl = Phonology(stress="initial", openness=1)
         return Language(phonotactics=pt, phonology=pl, words=[])
 
+    @pytest.fixture
+    def vowel_rounded_example(self):
+        nucleus = {"a": 1, "ø": 1, "y": 1, "o": 1, "u": 1}
+        pt = Phonotactics(onset={"b": 1}, nucleus=nucleus, coda={})
+        pl = Phonology(stress="initial", openness=1)
+        return Language(phonotactics=pt, phonology=pl, words=[])
+
     def test_creates_language(self):
         lang = Language()
         assert isinstance(lang, Language)
@@ -126,7 +133,6 @@ class TestLanguage:
 
     def test_vowel_raise_mapping(self, vowel_change_example):
         mapping = vowel_change_example.vowel_height_mapping()
-        print(mapping)
         assert mapping["a"].symbol == "e"
         assert mapping["e"].symbol == "i"
         assert mapping["i"].symbol == "i"
@@ -140,6 +146,22 @@ class TestLanguage:
         assert mapping["i"].symbol == "e"
         assert mapping["o"].symbol == "o"
         assert mapping["u"].symbol == "o"
+
+    def test_vowel_front_mapping(self, vowel_rounded_example):
+        mapping = vowel_rounded_example.vowel_location_mapping()
+        assert mapping["a"].symbol == "a"
+        assert mapping["ø"].symbol == "ø"
+        assert mapping["y"].symbol == "y"
+        assert mapping["o"].symbol == "ø"
+        assert mapping["u"].symbol == "y"
+
+    def test_vowel_back_mapping(self, vowel_rounded_example):
+        mapping = vowel_rounded_example.vowel_location_mapping(fronting=False)
+        assert mapping["a"].symbol == "a"
+        assert mapping["ø"].symbol == "o"
+        assert mapping["y"].symbol == "u"
+        assert mapping["o"].symbol == "o"
+        assert mapping["u"].symbol == "u"
 
     def test_generate_new_word(self, example_language):
         word = example_language.generate_new_word()

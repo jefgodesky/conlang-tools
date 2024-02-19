@@ -2,7 +2,7 @@ from typing import Dict, List, Literal, Optional, Tuple
 import random
 import yaml
 from phonemes.consonants import Consonant
-from phonemes.vowels import Vowel, VowelOpenness
+from phonemes.vowels import Vowel, VowelLocation, VowelOpenness
 from phonemes.roots import Syllable
 from utils.methods import get_choices, weigh_syllables
 
@@ -91,31 +91,43 @@ class Language:
 
         return consonants, vowels
 
-    def vowel_height_mapping(self, rise: bool = True) -> Dict[str, Vowel]:
+    def vowel_mapping(self, map_type: str = "height", reverse: bool = True):
         _, vowels = self.take_inventory()
+        locations = VowelLocation.types()
         heights = VowelOpenness.types()
-        location_order = {"front": 0, "central": 1, "back": 2}
-        sorted_vowels = sorted(
-            vowels,
-            key=lambda v: (
-                location_order[v.location.value],
+
+        def location_sort(v: Vowel):
+            return (
+                heights.index(v.openness.value),
+                v.rounded,
+                locations.index(v.location.value),
+            )
+
+        def height_sort(v: Vowel):
+            return (
+                locations.index(v.location.value),
                 v.rounded,
                 heights.index(v.openness.value),
-            ),
-            reverse=rise,
-        )
+            )
+
+        sorting_method = location_sort if map_type == "location" else height_sort
+        sorted_vowels = sorted(vowels, key=sorting_method, reverse=reverse)
         mapping: Dict[str, Vowel] = {}
 
         for i, vowel in enumerate(sorted_vowels):
             mapping[vowel.symbol] = vowel
             for next_vowel in sorted_vowels[i + 1 :]:
-                same_location = vowel.location == next_vowel.location
-                same_roundedness = vowel.rounded == next_vowel.rounded
-                if same_location and same_roundedness:
+                if vowel.same_except(next_vowel, map_type):
                     mapping[vowel.symbol] = next_vowel
                     break
 
         return mapping
+
+    def vowel_height_mapping(self, rise: bool = True) -> Dict[str, Vowel]:
+        return self.vowel_mapping("height", reverse=rise)
+
+    def vowel_location_mapping(self, fronting: bool = True) -> Dict[str, Vowel]:
+        return self.vowel_mapping("location", reverse=fronting)
 
     def generate_syllable(self):
         onset = random.choice(self.phonotactics.choices("onset"))
