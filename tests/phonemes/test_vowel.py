@@ -37,6 +37,10 @@ class TestVowel:
         i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False)
         assert str(i) == "[i]"
 
+    def test_repr_long(self):
+        i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False, long=True)
+        assert str(i) == "[i:]"
+
 
 class TestVowelLocation:
     def test_creates_vowel_location(self):

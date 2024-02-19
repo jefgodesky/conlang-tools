@@ -69,9 +69,10 @@ class Vowel:
     openness: VowelOpenness
     location: VowelLocation
     rounded: bool
+    long: Optional[bool] = False
 
     def __repr__(self):
-        return f"[{self.symbol}]"
+        return f"[{self.symbol}:]" if self.long else f"[{self.symbol}]"
 
 
 def get_vowels() -> List[Vowel]:
