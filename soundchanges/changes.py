@@ -112,8 +112,10 @@ def change(lang: Language) -> Tuple[str, List[str]]:
     sound_changes = {
         "vowel_backing": (6, vowel_backing),
         "vowel_fronting": (6, vowel_fronting),
+        "vowel_lengthening": (8, vowel_lengthening),
         "vowel_lowering": (7, vowel_lowering),
         "vowel_raising": (7, vowel_raising),
+        "vowel_shortening": (8, vowel_shortening),
     }
 
     choices = get_choices({key: wgt for key, (wgt, _) in sound_changes.items()})
