@@ -1,6 +1,9 @@
 from typing import Dict, List, Literal, Optional
 import random
 import yaml
+from phonemes.consonants import Consonant
+from phonemes.vowels import Vowel
+from phonemes.roots import Syllable
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
 # sure you update Stress.types to match!
@@ -140,22 +143,13 @@ class Language:
 
     @staticmethod
     def weigh_syllable(syllable: str) -> int:
-        vowels = "iyɨʉɯuɪʏʊeøɘɵɤoe̞ø̞əəɤ̞o̞ɛœɜɞʌɔæɐɐaɶäɑɒ"
-        symbols = ":/.ˈ"
-
-        # Long vowels increase syllable weight
-        long_vowels = [f"{vowel}:" for vowel in [*vowels]]
-        weight = 0
-        for long_vowel in long_vowels:
-            if long_vowel in syllable:
-                weight += 1
-
-        # Ending in a consonant increases syllable weight
-        ending = syllable[-1]
-        if ending not in vowels and ending not in symbols:
-            weight += 1
-
-        return weight
+        analysis = Syllable(syllable)
+        return sum(
+            [
+                any(isinstance(p, Vowel) and p.long is True for p in analysis.phonemes),
+                isinstance(analysis.phonemes[-1], Consonant),
+            ]
+        )
 
     @staticmethod
     def weigh_syllables(syllables: List[str]) -> List[int]:
