@@ -33,7 +33,7 @@ def vowel_change(
     for original in lang.words:
         analysis = Root(original)
         for syllable in analysis.syllables:
-            if affected == "all" or syllable.stressed:
+            if affected == "all" or syllable.stressed or len(analysis.syllables) < 2:
                 for index, phoneme in enumerate(syllable.phonemes):
                     if phoneme.symbol in affected_keys:
                         syllable.phonemes[index] = mapping[phoneme.symbol]

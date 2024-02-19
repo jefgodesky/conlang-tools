@@ -27,7 +27,8 @@ class TestVowelBacking:
         nucleus = {"a": 1, "ɑ": 1, "i": 1, "u": 1}
         pt = Phonotactics(onset={"b": 1}, nucleus=nucleus, coda={})
         pl = Phonology(stress="initial", openness=1)
-        return Language(phonotactics=pt, phonology=pl, words=["/ˈba.ba/", "/ˈbɑ.ba/"])
+        words = ["/ˈba.ba/", "/ˈbɑ.ba/", "/ba/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
 
     def test_vowel_backing(self, example_language):
         description, words = vowel_backing(example_language, syllables="all")
@@ -38,6 +39,7 @@ class TestVowelBacking:
         assert description == expected_desc
         assert words[0] == "/ˈbɑ.bɑ/"
         assert words[1] == "/ˈbɑ.bɑ/"
+        assert words[2] == "/bɑ/"
 
     def test_vowel_backing_stressed(self, example_language):
         description, words = vowel_backing(example_language, syllables="stressed")
@@ -48,6 +50,7 @@ class TestVowelBacking:
         assert description == expected_desc
         assert words[0] == "/ˈbɑ.ba/"
         assert words[1] == "/ˈbɑ.ba/"
+        assert words[2] == "/bɑ/"
 
     def test_vowel_backing_randomized(self, example_language):
         description, _ = vowel_backing(example_language)
@@ -62,7 +65,8 @@ class TestVowelFronting:
         nucleus = {"a": 1, "ɑ": 1, "i": 1, "u": 1}
         pt = Phonotactics(onset={"b": 1}, nucleus=nucleus, coda={})
         pl = Phonology(stress="initial", openness=1)
-        return Language(phonotactics=pt, phonology=pl, words=["/ˈbɑ.bɑ/", "/ˈba.ba/"])
+        words = ["/ˈbɑ.bɑ/", "/ˈba.ba/", "/bɑ/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
 
     def test_vowel_fronting(self, example_language):
         description, words = vowel_fronting(example_language, syllables="all")
@@ -73,6 +77,7 @@ class TestVowelFronting:
         assert description == expected_desc
         assert words[0] == "/ˈba.ba/"
         assert words[1] == "/ˈba.ba/"
+        assert words[2] == "/ba/"
 
     def test_vowel_fronting_stressed(self, example_language):
         description, words = vowel_fronting(example_language, syllables="stressed")
@@ -83,6 +88,7 @@ class TestVowelFronting:
         assert description == expected_desc
         assert words[0] == "/ˈba.bɑ/"
         assert words[1] == "/ˈba.ba/"
+        assert words[2] == "/ba/"
 
     def test_vowel_fronting_randomized(self, example_language):
         description, _ = vowel_fronting(example_language)
@@ -96,7 +102,8 @@ class TestVowelLowering:
     def example_language(self):
         pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1, "e": 1, "i": 1}, coda={})
         pl = Phonology(stress="initial", openness=1)
-        return Language(phonotactics=pt, phonology=pl, words=["/ˈba.be/", "/ˈbe.bi/"])
+        words = ["/ˈba.be/", "/ˈbe.bi/", "/be/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
 
     def test_vowel_lowering(self, example_language):
         description, words = vowel_lowering(example_language, syllables="all")
@@ -107,6 +114,7 @@ class TestVowelLowering:
         assert description == expected_desc
         assert words[0] == "/ˈba.ba/"
         assert words[1] == "/ˈba.be/"
+        assert words[2] == "/ba/"
 
     def test_vowel_lowering_stressed(self, example_language):
         description, words = vowel_lowering(example_language, syllables="stressed")
@@ -117,6 +125,7 @@ class TestVowelLowering:
         assert description == expected_desc
         assert words[0] == "/ˈba.be/"
         assert words[1] == "/ˈba.bi/"
+        assert words[2] == "/ba/"
 
     def test_vowel_lowering_randomized(self, example_language):
         description, _ = vowel_lowering(example_language)
@@ -130,7 +139,8 @@ class TestVowelRaising:
     def example_language(self):
         pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1, "e": 1, "i": 1}, coda={})
         pl = Phonology(stress="initial", openness=1)
-        return Language(phonotactics=pt, phonology=pl, words=["/ˈba.be/", "/ˈbe.bi/"])
+        words = ["/ˈba.be/", "/ˈbe.bi/", "/be/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
 
     def test_vowel_raising(self, example_language):
         description, words = vowel_raising(example_language, syllables="all")
@@ -141,6 +151,7 @@ class TestVowelRaising:
         assert description == expected_desc
         assert words[0] == "/ˈbe.bi/"
         assert words[1] == "/ˈbi.bi/"
+        assert words[2] == "/bi/"
 
     def test_vowel_raising_stressed(self, example_language):
         description, words = vowel_raising(example_language, syllables="stressed")
@@ -151,6 +162,7 @@ class TestVowelRaising:
         assert description == expected_desc
         assert words[0] == "/ˈbe.be/"
         assert words[1] == "/ˈbi.bi/"
+        assert words[2] == "/bi/"
 
     def test_vowel_raising_randomized(self, example_language):
         description, _ = vowel_raising(example_language)
