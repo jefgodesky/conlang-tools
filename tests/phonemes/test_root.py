@@ -1,4 +1,21 @@
-from phonemes.roots import Syllable
+from phonemes.roots import Root, Syllable
+
+
+class TestRoot:
+    def test_creates_root(self):
+        root = Root("/ˈba.ba/")
+        assert isinstance(root, Root)
+
+    def test_takes_ipa(self):
+        root = Root("/ˈba.ba/")
+        assert root.ipa == "/ˈba.ba/"
+
+    def test_breaks_down_syllables(self):
+        root = Root("/ˈba.ba/")
+        assert len(root.syllables) == 2
+        assert all([isinstance(syllable, Syllable) for syllable in root.syllables])
+        assert root.syllables[0].stressed is True
+        assert root.syllables[1].stressed is False
 
 
 class TestSyllable:

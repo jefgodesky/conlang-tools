@@ -35,3 +35,13 @@ class Syllable:
                 raise ValueError(f"Unrecognized IPA sequence at the start of: {working}")
 
         return breakdown
+
+
+class Root:
+    def __init__(self, ipa: str):
+        self.ipa = ipa
+        self.syllables = [Syllable(ipa) for ipa in self.unbracketed.split(".")]
+
+    @property
+    def unbracketed(self):
+        return self.ipa.strip("/[]")
