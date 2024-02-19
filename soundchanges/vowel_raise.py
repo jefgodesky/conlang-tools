@@ -1,9 +1,9 @@
 from typing import Dict, List, Optional, Tuple
 import random
 from language.classes import Language
-from soundchanges.describe import oxford_comma
 from phonemes.roots import Root
 from phonemes.vowels import Vowel, VowelOpenness
+from utils.methods import oxford_comma
 
 
 def create_vowel_raise_mapping(lang: Language) -> Dict[str, Vowel]:

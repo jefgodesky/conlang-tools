@@ -4,6 +4,7 @@ import yaml
 from phonemes.consonants import Consonant
 from phonemes.vowels import Vowel
 from phonemes.roots import Syllable
+from utils.methods import get_choices, weigh_syllables
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
 # sure you update Stress.types to match!
@@ -31,11 +32,12 @@ class Phonotactics:
         self.coda = coda if coda is not None else {}
 
     def choices(self, element: str = "nucleus") -> List[str]:
-        elements = ["onset", "nucleus", "coda"]
-        elem = element if element in elements else "nucleus"
-        dicts = {"onset": self.onset, "nucleus": self.nucleus, "coda": self.coda}
-        dictionary = dicts[elem]
-        return [key for key, value in dictionary.items() for _ in range(value)]
+        if element == "onset":
+            return get_choices(self.onset)
+        elif element == "coda":
+            return get_choices(self.coda)
+        else:
+            return get_choices(self.nucleus)
 
 
 class Stress:
@@ -113,7 +115,7 @@ class Language:
         elif self.phonology.stress == "random":
             index = random.randrange(0, len(syllables))
         elif self.phonology.stress == "heavy":
-            weights = Language.weigh_syllables(syllables)
+            weights = weigh_syllables(syllables)
             index = weights.index(max(weights))
         else:
             index = 0
@@ -156,17 +158,3 @@ class Language:
             return cls(
                 phonotactics=phonotactics, phonology=phonology, words=data["words"]
             )
-
-    @staticmethod
-    def weigh_syllable(syllable: str) -> int:
-        analysis = Syllable(syllable)
-        return sum(
-            [
-                any(isinstance(p, Vowel) and p.long is True for p in analysis.phonemes),
-                isinstance(analysis.phonemes[-1], Consonant),
-            ]
-        )
-
-    @staticmethod
-    def weigh_syllables(syllables: List[str]) -> List[int]:
-        return [Language.weigh_syllable(syllable) for syllable in syllables]
