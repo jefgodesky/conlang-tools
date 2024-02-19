@@ -2,7 +2,7 @@ from typing import List, Optional, Tuple
 import random
 from language.classes import Language
 from phonemes.roots import Root
-from utils.methods import oxford_comma
+from utils.methods import oxford_comma, get_choices
 
 
 def vowel_raise_lower(
@@ -41,3 +41,15 @@ def vowel_raise(
     lang: Language, syllables: Optional[str] = None
 ) -> Tuple[str, List[str]]:
     return vowel_raise_lower(lang, syllables)
+
+
+def change(lang: Language) -> Tuple[str, List[str]]:
+    sound_changes = {"vowel_lower": 7, "vowel_raise": 7}
+    sound_change = get_choices(sound_changes)
+
+    if sound_change == "vowel_lower":
+        return vowel_lower(lang)
+    elif sound_change == "vowel_raise":
+        return vowel_raise(lang)
+    else:
+        return "No change.", lang.words

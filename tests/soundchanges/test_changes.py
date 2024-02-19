@@ -1,6 +1,6 @@
 import pytest
 from language.classes import Phonology, Phonotactics, Language
-from soundchanges.changes import vowel_lower, vowel_raise
+from soundchanges.changes import change, vowel_lower, vowel_raise
 
 
 class TestVowelLower:
@@ -69,3 +69,17 @@ class TestVowelRaise:
         stressed_syllables = "stressed syllables" in description
         all_syllables = "all syllables" in description
         assert stressed_syllables or all_syllables
+
+
+class TestChange:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1}, coda={})
+        pl = Phonology(stress="initial", openness=1)
+        return Language(phonotactics=pt, phonology=pl, words=["/ba/"])
+
+    def test_change(self, example_language):
+        description, words = change(example_language)
+        assert isinstance(description, str)
+        assert all(isinstance(word, str) for word in words)
+        assert len(words) == len(example_language.words)
