@@ -1,3 +1,4 @@
+from typing import Any
 import pytest
 from phonemes.consonants import Consonant, ConsonantManner, ConsonantPlace, get_consonants, get_consonant
 
@@ -10,16 +11,20 @@ class TestGetConsonants:
 
 
 class TestGetConsonant:
+    @staticmethod
+    def isp(candidate: Any):
+        assert isinstance(candidate, Consonant)
+        assert candidate.symbol == "p"
+        assert candidate.manner == "stop"
+        assert isinstance(candidate.manner, ConsonantManner)
+        assert candidate.place == "labial"
+        assert isinstance(candidate.place, ConsonantPlace)
+        assert candidate.voiced is False
+        assert candidate.category == "obstruent"
+
     def test_get_consonant(self):
-        p = get_consonant("p")
-        assert isinstance(p, Consonant)
-        assert p.symbol == "p"
-        assert p.manner == "stop"
-        assert isinstance(p.manner, ConsonantManner)
-        assert p.place == "labial"
-        assert isinstance(p.place, ConsonantPlace)
-        assert p.voiced is False
-        assert p.category == "obstruent"
+        TestGetConsonant.isp(get_consonant("p"))
+
 
     def test_returns_none_if_not_found(self):
         assert get_consonant("@") is None
@@ -28,14 +33,7 @@ class TestGetConsonant:
 class TestConsonant:
     def test_creates_consonant(self):
         p = Consonant("p", ConsonantManner("stop"), ConsonantPlace("labial"), False)
-        assert isinstance(p, Consonant)
-        assert p.symbol == "p"
-        assert p.manner == "stop"
-        assert isinstance(p.manner, ConsonantManner)
-        assert p.place == "labial"
-        assert isinstance(p.place, ConsonantPlace)
-        assert p.voiced is False
-        assert p.category == "obstruent"
+        TestGetConsonant.isp(p)
 
     def test_repr(self):
         p = Consonant("p", ConsonantManner("stop"), ConsonantPlace("labial"), False)

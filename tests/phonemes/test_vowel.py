@@ -1,3 +1,4 @@
+from typing import Any
 import pytest
 from phonemes.vowels import Vowel, VowelLocation, VowelOpenness, get_vowels, get_vowel
 
@@ -10,15 +11,18 @@ class TestGetVowels:
 
 
 class TestGetVowel:
+    @staticmethod
+    def isi(candidate: Any):
+        assert isinstance(candidate, Vowel)
+        assert candidate.symbol == "i"
+        assert candidate.openness == "close"
+        assert isinstance(candidate.openness, VowelOpenness)
+        assert candidate.location == "front"
+        assert isinstance(candidate.location, VowelLocation)
+        assert candidate.rounded is False
+
     def test_get_vowel(self):
-        i = get_vowel("i")
-        assert isinstance(i, Vowel)
-        assert i.symbol == "i"
-        assert i.openness == "close"
-        assert isinstance(i.openness, VowelOpenness)
-        assert i.location == "front"
-        assert isinstance(i.location, VowelLocation)
-        assert i.rounded is False
+        TestGetVowel.isi(get_vowel("i"))
 
     def test_returns_none_if_not_found(self):
         assert get_vowel("@") is None
@@ -27,13 +31,7 @@ class TestGetVowel:
 class TestVowel:
     def test_creates_vowel(self):
         i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False)
-        assert isinstance(i, Vowel)
-        assert i.symbol == "i"
-        assert i.openness == "close"
-        assert isinstance(i.openness, VowelOpenness)
-        assert i.location == "front"
-        assert isinstance(i.location, VowelLocation)
-        assert i.rounded is False
+        TestGetVowel.isi(i)
 
     def test_repr(self):
         i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False)
