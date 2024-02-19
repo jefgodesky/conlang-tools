@@ -41,6 +41,24 @@ class TestVowel:
         i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False, long=True)
         assert str(i) == "[i:]"
 
+    def test_same_except(self):
+        # fmt: off
+        i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False, long=False)
+        il = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False, long=True)
+        y = Vowel("y", VowelOpenness("close"), VowelLocation("front"), True, long=False)
+        e = Vowel("e", VowelOpenness("close-mid"), VowelLocation("front"), False, long=False)
+        el = Vowel("e:", VowelOpenness("close-mid"), VowelLocation("front"), False, long=True)
+        w = Vowel("ɯ", VowelOpenness("close"), VowelLocation("back"), False, long=False)
+        u = Vowel("u", VowelOpenness("close"), VowelLocation("back"), True, long=False)
+        # fmt: on
+
+        assert i.same_except(il, "length") is True
+        assert i.same_except(y, "roundedness") is True
+        assert i.same_except(e, "height") is True
+        assert i.same_except(el, "height") is False
+        assert i.same_except(w, "location") is True
+        assert i.same_except(u, "location") is False
+
 
 class TestVowelLocation:
     def test_creates_vowel_location(self):

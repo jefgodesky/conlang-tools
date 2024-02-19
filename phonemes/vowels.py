@@ -77,6 +77,15 @@ class Vowel:
     def __hash__(self):
         return hash(self.symbol)
 
+    def same_except(self, other: "Vowel", criterion: str = "height") -> bool:
+        comparisons = {
+            "height": self.openness == other.openness,
+            "location": self.location == other.location,
+            "roundedness": self.rounded == other.rounded,
+            "length": self.long == other.long,
+        }
+        return all([value for key, value in comparisons.items() if key != criterion])
+
 
 def get_vowels() -> List[Vowel]:
     # fmt: off
