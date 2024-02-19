@@ -1,8 +1,6 @@
-from typing import Dict, List, Literal, Optional, Union
+from typing import Dict, List, Literal, Optional
 import random
 import yaml
-from phonemes.consonants import Consonant, get_consonants
-from phonemes.vowels import Vowel, get_vowels
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
 # sure you update Stress.types to match!
