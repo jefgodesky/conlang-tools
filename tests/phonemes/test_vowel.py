@@ -6,7 +6,7 @@ from phonemes.vowels import Vowel, VowelLocation, VowelOpenness, get_vowels, get
 class TestGetVowels:
     def test_get_vowels(self):
         vowels = get_vowels()
-        assert len(vowels) == 33
+        assert len(vowels) == 66
         assert all(isinstance(vowel, Vowel) for vowel in vowels)
 
 

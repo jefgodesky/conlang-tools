@@ -8,7 +8,7 @@ from phonemes.phonemes import get_phonemes, get_phoneme
 class TestGetPhonemes:
     def test_get_phonemes(self):
         phonemes = get_phonemes()
-        assert len(phonemes) == 105
+        assert len(phonemes) == 138
         assert all(isinstance(p, Consonant) or isinstance(p, Vowel) for p in phonemes)
 
 

@@ -34,10 +34,11 @@ class TestSyllable:
         assert unstressed.stressed is False
 
     def test_breaks_down_phonemes(self):
-        syllable = Syllable("/ba/")
+        syllable = Syllable("/ba:/")
         assert len(syllable.phonemes) == 2
         assert syllable.phonemes[0].symbol == "b"
-        assert syllable.phonemes[1].symbol == "a"
+        assert syllable.phonemes[1].symbol == "a:"
+        assert syllable.phonemes[1].long is True
 
     def test_unbrackets_ipa(self):
         syllable = Syllable("/ˈba/")
