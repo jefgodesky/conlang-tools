@@ -103,6 +103,9 @@ class Consonant:
     def __repr__(self):
         return f"[{self.symbol}]"
 
+    def __hash__(self):
+        return hash(self.symbol)
+
 
 def get_consonants() -> List[Consonant]:
     # fmt: off
