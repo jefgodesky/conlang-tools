@@ -6,7 +6,9 @@ from phonemes.vowels import Vowel, get_vowels
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
 # sure you update Stress.types to match!
-StressTypes = Literal["initial", "final", "penultimate", "antepenultimate", "heavy", "random"]
+StressTypes = Literal[
+    "initial", "final", "penultimate", "antepenultimate", "heavy", "random"
+]
 languages_directory = "languages/"
 
 
@@ -18,10 +20,10 @@ class Phonology:
 
 class Phonotactics:
     def __init__(
-            self,
-            onset: Optional[Dict[str, int]] = None,
-            nucleus: Optional[Dict[str, int]] = None,
-            coda: Optional[Dict[str, int]] = None
+        self,
+        onset: Optional[Dict[str, int]] = None,
+        nucleus: Optional[Dict[str, int]] = None,
+        coda: Optional[Dict[str, int]] = None,
     ):
         self.onset = onset if onset is not None else {}
         self.nucleus = nucleus if nucleus is not None else {}
@@ -40,7 +42,9 @@ class Stress:
         types = Stress.types()
         self.value = value if value is not None else types[0]
         if not Stress.isstress(self.value):
-            raise TypeError(f"{self.value} is not a valid value for Stress. Choose one of: {', '.join(types)}.")
+            raise TypeError(
+                f"{self.value} is not a valid value for Stress. Choose one of: {', '.join(types)}."
+            )
 
     def __eq__(self, other):
         return self.value == other
@@ -58,10 +62,10 @@ class Stress:
 
 class Language:
     def __init__(
-            self,
-            phonotactics: Optional[Phonotactics] = None,
-            phonology: Optional[Phonology] = None,
-            words: Optional[List[str]] = None,
+        self,
+        phonotactics: Optional[Phonotactics] = None,
+        phonology: Optional[Phonology] = None,
+        words: Optional[List[str]] = None,
     ):
         self.phonotactics = phonotactics if phonotactics is not None else Phonotactics()
         self.phonology = phonology if phonology is not None else Phonology()
@@ -114,7 +118,10 @@ class Language:
         return self.generate_new_word(num_syllables + 1)
 
     def generate_new_words(self, num_words: int = 1, num_syllables: int = 1):
-        return [self.generate_new_word(num_syllables=num_syllables) for _ in range(num_words)]
+        return [
+            self.generate_new_word(num_syllables=num_syllables)
+            for _ in range(num_words)
+        ]
 
     @classmethod
     def load(cls, name: str) -> "Language":
@@ -123,13 +130,15 @@ class Language:
             phonotactics = Phonotactics(
                 onset=data["phonotactics"]["onset"],
                 nucleus=data["phonotactics"]["nucleus"],
-                coda=data["phonotactics"]["coda"]
+                coda=data["phonotactics"]["coda"],
             )
             phonology = Phonology(
                 stress=data["phonology"]["stress"],
-                openness=data["phonology"]["openness"]
+                openness=data["phonology"]["openness"],
             )
-            return cls(phonotactics=phonotactics, phonology=phonology, words=data["words"])
+            return cls(
+                phonotactics=phonotactics, phonology=phonology, words=data["words"]
+            )
 
     @staticmethod
     def weigh_syllable(syllable: str) -> int:

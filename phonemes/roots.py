@@ -29,10 +29,12 @@ class Syllable:
             for phoneme in phonemes:
                 if working.startswith(phoneme.symbol):
                     breakdown.append(phoneme)
-                    working = working[len(phoneme.symbol):]
+                    working = working[len(phoneme.symbol) :]
                     break
             else:
-                raise ValueError(f"Unrecognized IPA sequence at the start of: {working}")
+                raise ValueError(
+                    f"Unrecognized IPA sequence at the start of: {working}"
+                )
 
         return breakdown
 

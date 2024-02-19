@@ -1,6 +1,12 @@
 from typing import Any
 import pytest
-from phonemes.consonants import Consonant, ConsonantManner, ConsonantPlace, get_consonants, get_consonant
+from phonemes.consonants import (
+    Consonant,
+    ConsonantManner,
+    ConsonantPlace,
+    get_consonants,
+    get_consonant,
+)
 
 
 class TestGetConsonants:
@@ -24,7 +30,6 @@ class TestGetConsonant:
 
     def test_get_consonant(self):
         TestGetConsonant.isp(get_consonant("p"))
-
 
     def test_returns_none_if_not_found(self):
         assert get_consonant("@") is None
@@ -151,9 +156,19 @@ class TestConsonantPlace:
             assert ConsonantPlace("other") != "other"
 
     def test_returns_types(self):
-        expected = ["labial", "dental", "alveolar-central", "alveolar-lateral",
-                    "retroflex", "palatal", "post-alveolar", "velar", "uvular",
-                    "pharyngeal", "glottal"]
+        expected = [
+            "labial",
+            "dental",
+            "alveolar-central",
+            "alveolar-lateral",
+            "retroflex",
+            "palatal",
+            "post-alveolar",
+            "velar",
+            "uvular",
+            "pharyngeal",
+            "glottal",
+        ]
         assert ", ".join(ConsonantPlace.types()) == ", ".join(expected)
 
     def test_isplace_labial_true(self):

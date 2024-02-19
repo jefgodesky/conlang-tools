@@ -8,11 +8,13 @@ if __name__ == "__main__":
         "main": "Command line tools for working with constructed languages (conlangs).",
         "lang": "Which language you’d like to work with. Options are: ",
         "words": "[Word Generator] When using the word generator, tool, how many words"
-                "would you like to generate?"
+        "would you like to generate?",
     }
 
     language_files = glob.glob("languages/*.yaml")
-    language_options = [os.path.splitext(os.path.basename(file))[0] for file in language_files]
+    language_options = [
+        os.path.splitext(os.path.basename(file))[0] for file in language_files
+    ]
     desc["lang"] = desc["lang"] + ", ".join(language_options)
 
     parser = argparse.ArgumentParser(description=desc["main"])
@@ -27,4 +29,6 @@ if __name__ == "__main__":
         for word in new_words:
             print(word)
     else:
-        print("No language specified. Please use '--lang' or '-l' to specify a language.")
+        print(
+            "No language specified. Please use '--lang' or '-l' to specify a language."
+        )

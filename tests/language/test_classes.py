@@ -125,7 +125,12 @@ class TestLanguage:
 
     def test_generate_bisyllabic_word(self, example_language):
         word = example_language.generate_word(num_syllables=2)
-        possibilities = ["/ˈba.ba/", "/ˈba.bac/", "/ˈbac.ba/", "/ˈbac.bac/",]
+        possibilities = [
+            "/ˈba.ba/",
+            "/ˈba.bac/",
+            "/ˈbac.ba/",
+            "/ˈbac.bac/",
+        ]
         assert word in possibilities
 
     def test_generate_new_word(self, example_language):
