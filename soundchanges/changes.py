@@ -25,6 +25,22 @@ def get_affected_syllables(syllables: Optional[str] = None) -> str:
     return syllables if syllables is not None else rand_all
 
 
+def apply_vowel_change(
+    lang: Language, mapping: Dict[str, Vowel], affected: str, affected_keys: List[str]
+) -> List[str]:
+    new_words: List[str] = []
+    for original in lang.words:
+        analysis = Root(original)
+        for syllable in analysis.syllables:
+            if affected == "all" or syllable.stressed or len(analysis.syllables) < 2:
+                for index, phoneme in enumerate(syllable.phonemes):
+                    if phoneme.symbol in affected_keys:
+                        syllable.phonemes[index] = mapping[phoneme.symbol]
+        analysis.rebuild()
+        new_words.append(analysis.ipa)
+    return new_words
+
+
 def vowel_change(
     lang: Language,
     map_type: str = "height",
@@ -38,18 +54,7 @@ def vowel_change(
     description, affected, affected_keys = describe_vowel_change(
         mapping, name, syllables
     )
-
-    new_words: List[str] = []
-    for original in lang.words:
-        analysis = Root(original)
-        for syllable in analysis.syllables:
-            if affected == "all" or syllable.stressed or len(analysis.syllables) < 2:
-                for index, phoneme in enumerate(syllable.phonemes):
-                    if phoneme.symbol in affected_keys:
-                        syllable.phonemes[index] = mapping[phoneme.symbol]
-        analysis.rebuild()
-        new_words.append(analysis.ipa)
-
+    new_words = apply_vowel_change(lang, mapping, affected, affected_keys)
     return description, new_words
 
 
@@ -85,18 +90,7 @@ def vowel_lengthening(
     description, affected, affected_keys = describe_vowel_change(
         mapping, "Lengthening", syllables
     )
-
-    new_words: List[str] = []
-    for original in lang.words:
-        analysis = Root(original)
-        for syllable in analysis.syllables:
-            if affected == "all" or syllable.stressed or len(analysis.syllables) < 2:
-                for index, phoneme in enumerate(syllable.phonemes):
-                    if phoneme.symbol in affected_keys:
-                        syllable.phonemes[index] = mapping[phoneme.symbol]
-        analysis.rebuild()
-        new_words.append(analysis.ipa)
-
+    new_words = apply_vowel_change(lang, mapping, affected, affected_keys)
     return description, new_words
 
 
@@ -110,18 +104,7 @@ def vowel_shortening(
     description, affected, affected_keys = describe_vowel_change(
         mapping, "Shortening", syllables
     )
-
-    new_words: List[str] = []
-    for original in lang.words:
-        analysis = Root(original)
-        for syllable in analysis.syllables:
-            if affected == "all" or syllable.stressed or len(analysis.syllables) < 2:
-                for index, phoneme in enumerate(syllable.phonemes):
-                    if phoneme.symbol in affected_keys:
-                        syllable.phonemes[index] = mapping[phoneme.symbol]
-        analysis.rebuild()
-        new_words.append(analysis.ipa)
-
+    new_words = apply_vowel_change(lang, mapping, affected, affected_keys)
     return description, new_words
 
 
