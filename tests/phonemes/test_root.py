@@ -18,6 +18,13 @@ class TestRoot:
         assert root.syllables[0].stressed is True
         assert root.syllables[1].stressed is False
 
+    def test_rebuild(self):
+        root = Root("/ˈba.ba/")
+        root.syllables[0].phonemes[0] = get_phoneme("k")
+        root.syllables[1].phonemes[0] = get_phoneme("l")
+        root.rebuild()
+        assert root.ipa == "/ˈka.la/"
+
 
 class TestSyllable:
     def test_creates_syllable(self):

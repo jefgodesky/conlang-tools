@@ -53,3 +53,10 @@ class Root:
     @property
     def unbracketed(self):
         return self.ipa.strip("/[]")
+
+    def rebuild(self):
+        for syllable in self.syllables:
+            syllable.rebuild()
+
+        syllables = [s.unbracketed for s in self.syllables]
+        self.ipa = f"/{'.'.join(syllables)}/"
