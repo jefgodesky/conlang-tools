@@ -1,6 +1,34 @@
 from typing import Any
 import pytest
-from phonemes.vowels import Vowel, VowelLocation, VowelOpenness, get_vowels, get_vowel
+from phonemes.vowels import (
+    Vowel,
+    VowelLocation,
+    VowelOpenness,
+    find_vowel,
+    get_vowels,
+    get_vowel,
+)
+
+
+class TestFindVowel:
+    def test_find_vowel(self):
+        # fmt: off
+        a = find_vowel(openness="open", location="front", rounded=False, long=False)
+        e = find_vowel(openness="close-mid", location="front", rounded=False, long=False)
+        i = find_vowel(openness="close", location="front", rounded=False, long=False)
+        o = find_vowel(openness="close-mid", location="back", rounded=True, long=False)
+        u = find_vowel(openness="close", location="back", rounded=True, long=False)
+        long_a = find_vowel(openness="open", location="front", rounded=False, long=True)
+        nope = find_vowel(openness="near-close", location="central", rounded=True, long=False)
+        # fmt: on
+
+        assert a.symbol == "a"
+        assert e.symbol == "e"
+        assert i.symbol == "i"
+        assert o.symbol == "o"
+        assert u.symbol == "u"
+        assert long_a.symbol == "a:"
+        assert nope is None
 
 
 class TestGetVowels:

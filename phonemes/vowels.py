@@ -141,3 +141,22 @@ def get_vowel(symbol: str) -> Optional[Vowel]:
         return vowels[index]
     except ValueError:
         return None
+
+
+def find_vowel(
+    openness: VowelOpennessTypes,
+    location: VowelLocationTypes,
+    rounded: bool,
+    long: bool,
+) -> Optional[Vowel]:
+    vowels = get_vowels()
+    for vowel in vowels:
+        matches = [
+            vowel.openness == openness,
+            vowel.location == location,
+            vowel.rounded == rounded,
+            vowel.long == long,
+        ]
+        if all(matches):
+            return vowel
+    return None
