@@ -5,6 +5,7 @@ from phonemes.vowels import (
     VowelLocation,
     VowelOpenness,
     find_vowel,
+    find_similar_vowel,
     get_vowels,
     get_vowel,
 )
@@ -28,6 +29,26 @@ class TestFindVowel:
         assert o.symbol == "o"
         assert u.symbol == "u"
         assert long_a.symbol == "a:"
+        assert nope is None
+
+
+class TestFindSimilarVowel:
+    def test_find_similar_vowel(self):
+        i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False, False)
+        w = find_similar_vowel(i, location="back")
+        u = find_similar_vowel(i, location="back", rounded=True)
+        a = find_similar_vowel(i, openness="open")
+        y = find_similar_vowel(i, rounded=True)
+        long_i = find_similar_vowel(i, long=True)
+
+        umla = Vowel("ä", VowelOpenness("open"), VowelLocation("central"), False, False)
+        nope = find_similar_vowel(umla, rounded=True)
+
+        assert w.symbol == "ɯ"
+        assert u.symbol == "u"
+        assert a.symbol == "a"
+        assert y.symbol == "y"
+        assert long_i.symbol == "i:"
         assert nope is None
 
 

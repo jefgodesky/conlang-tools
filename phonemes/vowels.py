@@ -160,3 +160,22 @@ def find_vowel(
         if all(matches):
             return vowel
     return None
+
+
+def find_similar_vowel(
+    vowel: Vowel,
+    openness: Optional[VowelOpennessTypes] = None,
+    location: Optional[VowelLocationTypes] = None,
+    rounded: Optional[bool] = None,
+    long: Optional[bool] = None,
+) -> Optional[Vowel]:
+    openness_arg = openness if openness is not None else vowel.openness.value
+    location_arg = location if location is not None else vowel.location.value
+    rounded_arg = rounded if rounded is not None else vowel.rounded
+    long_arg = long if long is not None else vowel.long
+    return find_vowel(
+        openness=openness_arg,
+        location=location_arg,
+        rounded=rounded_arg,
+        long=long_arg,
+    )
