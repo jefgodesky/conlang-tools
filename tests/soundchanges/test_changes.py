@@ -11,6 +11,7 @@ from soundchanges.changes import (
     vowel_raising,
     vowel_shortening,
     vowel_splitting_palatalization,
+    vowel_splitting_stress_diphthongization,
 )
 
 
@@ -299,6 +300,116 @@ class TestVowelSplittingPalatalization:
         assert description == expected_desc
         assert words[0] == "/bæʧ/"
         assert words[1] == "/baʃ/"
+
+
+class TestVowelSplittingStressDiphthongization:
+    @pytest.fixture
+    def example_language(self):
+        nucleus = {"a": 1, "e": 1, "i": 1, "o": 1, "u": 1}
+        pt = Phonotactics(onset={"b": 1}, nucleus=nucleus, coda={})
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈban.pan/", "/ˈben.pen/", "/ˈbin.pin/", "/ˈbon.pon/", "/ˈbun.pun/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    @pytest.fixture
+    def fn(self):
+        return vowel_splitting_stress_diphthongization
+
+    def test_vowel_splitting_stress_diphthongization_a_au(self, example_language, fn):
+        description, words = fn(example_language, "a", "au")
+        exdesc_title = "**Vowel Splitting:** "
+        exdesc_changes = "/a/ became /au/ in stressed syllables."
+        expected_desc = exdesc_title + exdesc_changes
+        assert description == expected_desc
+        assert words[0] == "/ˈbaun.pan/"
+        assert words[1] == "/ˈben.pen/"
+        assert words[2] == "/ˈbin.pin/"
+        assert words[3] == "/ˈbon.pon/"
+        assert words[4] == "/ˈbun.pun/"
+
+    def test_vowel_splitting_stress_diphthongization_a_ai(self, example_language, fn):
+        description, words = fn(example_language, "a", "ai")
+        exdesc_title = "**Vowel Splitting:** "
+        exdesc_changes = "/a/ became /ai/ in stressed syllables."
+        expected_desc = exdesc_title + exdesc_changes
+        assert description == expected_desc
+        assert words[0] == "/ˈbain.pan/"
+        assert words[1] == "/ˈben.pen/"
+        assert words[2] == "/ˈbin.pin/"
+        assert words[3] == "/ˈbon.pon/"
+        assert words[4] == "/ˈbun.pun/"
+
+    def test_vowel_splitting_stress_diphthongization_e_ei(self, example_language, fn):
+        description, words = fn(example_language, "e", "ei")
+        exdesc_title = "**Vowel Splitting:** "
+        exdesc_changes = "/e/ became /ei/ in stressed syllables."
+        expected_desc = exdesc_title + exdesc_changes
+        assert description == expected_desc
+        assert words[0] == "/ˈban.pan/"
+        assert words[1] == "/ˈbein.pen/"
+        assert words[2] == "/ˈbin.pin/"
+        assert words[3] == "/ˈbon.pon/"
+        assert words[4] == "/ˈbun.pun/"
+
+    def test_vowel_splitting_stress_diphthongization_i_ie(self, example_language, fn):
+        description, words = fn(example_language, "i", "ie")
+        exdesc_title = "**Vowel Splitting:** "
+        exdesc_changes = "/i/ became /ie/ in stressed syllables."
+        expected_desc = exdesc_title + exdesc_changes
+        assert description == expected_desc
+        assert words[0] == "/ˈban.pan/"
+        assert words[1] == "/ˈben.pen/"
+        assert words[2] == "/ˈbien.pin/"
+        assert words[3] == "/ˈbon.pon/"
+        assert words[4] == "/ˈbun.pun/"
+
+    def test_vowel_splitting_stress_diphthongization_i_ia(self, example_language, fn):
+        description, words = fn(example_language, "i", "ia")
+        exdesc_title = "**Vowel Splitting:** "
+        exdesc_changes = "/i/ became /ia/ in stressed syllables."
+        expected_desc = exdesc_title + exdesc_changes
+        assert description == expected_desc
+        assert words[0] == "/ˈban.pan/"
+        assert words[1] == "/ˈben.pen/"
+        assert words[2] == "/ˈbian.pin/"
+        assert words[3] == "/ˈbon.pon/"
+        assert words[4] == "/ˈbun.pun/"
+
+    def test_vowel_splitting_stress_diphthongization_o_oi(self, example_language, fn):
+        description, words = fn(example_language, "o", "ou")
+        exdesc_title = "**Vowel Splitting:** "
+        exdesc_changes = "/o/ became /ou/ in stressed syllables."
+        expected_desc = exdesc_title + exdesc_changes
+        assert description == expected_desc
+        assert words[0] == "/ˈban.pan/"
+        assert words[1] == "/ˈben.pen/"
+        assert words[2] == "/ˈbin.pin/"
+        assert words[3] == "/ˈboun.pon/"
+        assert words[4] == "/ˈbun.pun/"
+
+    def test_vowel_splitting_stress_diphthongization_u_ue(self, example_language, fn):
+        description, words = fn(example_language, "u", "ue")
+        exdesc_title = "**Vowel Splitting:** "
+        exdesc_changes = "/u/ became /ue/ in stressed syllables."
+        expected_desc = exdesc_title + exdesc_changes
+        assert description == expected_desc
+        assert words[0] == "/ˈban.pan/"
+        assert words[1] == "/ˈben.pen/"
+        assert words[2] == "/ˈbin.pin/"
+        assert words[3] == "/ˈbon.pon/"
+        assert words[4] == "/ˈbuen.pun/"
+
+    def test_vowel_splitting_stress_diphthongization_u_uo(self, example_language, fn):
+        description, words = fn(example_language, "u", "uo")
+        exdesc_title = "**Vowel Splitting:** "
+        exdesc_changes = "/u/ became /uo/ in stressed syllables."
+        expected_desc = exdesc_title + exdesc_changes
+        assert description == expected_desc
+        assert words[0] == "/ˈban.pan/"
+        assert words[1] == "/ˈben.pen/"
+        assert words[2] == "/ˈbin.pin/"
+        assert words[3] == "/ˈbon.pon/"
+        assert words[4] == "/ˈbuon.pun/"
 
 
 class TestChange:

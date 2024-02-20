@@ -130,7 +130,50 @@ def vowel_splitting_palatalization(lang: Language) -> Tuple[str, List[str]]:
     return description, new_words
 
 
+def vowel_splitting_stress_diphthongization(
+    lang: Language, original: Optional[str] = None, target: Optional[str] = None
+) -> Tuple[str, List[str]]:
+    options = {
+        "a": ["ai", "au"],
+        "e": ["ei"],
+        "i": ["ie", "ia"],
+        "o": ["ou"],
+        "u": ["ue", "uo"],
+    }
+    original_symbol = (
+        original if original is not None else random.choice(list(options.keys()))
+    )
+    target_symbols = (
+        target
+        if target is not None and target in options[original_symbol]
+        else random.choice(options[original_symbol])
+    )
+    replacements = [get_vowel(character) for character in target_symbols]
+
+    desc_title = "**Vowel Splitting:** "
+    desc_changes = (
+        f"/{original_symbol}/ became /{target_symbols}/ in stressed syllables."
+    )
+    description = desc_title + desc_changes
+
+    new_words: List[str] = []
+    for original in lang.words:
+        root = Root(original)
+        for syllable in root.syllables:
+            if syllable.stressed:
+                for index, phoneme in enumerate(syllable.phonemes):
+                    if phoneme.symbol == original_symbol:
+                        before = syllable.phonemes[:index]
+                        after = syllable.phonemes[index + 1 :]
+                        syllable.phonemes = before + replacements + after
+        root.rebuild()
+        new_words.append(root.ipa)
+
+    return description, new_words
+
+
 def change(lang: Language) -> Tuple[str, List[str]]:
+    # fmt: off
     sound_changes = {
         "vowel_backing": (6, vowel_backing),
         "vowel_fronting": (6, vowel_fronting),
@@ -139,7 +182,9 @@ def change(lang: Language) -> Tuple[str, List[str]]:
         "vowel_raising": (7, vowel_raising),
         "vowel_shortening": (8, vowel_shortening),
         "vowel_splitting_palatalization": (2, vowel_splitting_palatalization),
+        "vowel_splitting_stress_diphthongization": (2, vowel_splitting_stress_diphthongization),
     }
+    # fmt: on
 
     choices = get_choices({key: wgt for key, (wgt, _) in sound_changes.items()})
     sound_change = random.choice(choices)
