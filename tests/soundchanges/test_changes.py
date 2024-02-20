@@ -77,11 +77,11 @@ class TestDevoicing:
 
     def test_devoicing(self, example_language):
         description, words = devoicing(example_language)
-        exdesc_title = "**Devoicing:** "
-        exdesc_changes = "Voiced consonants became voiceless "
-        exdesc_circ = "at the end of words or next to voiceless consonants."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_circ
-        assert description == expected_desc
+        expected_description = (
+            "**Devoicing:** Voiced consonants became voiceless "
+            "at the end of words or next to voiceless consonants."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈba.ba/"
         assert words[1] == "/bap/"
         assert words[2] == "/bapt/"
@@ -97,10 +97,10 @@ class TestVoicing:
 
     def test_voicing(self, example_language):
         description, words = voicing(example_language)
-        exdesc_title = "**Voicing:** "
-        exdesc_changes = "Unvoiced consonants became voiced between vowels."
-        expected_desc = exdesc_title + exdesc_changes
-        assert description == expected_desc
+        expected_description = (
+            "**Voicing:** Unvoiced consonants became voiced " "between vowels."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈpa.ba/"
 
 
@@ -115,22 +115,18 @@ class TestVowelBacking:
 
     def test_vowel_backing(self, example_language):
         description, words = vowel_backing(example_language, syllables="all")
-        exdesc_title = "**Vowel Backing:** "
-        exdesc_changes = "/a/ became /ɑ/"
-        exdesc_syllables = " in all syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = "**Vowel Backing:** /a/ became /ɑ/ in all syllables."
+        assert description == expected_description
         assert words[0] == "/ˈbɑ.bɑ/"
         assert words[1] == "/ˈbɑ.bɑ/"
         assert words[2] == "/bɑ/"
 
     def test_vowel_backing_stressed(self, example_language):
         description, words = vowel_backing(example_language, syllables="stressed")
-        exdesc_title = "**Vowel Backing:** "
-        exdesc_changes = "/a/ became /ɑ/"
-        exdesc_syllables = " in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Backing:** /a/ became /ɑ/ in stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈbɑ.ba/"
         assert words[1] == "/ˈbɑ.ba/"
         assert words[2] == "/bɑ/"
@@ -153,22 +149,18 @@ class TestVowelFronting:
 
     def test_vowel_fronting(self, example_language):
         description, words = vowel_fronting(example_language, syllables="all")
-        exdesc_title = "**Vowel Fronting:** "
-        exdesc_changes = "/ɑ/ became /a/"
-        exdesc_syllables = " in all syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = "**Vowel Fronting:** /ɑ/ became /a/ in all syllables."
+        assert description == expected_description
         assert words[0] == "/ˈba.ba/"
         assert words[1] == "/ˈba.ba/"
         assert words[2] == "/ba/"
 
     def test_vowel_fronting_stressed(self, example_language):
         description, words = vowel_fronting(example_language, syllables="stressed")
-        exdesc_title = "**Vowel Fronting:** "
-        exdesc_changes = "/ɑ/ became /a/"
-        exdesc_syllables = " in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Fronting:** /ɑ/ became /a/ in stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈba.bɑ/"
         assert words[1] == "/ˈba.ba/"
         assert words[2] == "/ba/"
@@ -190,21 +182,19 @@ class TestVowelLengthening:
 
     def test_vowel_lengthening(self, example_language):
         description, words = vowel_lengthening(example_language, syllables="all")
-        exdesc_title = "**Vowel Lengthening:** "
-        exdesc_changes = "/a/ became /a:/"
-        exdesc_syllables = " in all syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Lengthening:** /a/ became /a:/ in all syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈba:.ba:/"
         assert words[1] == "/ba:/"
 
     def test_vowel_lengthening_stressed(self, example_language):
         description, words = vowel_lengthening(example_language, syllables="stressed")
-        exdesc_title = "**Vowel Lengthening:** "
-        exdesc_changes = "/a/ became /a:/"
-        exdesc_syllables = " in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Lengthening:** /a/ became /a:/ in stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈba:.ba/"
         assert words[1] == "/ba:/"
 
@@ -225,22 +215,18 @@ class TestVowelLowering:
 
     def test_vowel_lowering(self, example_language):
         description, words = vowel_lowering(example_language, syllables="all")
-        exdesc_title = "**Vowel Lowering:** "
-        exdesc_changes = "/i/ became /e/ and /e/ became /a/"
-        exdesc_syllables = " in all syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Lowering:** /i/ became /e/ and /e/ became /a/ in all syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈba.ba/"
         assert words[1] == "/ˈba.be/"
         assert words[2] == "/ba/"
 
     def test_vowel_lowering_stressed(self, example_language):
         description, words = vowel_lowering(example_language, syllables="stressed")
-        exdesc_title = "**Vowel Lowering:** "
-        exdesc_changes = "/i/ became /e/ and /e/ became /a/"
-        exdesc_syllables = " in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = "**Vowel Lowering:** /i/ became /e/ and /e/ became /a/ in stressed syllables."
+        assert description == expected_description
         assert words[0] == "/ˈba.be/"
         assert words[1] == "/ˈba.bi/"
         assert words[2] == "/ba/"
@@ -262,22 +248,18 @@ class TestVowelRaising:
 
     def test_vowel_raising(self, example_language):
         description, words = vowel_raising(example_language, syllables="all")
-        exdesc_title = "**Vowel Raising:** "
-        exdesc_changes = "/a/ became /e/ and /e/ became /i/"
-        exdesc_syllables = " in all syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Raising:** /a/ became /e/ and /e/ became /i/ in all syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈbe.bi/"
         assert words[1] == "/ˈbi.bi/"
         assert words[2] == "/bi/"
 
     def test_vowel_raising_stressed(self, example_language):
         description, words = vowel_raising(example_language, syllables="stressed")
-        exdesc_title = "**Vowel Raising:** "
-        exdesc_changes = "/a/ became /e/ and /e/ became /i/"
-        exdesc_syllables = " in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = "**Vowel Raising:** /a/ became /e/ and /e/ became /i/ in stressed syllables."
+        assert description == expected_description
         assert words[0] == "/ˈbe.be/"
         assert words[1] == "/ˈbi.bi/"
         assert words[2] == "/bi/"
@@ -299,21 +281,17 @@ class TestVowelShortening:
 
     def test_vowel_shortening(self, example_language):
         description, words = vowel_shortening(example_language, syllables="all")
-        exdesc_title = "**Vowel Shortening:** "
-        exdesc_changes = "/a:/ became /a/"
-        exdesc_syllables = " in all syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = "**Vowel Shortening:** /a:/ became /a/ in all syllables."
+        assert description == expected_description
         assert words[0] == "/ˈba.ba/"
         assert words[1] == "/ba/"
 
     def test_vowel_shortening_stressed(self, example_language):
         description, words = vowel_shortening(example_language, syllables="stressed")
-        exdesc_title = "**Vowel Shortening:** "
-        exdesc_changes = "/a:/ became /a/"
-        exdesc_syllables = " in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes + exdesc_syllables
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Shortening:** /a:/ became /a/ in stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈba.ba:/"
         assert words[1] == "/ba/"
 
@@ -347,10 +325,11 @@ class TestVowelSplittingPalatalization:
 
     def test_vowel_splitting_palatalization(self, example_language):
         description, words = vowel_splitting_palatalization(example_language)
-        exdesc_title = "**Vowel Splitting:** "
-        exdesc_changes = "/a/ became /æ/ when followed by a palatal consonant."
-        expected_desc = exdesc_title + exdesc_changes
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Splitting:** /a/ became /æ/ when followed by "
+            "a palatal consonant."
+        )
+        assert description == expected_description
         assert words[0] == "/bæʧ/"
         assert words[1] == "/baʃ/"
 
@@ -370,10 +349,10 @@ class TestVowelSplittingStressDiphthongization:
 
     def test_vowel_splitting_stress_diphthongization_a_au(self, example_language, fn):
         description, words = fn(example_language, "a", "au")
-        exdesc_title = "**Vowel Splitting:** "
-        exdesc_changes = "/a/ became /au/ in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Splitting:** /a/ became /au/ in " "stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈbaun.pan/"
         assert words[1] == "/ˈben.pen/"
         assert words[2] == "/ˈbin.pin/"
@@ -382,10 +361,10 @@ class TestVowelSplittingStressDiphthongization:
 
     def test_vowel_splitting_stress_diphthongization_a_ai(self, example_language, fn):
         description, words = fn(example_language, "a", "ai")
-        exdesc_title = "**Vowel Splitting:** "
-        exdesc_changes = "/a/ became /ai/ in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Splitting:** /a/ became /ai/ in " "stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈbain.pan/"
         assert words[1] == "/ˈben.pen/"
         assert words[2] == "/ˈbin.pin/"
@@ -394,10 +373,10 @@ class TestVowelSplittingStressDiphthongization:
 
     def test_vowel_splitting_stress_diphthongization_e_ei(self, example_language, fn):
         description, words = fn(example_language, "e", "ei")
-        exdesc_title = "**Vowel Splitting:** "
-        exdesc_changes = "/e/ became /ei/ in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Splitting:** /e/ became /ei/ in " "stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈban.pan/"
         assert words[1] == "/ˈbein.pen/"
         assert words[2] == "/ˈbin.pin/"
@@ -406,10 +385,10 @@ class TestVowelSplittingStressDiphthongization:
 
     def test_vowel_splitting_stress_diphthongization_i_ie(self, example_language, fn):
         description, words = fn(example_language, "i", "ie")
-        exdesc_title = "**Vowel Splitting:** "
-        exdesc_changes = "/i/ became /ie/ in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Splitting:** /i/ became /ie/ in " "stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈban.pan/"
         assert words[1] == "/ˈben.pen/"
         assert words[2] == "/ˈbien.pin/"
@@ -418,10 +397,10 @@ class TestVowelSplittingStressDiphthongization:
 
     def test_vowel_splitting_stress_diphthongization_i_ia(self, example_language, fn):
         description, words = fn(example_language, "i", "ia")
-        exdesc_title = "**Vowel Splitting:** "
-        exdesc_changes = "/i/ became /ia/ in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Splitting:** /i/ became /ia/ in " "stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈban.pan/"
         assert words[1] == "/ˈben.pen/"
         assert words[2] == "/ˈbian.pin/"
@@ -430,10 +409,10 @@ class TestVowelSplittingStressDiphthongization:
 
     def test_vowel_splitting_stress_diphthongization_o_oi(self, example_language, fn):
         description, words = fn(example_language, "o", "ou")
-        exdesc_title = "**Vowel Splitting:** "
-        exdesc_changes = "/o/ became /ou/ in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Splitting:** /o/ became /ou/ in " "stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈban.pan/"
         assert words[1] == "/ˈben.pen/"
         assert words[2] == "/ˈbin.pin/"
@@ -442,10 +421,10 @@ class TestVowelSplittingStressDiphthongization:
 
     def test_vowel_splitting_stress_diphthongization_u_ue(self, example_language, fn):
         description, words = fn(example_language, "u", "ue")
-        exdesc_title = "**Vowel Splitting:** "
-        exdesc_changes = "/u/ became /ue/ in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Splitting:** /u/ became /ue/ in " "stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈban.pan/"
         assert words[1] == "/ˈben.pen/"
         assert words[2] == "/ˈbin.pin/"
@@ -454,10 +433,10 @@ class TestVowelSplittingStressDiphthongization:
 
     def test_vowel_splitting_stress_diphthongization_u_uo(self, example_language, fn):
         description, words = fn(example_language, "u", "uo")
-        exdesc_title = "**Vowel Splitting:** "
-        exdesc_changes = "/u/ became /uo/ in stressed syllables."
-        expected_desc = exdesc_title + exdesc_changes
-        assert description == expected_desc
+        expected_description = (
+            "**Vowel Splitting:** /u/ became /uo/ in " "stressed syllables."
+        )
+        assert description == expected_description
         assert words[0] == "/ˈban.pan/"
         assert words[1] == "/ˈben.pen/"
         assert words[2] == "/ˈbin.pin/"

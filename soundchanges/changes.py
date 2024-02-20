@@ -7,7 +7,6 @@ from phonemes.roots import Root
 from phonemes.vowels import Vowel, find_similar_vowel
 from utils.methods import oxford_comma, get_choices
 
-
 SoundChangeFunction = Callable[[Language, ...], Tuple[str, List[str]]]
 
 
@@ -31,10 +30,10 @@ def get_affected_syllables(syllables: Optional[str] = None) -> str:
 
 
 def devoicing(lang: Language) -> Tuple[str, List[str]]:
-    desc_title = "**Devoicing:** "
-    desc_changes = "Voiced consonants became voiceless "
-    desc_circ = "at the end of words or next to voiceless consonants."
-    description = desc_title + desc_changes + desc_circ
+    description = (
+        "**Devoicing:** Voiced consonants became voiceless "
+        "at the end of words or next to voiceless consonants."
+    )
 
     new_words: List[str] = []
     for original in lang.words:
@@ -57,9 +56,7 @@ def devoicing(lang: Language) -> Tuple[str, List[str]]:
 
 
 def voicing(lang: Language) -> Tuple[str, List[str]]:
-    desc_title = "**Voicing:** "
-    desc_changes = "Unvoiced consonants became voiced between vowels."
-    description = desc_title + desc_changes
+    description = "**Voicing:** Unvoiced consonants became voiced between vowels."
 
     new_words: List[str] = []
     for original in lang.words:
@@ -172,9 +169,9 @@ def vowel_splitting(lang: Language) -> Tuple[str, List[str]]:
 
 
 def vowel_splitting_palatalization(lang: Language) -> Tuple[str, List[str]]:
-    desc_title = "**Vowel Splitting:** "
-    desc_changes = "/a/ became /æ/ when followed by a palatal consonant."
-    description = desc_title + desc_changes
+    description = (
+        "**Vowel Splitting:** /a/ became /æ/ when followed by a palatal consonant."
+    )
 
     ae = get_vowel("æ")
     new_words: List[str] = []
@@ -213,11 +210,10 @@ def vowel_splitting_stress_diphthongization(
     )
     replacements = [get_vowel(character) for character in target_symbols]
 
-    desc_title = "**Vowel Splitting:** "
-    desc_changes = (
-        f"/{original_symbol}/ became /{target_symbols}/ in stressed syllables."
+    description = (
+        f"**Vowel Splitting:** /{original_symbol}/ became /{target_symbols}/ "
+        "in stressed syllables."
     )
-    description = desc_title + desc_changes
 
     new_words: List[str] = []
     for original in lang.words:
