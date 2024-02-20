@@ -1,7 +1,7 @@
 from typing import Callable, Dict, List, Optional, Tuple
 import random
 from language.classes import Language
-from phonemes.consonants import Consonant
+from phonemes.consonants import Consonant, find_similar_consonant
 from phonemes.vowels import get_vowel
 from phonemes.roots import Root
 from phonemes.vowels import Vowel, find_similar_vowel
@@ -44,6 +44,30 @@ def apply_vowel_change(
         analysis.rebuild()
         new_words.append(analysis.ipa)
     return new_words
+
+
+def voicing(lang: Language) -> Tuple[str, List[str]]:
+    desc_title = "**Voicing:** "
+    desc_changes = "Unvoiced consonants became voiced between vowels."
+    description = desc_title + desc_changes
+
+    new_words: List[str] = []
+    for original in lang.words:
+        root = Root(original)
+        for syllable_index, phoneme_index, phoneme in root.phoneme_index:
+            p = root.syllables[syllable_index].phonemes[phoneme_index]
+            if isinstance(p, Consonant) and p.voiced is False:
+                preceding = root.preceding(syllable_index, phoneme_index)
+                vowel_preceding = isinstance(preceding, Vowel)
+                following = root.following(syllable_index, phoneme_index)
+                vowel_following = isinstance(following, Vowel)
+                if vowel_preceding and vowel_following:
+                    voiced = find_similar_consonant(p, voiced=True)
+                    root.syllables[syllable_index].phonemes[phoneme_index] = voiced
+        root.rebuild()
+        new_words.append(root.ipa)
+
+    return description, new_words
 
 
 def vowel_change(
@@ -201,6 +225,7 @@ def change(lang: Language) -> Tuple[str, List[str]]:
     return apply_random_change(
         lang,
         {
+            "voicing": (9, voicing),
             "vowel_backing": (6, vowel_backing),
             "vowel_fronting": (6, vowel_fronting),
             "vowel_lengthening": (8, vowel_lengthening),
