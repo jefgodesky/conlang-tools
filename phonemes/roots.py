@@ -79,3 +79,10 @@ class Root:
         if index < 1:
             return None
         return self.phoneme_index[index - 1][2]
+
+    def following(self, syllable: int, phoneme: int) -> Optional[Consonant | Vowel]:
+        p = self.syllables[syllable].phonemes[phoneme]
+        index = self.phoneme_index.index((syllable, phoneme, p))
+        if index > len(self.phonemes) - 2:
+            return None
+        return self.phoneme_index[index + 1][2]

@@ -58,6 +58,14 @@ class TestRoot:
     def test_preceding_not_found(self, example_root):
         assert example_root.preceding(0, 0) is None
 
+    def test_following_found(self, example_root):
+        actual = example_root.following(0, 1)
+        assert isinstance(actual, Consonant)
+        assert actual.symbol == "b"
+
+    def test_following_not_found(self, example_root):
+        assert example_root.following(1, 1) is None
+
 
 class TestSyllable:
     def test_creates_syllable(self):
