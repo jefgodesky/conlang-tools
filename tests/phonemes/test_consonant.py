@@ -4,9 +4,21 @@ from phonemes.consonants import (
     Consonant,
     ConsonantManner,
     ConsonantPlace,
+    find_consonant,
     get_consonants,
     get_consonant,
 )
+
+
+class TestFindConsonant:
+    def test_find_consonant(self):
+        p = find_consonant(manner="stop", place="labial", voiced=False)
+        ng = find_consonant(manner="nasal", place="velar", voiced=True)
+        nope = find_consonant(manner="stop", place="pharyngeal", voiced=True)
+
+        assert p.symbol == "p"
+        assert ng.symbol == "ŋ"
+        assert nope is None
 
 
 class TestGetConsonants:

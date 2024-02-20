@@ -199,3 +199,20 @@ def get_consonant(symbol: str) -> Optional[Consonant]:
         return consonants[index]
     except ValueError:
         return None
+
+
+def find_consonant(
+    manner: ConsonantMannerTypes,
+    place: ConsonantPlaceTypes,
+    voiced: bool,
+) -> Optional[Consonant]:
+    consonants = get_consonants()
+    for consonant in consonants:
+        matches = [
+            consonant.manner == manner,
+            consonant.place == place,
+            consonant.voiced == voiced,
+        ]
+        if all(matches):
+            return consonant
+    return None
