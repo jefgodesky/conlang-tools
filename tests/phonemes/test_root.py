@@ -25,6 +25,11 @@ class TestRoot:
         root.rebuild()
         assert root.ipa == "/ˈka.la/"
 
+    def test_phonemes(self):
+        root = Root("/ˈba.ba/")
+        symbols = [p.symbol for p in root.phonemes]
+        assert "".join(symbols) == "baba"
+
 
 class TestSyllable:
     def test_creates_syllable(self):

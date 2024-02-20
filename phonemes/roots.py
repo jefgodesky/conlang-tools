@@ -54,6 +54,10 @@ class Root:
     def unbracketed(self):
         return self.ipa.strip("/[]")
 
+    @property
+    def phonemes(self) -> List[Consonant | Vowel]:
+        return [phoneme for syllable in self.syllables for phoneme in syllable.phonemes]
+
     def rebuild(self):
         for syllable in self.syllables:
             syllable.rebuild()
