@@ -30,20 +30,30 @@ def get_affected_syllables(syllables: Optional[str] = None) -> str:
     return syllables if syllables is not None else rand_all
 
 
-def apply_vowel_change(
-    lang: Language, mapping: Dict[str, Vowel], affected: str, affected_keys: List[str]
-) -> List[str]:
+def devoicing(lang: Language) -> Tuple[str, List[str]]:
+    desc_title = "**Devoicing:** "
+    desc_changes = "Voiced consonants became voiceless "
+    desc_circ = "at the end of words or next to voiceless consonants."
+    description = desc_title + desc_changes + desc_circ
+
     new_words: List[str] = []
     for original in lang.words:
-        analysis = Root(original)
-        for syllable in analysis.syllables:
-            if affected == "all" or syllable.stressed or len(analysis.syllables) < 2:
-                for index, phoneme in enumerate(syllable.phonemes):
-                    if phoneme.symbol in affected_keys:
-                        syllable.phonemes[index] = mapping[phoneme.symbol]
-        analysis.rebuild()
-        new_words.append(analysis.ipa)
-    return new_words
+        root = Root(original)
+        for syllable_index, phoneme_index, phoneme in root.phoneme_index:
+            p = root.syllables[syllable_index].phonemes[phoneme_index]
+            if isinstance(p, Consonant) and p.voiced is True:
+                following = root.following(syllable_index, phoneme_index)
+                neighbors = [root.preceding(syllable_index, phoneme_index), following]
+                voiceless_neighbors = [
+                    isinstance(n, Consonant) and n.voiced is False for n in neighbors
+                ]
+                if any(voiceless_neighbors) or following is None:
+                    voiceless = find_similar_consonant(p, voiced=False)
+                    root.syllables[syllable_index].phonemes[phoneme_index] = voiceless
+        root.rebuild()
+        new_words.append(root.ipa)
+
+    return description, new_words
 
 
 def voicing(lang: Language) -> Tuple[str, List[str]]:
@@ -68,6 +78,22 @@ def voicing(lang: Language) -> Tuple[str, List[str]]:
         new_words.append(root.ipa)
 
     return description, new_words
+
+
+def apply_vowel_change(
+    lang: Language, mapping: Dict[str, Vowel], affected: str, affected_keys: List[str]
+) -> List[str]:
+    new_words: List[str] = []
+    for original in lang.words:
+        analysis = Root(original)
+        for syllable in analysis.syllables:
+            if affected == "all" or syllable.stressed or len(analysis.syllables) < 2:
+                for index, phoneme in enumerate(syllable.phonemes):
+                    if phoneme.symbol in affected_keys:
+                        syllable.phonemes[index] = mapping[phoneme.symbol]
+        analysis.rebuild()
+        new_words.append(analysis.ipa)
+    return new_words
 
 
 def vowel_change(
@@ -225,6 +251,7 @@ def change(lang: Language) -> Tuple[str, List[str]]:
     return apply_random_change(
         lang,
         {
+            "devoicing": (10, devoicing),
             "voicing": (9, voicing),
             "vowel_backing": (6, vowel_backing),
             "vowel_fronting": (6, vowel_fronting),

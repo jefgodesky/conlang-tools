@@ -4,6 +4,7 @@ from soundchanges.changes import (
     change,
     describe_vowel_change,
     get_affected_syllables,
+    devoicing,
     voicing,
     vowel_backing,
     vowel_fronting,
@@ -64,6 +65,26 @@ class TestGetAffectedSyllables:
 
     def test_random(self):
         assert get_affected_syllables() in ["all", "stressed"]
+
+
+class TestDevoicing:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1}, coda={"b": 1, "bt": 1})
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈba.ba/", "/bab/", "/babt/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_devoicing(self, example_language):
+        description, words = devoicing(example_language)
+        exdesc_title = "**Devoicing:** "
+        exdesc_changes = "Voiced consonants became voiceless "
+        exdesc_circ = "at the end of words or next to voiceless consonants."
+        expected_desc = exdesc_title + exdesc_changes + exdesc_circ
+        assert description == expected_desc
+        assert words[0] == "/ˈba.ba/"
+        assert words[1] == "/bap/"
+        assert words[2] == "/bapt/"
 
 
 class TestVoicing:
