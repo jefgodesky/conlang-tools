@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from phonemes.consonants import Consonant
 from phonemes.vowels import Vowel
 from phonemes.phonemes import get_phonemes
@@ -72,3 +72,10 @@ class Root:
 
         syllables = [s.unbracketed for s in self.syllables]
         self.ipa = f"/{'.'.join(syllables)}/"
+
+    def preceding(self, syllable: int, phoneme: int) -> Optional[Consonant | Vowel]:
+        p = self.syllables[syllable].phonemes[phoneme]
+        index = self.phoneme_index.index((syllable, phoneme, p))
+        if index < 1:
+            return None
+        return self.phoneme_index[index - 1][2]

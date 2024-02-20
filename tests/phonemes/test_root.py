@@ -50,6 +50,14 @@ class TestRoot:
             assert isinstance(item[2], expectations[i][2])
             assert item[2].symbol == expectations[i][3]
 
+    def test_preceding_found(self, example_root):
+        actual = example_root.preceding(1, 0)
+        assert isinstance(actual, Vowel)
+        assert actual.symbol == "a"
+
+    def test_preceding_not_found(self, example_root):
+        assert example_root.preceding(0, 0) is None
+
 
 class TestSyllable:
     def test_creates_syllable(self):
