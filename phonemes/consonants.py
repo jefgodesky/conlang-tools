@@ -216,3 +216,19 @@ def find_consonant(
         if all(matches):
             return consonant
     return None
+
+
+def find_similar_consonant(
+    consonant: Consonant,
+    manner: Optional[ConsonantMannerTypes] = None,
+    place: Optional[ConsonantPlaceTypes] = None,
+    voiced: Optional[bool] = None,
+) -> Optional[Consonant]:
+    manner_arg = manner if manner is not None else consonant.manner.value
+    place_arg = place if place is not None else consonant.place.value
+    voiced_arg = voiced if voiced is not None else consonant.voiced
+    return find_consonant(
+        manner=manner_arg,
+        place=place_arg,
+        voiced=voiced_arg,
+    )

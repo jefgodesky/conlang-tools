@@ -5,6 +5,7 @@ from phonemes.consonants import (
     ConsonantManner,
     ConsonantPlace,
     find_consonant,
+    find_similar_consonant,
     get_consonants,
     get_consonant,
 )
@@ -18,6 +19,20 @@ class TestFindConsonant:
 
         assert p.symbol == "p"
         assert ng.symbol == "ŋ"
+        assert nope is None
+
+
+class TestFindSimilarConsonant:
+    def test_find_similar_consonant(self):
+        p = get_consonant("p")
+        b = find_similar_consonant(p, voiced=True)
+        t = find_similar_consonant(p, place="alveolar-central")
+        f = find_similar_consonant(p, manner="fricative")
+        nope = find_similar_consonant(p, manner="liquid")
+
+        assert b.symbol == "b"
+        assert t.symbol == "t"
+        assert f.symbol == "f"
         assert nope is None
 
 
