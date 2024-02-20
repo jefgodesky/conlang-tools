@@ -1,6 +1,8 @@
 from typing import Dict, List, Optional, Tuple
 import random
 from language.classes import Language
+from phonemes.consonants import Consonant
+from phonemes.vowels import get_vowel
 from phonemes.roots import Root
 from phonemes.vowels import Vowel, find_similar_vowel
 from utils.methods import oxford_comma, get_choices
@@ -106,6 +108,28 @@ def vowel_shortening(
     return description, new_words
 
 
+def vowel_splitting_palatalization(lang: Language) -> Tuple[str, List[str]]:
+    desc_title = "**Vowel Splitting:** "
+    desc_changes = "/a/ became /æ/ when followed by a palatal consonant."
+    description = desc_title + desc_changes
+
+    ae = get_vowel("æ")
+    new_words: List[str] = []
+    for original in lang.words:
+        root = Root(original)
+        for item in root.phoneme_index:
+            is_a = item[2].symbol == "a"
+            following = root.following(item[0], item[1])
+            following_consonant = isinstance(following, Consonant)
+            following_palatal = following_consonant and following.place == "palatal"
+            if is_a and following_palatal:
+                root.syllables[item[0]].phonemes[item[1]] = ae
+        root.rebuild()
+        new_words.append(root.ipa)
+
+    return description, new_words
+
+
 def change(lang: Language) -> Tuple[str, List[str]]:
     sound_changes = {
         "vowel_backing": (6, vowel_backing),
@@ -114,6 +138,7 @@ def change(lang: Language) -> Tuple[str, List[str]]:
         "vowel_lowering": (7, vowel_lowering),
         "vowel_raising": (7, vowel_raising),
         "vowel_shortening": (8, vowel_shortening),
+        "vowel_splitting_palatalization": (2, vowel_splitting_palatalization),
     }
 
     choices = get_choices({key: wgt for key, (wgt, _) in sound_changes.items()})

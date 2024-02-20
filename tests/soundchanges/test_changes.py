@@ -10,6 +10,7 @@ from soundchanges.changes import (
     vowel_lowering,
     vowel_raising,
     vowel_shortening,
+    vowel_splitting_palatalization,
 )
 
 
@@ -280,6 +281,24 @@ class TestVowelShortening:
         stressed_syllables = "stressed syllables" in description
         all_syllables = "all syllables" in description
         assert stressed_syllables or all_syllables
+
+
+class TestVowelSplittingPalatalization:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a:": 1}, coda={})
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/baʧ/", "/baʃ/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_vowel_splitting_palatalization(self, example_language):
+        description, words = vowel_splitting_palatalization(example_language)
+        exdesc_title = "**Vowel Splitting:** "
+        exdesc_changes = "/a/ became /æ/ when followed by a palatal consonant."
+        expected_desc = exdesc_title + exdesc_changes
+        assert description == expected_desc
+        assert words[0] == "/bæʧ/"
+        assert words[1] == "/baʃ/"
 
 
 class TestChange:
