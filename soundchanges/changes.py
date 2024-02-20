@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Tuple
 import random
 from language.classes import Language
 from phonemes.consonants import Consonant
@@ -6,6 +6,9 @@ from phonemes.vowels import get_vowel
 from phonemes.roots import Root
 from phonemes.vowels import Vowel, find_similar_vowel
 from utils.methods import oxford_comma, get_choices
+
+
+SoundChangeFunction = Callable[[Language, ...], Tuple[str, List[str]]]
 
 
 def describe_vowel_change(
@@ -108,6 +111,16 @@ def vowel_shortening(
     return description, new_words
 
 
+def vowel_splitting(lang: Language) -> Tuple[str, List[str]]:
+    return apply_random_change(
+        lang,
+        {
+            "palatalization": (1, vowel_splitting_palatalization),
+            "diphthongization": (3, vowel_splitting_stress_diphthongization),
+        },
+    )
+
+
 def vowel_splitting_palatalization(lang: Language) -> Tuple[str, List[str]]:
     desc_title = "**Vowel Splitting:** "
     desc_changes = "/a/ became /æ/ when followed by a palatal consonant."
@@ -172,24 +185,28 @@ def vowel_splitting_stress_diphthongization(
     return description, new_words
 
 
-def change(lang: Language) -> Tuple[str, List[str]]:
-    # fmt: off
-    sound_changes = {
-        "vowel_backing": (6, vowel_backing),
-        "vowel_fronting": (6, vowel_fronting),
-        "vowel_lengthening": (8, vowel_lengthening),
-        "vowel_lowering": (7, vowel_lowering),
-        "vowel_raising": (7, vowel_raising),
-        "vowel_shortening": (8, vowel_shortening),
-        "vowel_splitting_palatalization": (2, vowel_splitting_palatalization),
-        "vowel_splitting_stress_diphthongization": (2, vowel_splitting_stress_diphthongization),
-    }
-    # fmt: on
-
-    choices = get_choices({key: wgt for key, (wgt, _) in sound_changes.items()})
-    sound_change = random.choice(choices)
-    if sound_change in sound_changes:
-        _, change_fn = sound_changes[sound_change]
+def apply_random_change(
+    lang: Language, choices: Dict[str, Tuple[int, SoundChangeFunction]]
+) -> Tuple[str, List[str]]:
+    weighted = get_choices({key: wgt for key, (wgt, _) in choices.items()})
+    chosen = random.choice(weighted)
+    if chosen in choices:
+        _, change_fn = choices[chosen]
         return change_fn(lang)
     else:
         return "No change.", lang.words
+
+
+def change(lang: Language) -> Tuple[str, List[str]]:
+    return apply_random_change(
+        lang,
+        {
+            "vowel_backing": (6, vowel_backing),
+            "vowel_fronting": (6, vowel_fronting),
+            "vowel_lengthening": (8, vowel_lengthening),
+            "vowel_lowering": (7, vowel_lowering),
+            "vowel_raising": (7, vowel_raising),
+            "vowel_shortening": (8, vowel_shortening),
+            "vowel_splitting": (8, vowel_splitting),
+        },
+    )

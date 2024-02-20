@@ -10,6 +10,7 @@ from soundchanges.changes import (
     vowel_lowering,
     vowel_raising,
     vowel_shortening,
+    vowel_splitting,
     vowel_splitting_palatalization,
     vowel_splitting_stress_diphthongization,
 )
@@ -282,6 +283,19 @@ class TestVowelShortening:
         stressed_syllables = "stressed syllables" in description
         all_syllables = "all syllables" in description
         assert stressed_syllables or all_syllables
+
+
+class TestVowelSplitting:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a:": 1}, coda={})
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/baʧ/", "/baʃ/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_vowel_splitting(self, example_language):
+        description, _ = vowel_splitting(example_language)
+        assert "Vowel Splitting" in description
 
 
 class TestVowelSplittingPalatalization:
