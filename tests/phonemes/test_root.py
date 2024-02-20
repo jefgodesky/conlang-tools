@@ -1,5 +1,7 @@
 import pytest
 
+from phonemes.consonants import Consonant
+from phonemes.vowels import Vowel
 from phonemes.phonemes import get_phoneme
 from phonemes.roots import Root, Syllable
 
@@ -32,6 +34,21 @@ class TestRoot:
     def test_phonemes(self, example_root):
         symbols = [p.symbol for p in example_root.phonemes]
         assert "".join(symbols) == "baba"
+
+    def test_phoneme_index(self, example_root):
+        index = example_root.phoneme_index
+        expectations = [
+            (0, 0, Consonant, "b"),
+            (0, 1, Vowel, "a"),
+            (1, 0, Consonant, "b"),
+            (1, 1, Vowel, "a"),
+        ]
+
+        for i, item in enumerate(index):
+            assert item[0] == expectations[i][0]
+            assert item[1] == expectations[i][1]
+            assert isinstance(item[2], expectations[i][2])
+            assert item[2].symbol == expectations[i][3]
 
 
 class TestSyllable:

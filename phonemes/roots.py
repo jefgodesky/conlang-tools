@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 from phonemes.consonants import Consonant
 from phonemes.vowels import Vowel
 from phonemes.phonemes import get_phonemes
@@ -57,6 +57,14 @@ class Root:
     @property
     def phonemes(self) -> List[Consonant | Vowel]:
         return [phoneme for syllable in self.syllables for phoneme in syllable.phonemes]
+
+    @property
+    def phoneme_index(self) -> List[Tuple[int, int, Consonant | Vowel]]:
+        index: List[Tuple[int, int, Consonant | Vowel]] = []
+        for syllable_index, syllable in enumerate(self.syllables):
+            for phoneme_index, phoneme in enumerate(syllable.phonemes):
+                index.append((syllable_index, phoneme_index, phoneme))
+        return index
 
     def rebuild(self):
         for syllable in self.syllables:
