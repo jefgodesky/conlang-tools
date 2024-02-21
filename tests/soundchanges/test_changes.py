@@ -10,6 +10,7 @@ from soundchanges.changes import (
     describe_vowel_change,
     get_affected_syllables,
     devoicing,
+    devoicing_assimilation,
     erosion_coda_stops_followed_by_consonant,
     erosion_h_between_vowels,
     erosion_ui_becomes_jw_vowel_pair,
@@ -300,6 +301,30 @@ class TestDevoicing:
         assert words[0] == "/ˈba.ba/"
         assert words[1] == "/bap/"
         assert words[2] == "/bapt/"
+
+
+class TestDevoicingAssimilation:
+    @pytest.fixture
+    def example_language(self):
+        consonants = {"p": 1, "b": 1, "t": 1, "d": 1, "g": 1}
+        pt = Phonotactics(onset=consonants, nucleus={"a": 1}, coda=consonants)
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈba.ba/", "/ˈbapd.ab/", "/ba/", "/bapd/", "/babt/", "/bagt/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_devoicing_assimilation(self, example_language):
+        description, words = devoicing_assimilation(example_language)
+        expected_description = (
+            "**Devoicing Assimilation:** Voiced consonants became voiceless "
+            "when they occurred next to voiceless consonants."
+        )
+        assert description == expected_description
+        assert words[0] == "/ˈba.ba/"
+        assert words[1] == "/ˈbapt.ab/"
+        assert words[2] == "/ba/"
+        assert words[3] == "/bapt/"
+        assert words[4] == "/bapt/"
+        assert words[5] == "/bagt/"
 
 
 class TestLabialAssimilation:

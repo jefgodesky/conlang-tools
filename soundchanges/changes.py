@@ -74,6 +74,29 @@ def devoicing(lang: Language) -> Tuple[str, List[str]]:
     return description, new_words
 
 
+def devoicing_assimilation(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Devoicing Assimilation:** Voiced consonants became voiceless "
+        "when they occurred next to voiceless consonants."
+    )
+
+    consonants, _ = lang.take_inventory()
+
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        if not isinstance(phoneme, Consonant) or phoneme.voiced is False:
+            return False
+        neighbors = root.neighbors(si, pi)
+        voiceless = [isinstance(n, Consonant) and n.voiced is False for n in neighbors]
+        return any(voiceless)
+
+    def transformer(phoneme: Consonant) -> List[Consonant]:
+        repl = find_similar_consonant(phoneme, voiced=False)
+        return [repl if repl is not None and repl in consonants else phoneme]
+
+    new_words = apply_change(lang, evaluator, transformer)
+    return description, new_words
+
+
 def phonetic_erosion(lang: Language) -> Tuple[str, List[str]]:
     return apply_random_change(
         lang,
@@ -521,6 +544,7 @@ def change(lang: Language) -> Tuple[str, List[str]]:
         lang,
         {
             "devoicing": (10, devoicing),
+            "devoicing_assimilation": (5, devoicing_assimilation),
             "phonetic_erosion": (10, phonetic_erosion),
             "labial_assimilation": (3, labial_assimilation),
             "nasal_assimilation": (5, nasal_assimilation),
