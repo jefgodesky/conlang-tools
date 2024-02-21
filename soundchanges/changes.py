@@ -1,7 +1,7 @@
 from typing import Callable, Dict, List, Optional, Tuple
 import random
 from language.classes import Language
-from phonemes.consonants import Consonant, find_similar_consonant
+from phonemes.consonants import Consonant, find_similar_consonant, get_consonant
 from phonemes.vowels import get_vowel
 from phonemes.roots import Root
 from phonemes.vowels import Vowel, find_similar_vowel
@@ -84,6 +84,7 @@ def phonetic_erosion(lang: Language) -> Tuple[str, List[str]]:
             "word_final_diphthongs": (1, erosion_word_final_diphthongs),
             "word_final_short_vowels": (3, erosion_word_final_short_vowels),
             "word_final_shortening": (3, erosion_word_final_shortening),
+            "ui_becomes_jw_vowel_pair": (2, erosion_ui_becomes_jw_vowel_pair),
         },
     )
 
@@ -150,6 +151,27 @@ def erosion_h_between_vowels(lang: Language) -> Tuple[str, List[str]]:
 
     def transformer(phoneme: Consonant) -> List[Consonant]:
         return []
+
+    new_words = apply_change(lang, evaluator, transformer)
+    return description, new_words
+
+
+def erosion_ui_becomes_jw_vowel_pair(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Phonetic Erosion:** /i/ became /j/ and /u/ became /w/ "
+        "when followed by another vowel."
+    )
+
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        if phoneme.symbol != "i" and phoneme.symbol != "u":
+            return False
+
+        following = root.following(si, pi)
+        return isinstance(following, Vowel)
+
+    def transformer(phoneme: Consonant) -> List[Consonant]:
+        symbol = "j" if phoneme.symbol == "i" else "w"
+        return [get_consonant(symbol)]
 
     new_words = apply_change(lang, evaluator, transformer)
     return description, new_words

@@ -12,6 +12,7 @@ from soundchanges.changes import (
     devoicing,
     erosion_coda_stops_followed_by_consonant,
     erosion_h_between_vowels,
+    erosion_ui_becomes_jw_vowel_pair,
     erosion_voiceless_obstruents,
     erosion_word_final_diphthongs,
     erosion_word_final_short_vowels,
@@ -133,6 +134,41 @@ class TestErosionHBetweenVowels:
         assert words[1] == "/ˈba.a/"
         assert words[2] == "/ba/"
         assert words[3] == "/ha/"
+
+
+class TestErosionIUBecomesJWVowelPair:
+    @pytest.fixture
+    def example_language(self):
+        nucleus = {"a": 1, "i": 1, "u": 1}
+        pt = Phonotactics(onset={"b": 1}, nucleus=nucleus, coda={})
+        pl = Phonology(stress="initial", openness=1)
+        words = [
+            "/ˈbu.bi/",
+            "/ˈbia.bi/",
+            "/ˈbua.bu/",
+            "/ba/",
+            "/bia/",
+            "/bua/",
+            "/bi/",
+            "/bu/",
+        ]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_erosion_ui_becomes_jw_vowel_pair(self, example_language):
+        description, words = erosion_ui_becomes_jw_vowel_pair(example_language)
+        expected_description = (
+            "**Phonetic Erosion:** /i/ became /j/ and /u/ became /w/ "
+            "when followed by another vowel."
+        )
+        assert description == expected_description
+        assert words[0] == "/ˈbu.bi/"
+        assert words[1] == "/ˈbja.bi/"
+        assert words[2] == "/ˈbwa.bu/"
+        assert words[3] == "/ba/"
+        assert words[4] == "/bja/"
+        assert words[5] == "/bwa/"
+        assert words[6] == "/bi/"
+        assert words[7] == "/bu/"
 
 
 class TestErosionVoicelessObstruents:
