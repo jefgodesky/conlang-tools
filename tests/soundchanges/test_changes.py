@@ -18,6 +18,7 @@ from soundchanges.changes import (
     erosion_word_final_diphthongs,
     erosion_word_final_short_vowels,
     erosion_word_final_shortening,
+    nasal_assimilation,
     voicing,
     vowel_backing,
     vowel_fronting,
@@ -296,6 +297,28 @@ class TestDevoicing:
         assert words[0] == "/ˈba.ba/"
         assert words[1] == "/bap/"
         assert words[2] == "/bapt/"
+
+
+class TestNasalAssimilation:
+    @pytest.fixture
+    def example_language(self):
+        consonants = {"b": 1, "m": 1, "n": 1, "d": 1, "k": 1}
+        pt = Phonotactics(onset=consonants, nucleus={"a": 1}, coda=consonants)
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈbna.da/", "/amd/", "/amk/", "/ba/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_nasal_assimilation(self, example_language):
+        description, words = nasal_assimilation(example_language)
+        expected_description = (
+            "**Nasal Assimilation:** Non-nasal consonants became nasal "
+            "consonants when they occurred next to nasal consonants."
+        )
+        assert description == expected_description
+        assert words[0] == "/ˈmna.da/"
+        assert words[1] == "/amn/"
+        assert words[2] == "/amk/"
+        assert words[3] == "/ba/"
 
 
 class TestVoicing:
