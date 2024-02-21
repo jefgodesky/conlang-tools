@@ -27,6 +27,17 @@ def get_affected_syllables(syllables: Optional[str] = None) -> str:
     return syllables if syllables is not None else rand_all
 
 
+def replace(
+    root: Root,
+    syllable_index: int,
+    phoneme_index: int,
+    replacements: List[Consonant | Vowel],
+) -> None:
+    before = root.syllables[syllable_index].phonemes[:phoneme_index]
+    after = root.syllables[syllable_index].phonemes[phoneme_index + 1 :]
+    root.syllables[syllable_index].phonemes = before + replacements + after
+
+
 def devoicing(lang: Language) -> Tuple[str, List[str]]:
     description = (
         "**Devoicing:** Voiced consonants became voiceless "
@@ -58,6 +69,7 @@ def phonetic_erosion(lang: Language) -> Tuple[str, List[str]]:
         lang,
         {
             "voiceless_obstruents": (1, erosion_voiceless_obstruents),
+            "h_between_vowels": (5, erosion_h_between_vowels),
         },
     )
 
@@ -87,9 +99,29 @@ def erosion_voiceless_obstruents(lang: Language) -> Tuple[str, List[str]]:
                             for n in neighbors
                         ]
                         if all(obs):
-                            before = syllable.phonemes[:phoneme_index]
-                            after = syllable.phonemes[phoneme_index + 1 :]
-                            syllable.phonemes = before + after
+                            replace(root, syllable_index, phoneme_index, [])
+        root.rebuild()
+        new_words.append(root.ipa)
+
+    return description, new_words
+
+
+def erosion_h_between_vowels(lang: Language) -> Tuple[str, List[str]]:
+    description = "**Phonetic Erosion:** /h/ was dropped between vowels."
+
+    new_words: List[str] = []
+    for original in lang.words:
+        root = Root(original)
+        for syllable_index, syllable in enumerate(root.syllables):
+            for phoneme_index, phoneme in enumerate(syllable.phonemes):
+                if phoneme.symbol == "h":
+                    neighbors = [
+                        root.preceding(syllable_index, phoneme_index),
+                        root.following(syllable_index, phoneme_index),
+                    ]
+                    vowels = [isinstance(n, Vowel) for n in neighbors]
+                    if all(vowels):
+                        replace(root, syllable_index, phoneme_index, [])
         root.rebuild()
         new_words.append(root.ipa)
 
@@ -259,13 +291,11 @@ def vowel_splitting_stress_diphthongization(
     new_words: List[str] = []
     for original in lang.words:
         root = Root(original)
-        for syllable in root.syllables:
+        for syllable_index, syllable in enumerate(root.syllables):
             if syllable.stressed:
                 for index, phoneme in enumerate(syllable.phonemes):
                     if phoneme.symbol == original_symbol:
-                        before = syllable.phonemes[:index]
-                        after = syllable.phonemes[index + 1 :]
-                        syllable.phonemes = before + replacements + after
+                        replace(root, syllable_index, index, replacements)
         root.rebuild()
         new_words.append(root.ipa)
 
