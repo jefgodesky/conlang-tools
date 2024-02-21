@@ -31,6 +31,16 @@ class TestRoot:
         example_root.rebuild()
         assert example_root.ipa == "/ˈka.la/"
 
+    def test_rebuild_cleans_up_orphan_syllables(self):
+        r1 = Root("/ˈba.ba.b/")
+        r2 = Root("/ˈba.b/")
+
+        r1.rebuild()
+        r2.rebuild()
+
+        assert r1.ipa == "/ˈba.bab/"
+        assert r2.ipa == "/bab/"
+
     def test_phonemes(self, example_root):
         symbols = [p.symbol for p in example_root.phonemes]
         assert "".join(symbols) == "baba"

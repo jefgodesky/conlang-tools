@@ -8,6 +8,7 @@ from soundchanges.changes import (
     erosion_coda_stops_followed_by_consonant,
     erosion_h_between_vowels,
     erosion_voiceless_obstruents,
+    erosion_word_final_short_vowels,
     voicing,
     vowel_backing,
     vowel_fronting,
@@ -126,10 +127,29 @@ class TestErosionVoicelessObstruents:
             "syllables."
         )
         assert description == expected_description
-        assert words[0] == "/ˈba.pt/"
+        assert words[0] == "/bapt/"
         assert words[1] == "/pat/"
         assert words[2] == "/ˈba.bat/"
         assert words[3] == "/ˈba.m̥at/"
+
+
+class TestErosionWordFinalShortVowels:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1}, coda={"b": 1})
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈba.ba/", "/ba/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_erosion_word_final_short_vowels(self, example_language):
+        description, words = erosion_word_final_short_vowels(example_language)
+        expected_description = (
+            "**Phonetic Erosion:** Short vowels that occurred as the last "
+            "sound in a word were dropped."
+        )
+        assert description == expected_description
+        assert words[0] == "/bab/"
+        assert words[1] == "/b/"
 
 
 class TestDevoicing:

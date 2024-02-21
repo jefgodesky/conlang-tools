@@ -67,8 +67,21 @@ class Root:
         return index
 
     def rebuild(self):
-        for syllable in self.syllables:
+        for index, syllable in enumerate(self.syllables):
             syllable.rebuild()
+
+            # If we end up with a syllable that's just consonants and no
+            # vowels, glom it onto the syllable that occurs before it and
+            # remove it from the root.
+
+            consonants = [isinstance(p, Consonant) for p in syllable.phonemes]
+            if all(consonants) and index > 0:
+                prev = self.syllables[index - 1]
+                prev.phonemes = prev.phonemes + syllable.phonemes
+                self.syllables = self.syllables[:index] + self.syllables[index + 1 :]
+                if len(self.syllables) < 2:
+                    self.syllables[0].stressed = False
+                prev.rebuild()
 
         syllables = [s.unbracketed for s in self.syllables]
         self.ipa = f"/{'.'.join(syllables)}/"

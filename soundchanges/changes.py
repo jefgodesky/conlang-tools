@@ -71,6 +71,7 @@ def phonetic_erosion(lang: Language) -> Tuple[str, List[str]]:
             "voiceless_obstruents": (1, erosion_voiceless_obstruents),
             "h_between_vowels": (5, erosion_h_between_vowels),
             "coda_stops": (4, erosion_coda_stops_followed_by_consonant),
+            "word_final_short_vowels": (3, erosion_word_final_short_vowels),
         },
     )
 
@@ -145,6 +146,24 @@ def erosion_h_between_vowels(lang: Language) -> Tuple[str, List[str]]:
                     vowels = [isinstance(n, Vowel) for n in neighbors]
                     if all(vowels):
                         replace(root, syllable_index, phoneme_index, [])
+        root.rebuild()
+        new_words.append(root.ipa)
+
+    return description, new_words
+
+
+def erosion_word_final_short_vowels(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Phonetic Erosion:** Short vowels that occurred as the last "
+        "sound in a word were dropped."
+    )
+
+    new_words: List[str] = []
+    for original in lang.words:
+        root = Root(original)
+        last = root.phoneme_index[-1]
+        if isinstance(last[2], Vowel) and last[2].long is False:
+            replace(root, last[0], last[1], [])
         root.rebuild()
         new_words.append(root.ipa)
 
