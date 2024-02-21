@@ -25,6 +25,16 @@ class TestRoot:
         assert example_root.syllables[0].stressed is True
         assert example_root.syllables[1].stressed is False
 
+    def test_stresses_stressed_syllables(self, example_root):
+        assert example_root.stresses(0) is True
+
+    def test_does_not_stress_unstressed_syllables(self, example_root):
+        assert example_root.stresses(1) is False
+
+    def test_stresses_isolated_syllables(self):
+        root = Root("/ba/")
+        assert root.stresses(0) is True
+
     def test_rebuild(self, example_root):
         example_root.syllables[0].phonemes[0] = get_phoneme("k")
         example_root.syllables[1].phonemes[0] = get_phoneme("l")

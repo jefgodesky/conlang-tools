@@ -66,6 +66,11 @@ class Root:
                 index.append((syllable_index, phoneme_index, phoneme))
         return index
 
+    def stresses(self, syllable_index: int) -> bool:
+        if len(self.syllables) < 2:
+            return True
+        return self.syllables[syllable_index].stressed
+
     def rebuild(self):
         for index, syllable in enumerate(self.syllables):
             syllable.rebuild()
