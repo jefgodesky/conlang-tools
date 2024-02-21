@@ -301,6 +301,29 @@ def nasal_assimilation(lang: Language) -> Tuple[str, List[str]]:
     return description, new_words
 
 
+def velar_assimilation(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Velar Assimilation:** Non-velar consonants became velar "
+        "consonants when they occurred next to velar consonants."
+    )
+
+    consonants, _ = lang.take_inventory()
+
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        if not isinstance(phoneme, Consonant) or phoneme.place == "velar":
+            return False
+        neighbors = root.neighbors(si, pi)
+        velars = [isinstance(n, Consonant) and n.place == "velar" for n in neighbors]
+        return any(velars)
+
+    def transformer(phoneme: Consonant) -> List[Consonant]:
+        velar = find_similar_consonant(phoneme, place="velar")
+        return [velar if velar is not None and velar in consonants else phoneme]
+
+    new_words = apply_change(lang, evaluator, transformer)
+    return description, new_words
+
+
 def voicing(lang: Language) -> Tuple[str, List[str]]:
     description = "**Voicing:** Unvoiced consonants became voiced between vowels."
 
@@ -478,6 +501,7 @@ def change(lang: Language) -> Tuple[str, List[str]]:
             "phonetic_erosion": (10, phonetic_erosion),
             "labial_assimilation": (3, labial_assimilation),
             "nasal_assimilation": (5, nasal_assimilation),
+            "velar_assimilation": (4, velar_assimilation),
             "voicing": (9, voicing),
             "vowel_backing": (6, vowel_backing),
             "vowel_fronting": (6, vowel_fronting),
