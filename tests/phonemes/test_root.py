@@ -86,6 +86,34 @@ class TestRoot:
     def test_following_not_found(self, example_root):
         assert example_root.following(1, 1) is None
 
+    def test_neighbors_both_found(self, example_root):
+        neighbors = example_root.neighbors(0, 1)
+        assert len(neighbors) == 2
+        for neighbor in neighbors:
+            assert isinstance(neighbor, Consonant)
+            assert neighbor.symbol == "b"
+
+    def test_neighbors_preceding_found(self, example_root):
+        neighbors = example_root.neighbors(1, 1)
+        assert len(neighbors) == 2
+        assert isinstance(neighbors[0], Consonant)
+        assert neighbors[0].symbol == "b"
+        assert neighbors[1] is None
+
+    def test_neighbors_following_found(self, example_root):
+        neighbors = example_root.neighbors(0, 0)
+        assert len(neighbors) == 2
+        assert neighbors[0] is None
+        assert isinstance(neighbors[1], Vowel)
+        assert neighbors[1].symbol == "a"
+
+    def test_neighbors_not_found(self):
+        root = Root("/a/")
+        neighbors = root.neighbors(0, 0)
+        assert len(neighbors) == 2
+        assert neighbors[0] is None
+        assert neighbors[1] is None
+
 
 class TestSyllable:
     def test_creates_syllable(self):

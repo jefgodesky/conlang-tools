@@ -104,3 +104,11 @@ class Root:
         if index > len(self.phonemes) - 2:
             return None
         return self.phoneme_index[index + 1][2]
+
+    def neighbors(
+        self, syllable: int, phoneme: int
+    ) -> List[Optional[Consonant | Vowel]]:
+        return [
+            self.preceding(syllable, phoneme),
+            self.following(syllable, phoneme),
+        ]
