@@ -8,6 +8,7 @@ from soundchanges.changes import (
     erosion_coda_stops_followed_by_consonant,
     erosion_h_between_vowels,
     erosion_voiceless_obstruents,
+    erosion_word_final_diphthongs,
     erosion_word_final_short_vowels,
     erosion_word_final_shortening,
     voicing,
@@ -132,6 +133,29 @@ class TestErosionVoicelessObstruents:
         assert words[1] == "/pat/"
         assert words[2] == "/ˈba.bat/"
         assert words[3] == "/ˈba.m̥at/"
+
+
+class TestErosionWordFinalDiphthongs:
+    @pytest.fixture
+    def example_language(self):
+        nucleus = {"a": 1, "a:": 1, "ao": 1}
+        pt = Phonotactics(onset={"b": 1}, nucleus=nucleus, coda={"b": 1})
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈba.ba/", "/ˈba.bao/", "/ba/", "/bao/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_erosion_word_final_diphthongs(self, example_language):
+        description, words = erosion_word_final_diphthongs(example_language)
+        expected_description = (
+            "**Phonetic Erosion:** Diphthongs that occurred at the end of "
+            "a word were simplified into the long-vowel form of the first "
+            "vowel in the original diphthong."
+        )
+        assert description == expected_description
+        assert words[0] == "/ˈba.ba/"
+        assert words[1] == "/ˈba.ba:/"
+        assert words[2] == "/ba/"
+        assert words[3] == "/ba:/"
 
 
 class TestErosionWordFinalShortVowels:

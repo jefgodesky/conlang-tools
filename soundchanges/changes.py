@@ -71,6 +71,7 @@ def phonetic_erosion(lang: Language) -> Tuple[str, List[str]]:
             "voiceless_obstruents": (1, erosion_voiceless_obstruents),
             "h_between_vowels": (5, erosion_h_between_vowels),
             "coda_stops": (4, erosion_coda_stops_followed_by_consonant),
+            "word_final_diphthongs": (1, erosion_word_final_diphthongs),
             "word_final_short_vowels": (3, erosion_word_final_short_vowels),
             "word_final_shortening": (3, erosion_word_final_shortening),
         },
@@ -147,6 +148,28 @@ def erosion_h_between_vowels(lang: Language) -> Tuple[str, List[str]]:
                     vowels = [isinstance(n, Vowel) for n in neighbors]
                     if all(vowels):
                         replace(root, syllable_index, phoneme_index, [])
+        root.rebuild()
+        new_words.append(root.ipa)
+
+    return description, new_words
+
+
+def erosion_word_final_diphthongs(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Phonetic Erosion:** Diphthongs that occurred at the end of "
+        "a word were simplified into the long-vowel form of the first "
+        "vowel in the original diphthong."
+    )
+
+    new_words: List[str] = []
+    for original in lang.words:
+        root = Root(original)
+        ult = root.phoneme_index[-1]
+        penult = root.phoneme_index[-2]
+        if isinstance(ult[2], Vowel) and isinstance(penult[2], Vowel):
+            long = find_similar_vowel(penult[2], long=True)
+            replace(root, penult[0], penult[1], [long])
+            replace(root, ult[0], ult[1], [])
         root.rebuild()
         new_words.append(root.ipa)
 
