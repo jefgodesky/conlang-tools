@@ -5,6 +5,7 @@ from soundchanges.changes import (
     describe_vowel_change,
     get_affected_syllables,
     devoicing,
+    erosion_coda_stops_followed_by_consonant,
     erosion_h_between_vowels,
     erosion_voiceless_obstruents,
     voicing,
@@ -67,6 +68,26 @@ class TestGetAffectedSyllables:
 
     def test_random(self):
         assert get_affected_syllables() in ["all", "stressed"]
+
+
+class TestErosionCodaStopsFollwedByConsonant:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1}, coda={"b": 1})
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈbab.ba/", "/ˈbab.ab/", "/bab/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_erosion_coda_stops_followed_by_consonants(self, example_language):
+        description, words = erosion_coda_stops_followed_by_consonant(example_language)
+        expected_description = (
+            "**Phonetic Erosion:** Coda stops were dropped when they were followed "
+            "by a consonant."
+        )
+        assert description == expected_description
+        assert words[0] == "/ˈba.ba/"
+        assert words[1] == "/ˈbab.ab/"
+        assert words[2] == "/bab/"
 
 
 class TestErosionHBetweenVowels:

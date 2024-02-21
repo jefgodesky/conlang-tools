@@ -70,8 +70,31 @@ def phonetic_erosion(lang: Language) -> Tuple[str, List[str]]:
         {
             "voiceless_obstruents": (1, erosion_voiceless_obstruents),
             "h_between_vowels": (5, erosion_h_between_vowels),
+            "coda_stops": (4, erosion_coda_stops_followed_by_consonant),
         },
     )
+
+
+def erosion_coda_stops_followed_by_consonant(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Phonetic Erosion:** Coda stops were dropped when they were followed "
+        "by a consonant."
+    )
+
+    new_words: List[str] = []
+    for original in lang.words:
+        root = Root(original)
+        for syllable_index, syllable in enumerate(root.syllables):
+            final_index = len(syllable.phonemes) - 1
+            final = syllable.phonemes[final_index]
+            if isinstance(final, Consonant) and final.manner == "stop":
+                followed = root.following(syllable_index, final_index)
+                if isinstance(followed, Consonant):
+                    replace(root, syllable_index, final_index, [])
+        root.rebuild()
+        new_words.append(root.ipa)
+
+    return description, new_words
 
 
 def erosion_voiceless_obstruents(lang: Language) -> Tuple[str, List[str]]:
