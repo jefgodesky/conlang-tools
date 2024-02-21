@@ -78,13 +78,14 @@ def phonetic_erosion(lang: Language) -> Tuple[str, List[str]]:
     return apply_random_change(
         lang,
         {
-            "voiceless_obstruents": (1, erosion_voiceless_obstruents),
-            "h_between_vowels": (5, erosion_h_between_vowels),
             "coda_stops": (4, erosion_coda_stops_followed_by_consonant),
+            "h_between_vowels": (5, erosion_h_between_vowels),
+            "ui_becomes_jw_vowel_pair": (2, erosion_ui_becomes_jw_vowel_pair),
+            "voiceless_obstruents": (1, erosion_voiceless_obstruents),
             "word_final_diphthongs": (1, erosion_word_final_diphthongs),
             "word_final_short_vowels": (3, erosion_word_final_short_vowels),
             "word_final_shortening": (3, erosion_word_final_shortening),
-            "ui_becomes_jw_vowel_pair": (2, erosion_ui_becomes_jw_vowel_pair),
+            "word_final_voiced_consonants": (2, erosion_word_final_voiced_consonants),
         },
     )
 
@@ -229,6 +230,25 @@ def erosion_word_final_shortening(lang: Language) -> Tuple[str, List[str]]:
         last = root.phoneme_index[-1]
         if isinstance(last[2], Vowel) and last[2].long is True:
             root.syllables[-1].phonemes[-1] = find_similar_vowel(last[2], long=False)
+        root.rebuild()
+        new_words.append(root.ipa)
+
+    return description, new_words
+
+
+def erosion_word_final_voiced_consonants(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Phonetic Erosion:** Voiced consonants at the end of words "
+        "became voiceless."
+    )
+
+    new_words: List[str] = []
+    for original in lang.words:
+        root = Root(original)
+        last = root.phoneme_index[-1]
+        if isinstance(last[2], Consonant) and last[2].voiced is True:
+            voiceless = find_similar_consonant(last[2], voiced=False)
+            root.syllables[-1].phonemes[-1] = voiceless
         root.rebuild()
         new_words.append(root.ipa)
 

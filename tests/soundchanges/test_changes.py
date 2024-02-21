@@ -14,6 +14,7 @@ from soundchanges.changes import (
     erosion_h_between_vowels,
     erosion_ui_becomes_jw_vowel_pair,
     erosion_voiceless_obstruents,
+    erosion_word_final_voiced_consonants,
     erosion_word_final_diphthongs,
     erosion_word_final_short_vowels,
     erosion_word_final_shortening,
@@ -255,6 +256,26 @@ class TestErosionWordFinalShortening:
         assert words[1] == "/ˈba.ba/"
         assert words[2] == "/ba/"
         assert words[3] == "/ba/"
+
+
+class TestErosionWordFinalVoicedConsonants:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1}, coda={"b": 1, "p": 1})
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈba.bab/", "/bap/", "/bab/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_erosion_word_final_voiced_consonants(self, example_language):
+        description, words = erosion_word_final_voiced_consonants(example_language)
+        expected_description = (
+            "**Phonetic Erosion:** Voiced consonants at the end of words "
+            "became voiceless."
+        )
+        assert description == expected_description
+        assert words[0] == "/ˈba.bap/"
+        assert words[1] == "/bap/"
+        assert words[2] == "/bap/"
 
 
 class TestDevoicing:
