@@ -232,17 +232,15 @@ def voicing(lang: Language) -> Tuple[str, List[str]]:
 def apply_vowel_change(
     lang: Language, mapping: Dict[str, Vowel], affected: str, affected_keys: List[str]
 ) -> List[str]:
-    new_words: List[str] = []
-    for original in lang.words:
-        analysis = Root(original)
-        for syllable in analysis.syllables:
-            if affected == "all" or syllable.stressed or len(analysis.syllables) < 2:
-                for index, phoneme in enumerate(syllable.phonemes):
-                    if phoneme.symbol in affected_keys:
-                        syllable.phonemes[index] = mapping[phoneme.symbol]
-        analysis.rebuild()
-        new_words.append(analysis.ipa)
-    return new_words
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        if affected != "all" and not root.stresses(si):
+            return False
+        return phoneme.symbol in affected_keys
+
+    def transformer(phoneme: Consonant) -> List[Vowel]:
+        return [mapping[phoneme.symbol]]
+
+    return apply_change(lang, evaluator, transformer)
 
 
 def vowel_change(
