@@ -37,12 +37,7 @@ class TestApplyChange:
         return Language(phonotactics=pt, phonology=pl, words=["/ba/"])
 
     def test_apply_change(self, example_language):
-        def evaluator(
-            root: Root,
-            syllable_index: int,
-            phoneme_index: int,
-            phoneme: Consonant | Vowel,
-        ) -> bool:
+        def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
             return phoneme.symbol == "a"
 
         def transformer(phoneme: Consonant | Vowel) -> List[Consonant | Vowel]:

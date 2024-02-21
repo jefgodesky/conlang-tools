@@ -14,10 +14,10 @@ def apply_change(
     new_words: List[str] = []
     for original in lang.words:
         root = Root(original)
-        for syllable_index, syllable in enumerate(root.syllables):
-            for phoneme_index, phoneme in enumerate(syllable.phonemes):
-                if evaluator(root, syllable_index, phoneme_index, phoneme):
-                    replace(root, syllable_index, phoneme_index, transformer(phoneme))
+        for si, syllable in enumerate(root.syllables):
+            for pi, phoneme in enumerate(syllable.phonemes):
+                if evaluator(root, si, pi, phoneme):
+                    replace(root, si, pi, transformer(phoneme))
         root.rebuild()
         new_words.append(root.ipa)
     return new_words
@@ -43,14 +43,11 @@ def get_affected_syllables(syllables: Optional[str] = None) -> str:
 
 
 def replace(
-    root: Root,
-    syllable_index: int,
-    phoneme_index: int,
-    replacements: List[Consonant | Vowel],
+    root: Root, si: int, pi: int, replacements: List[Consonant | Vowel]
 ) -> None:
-    before = root.syllables[syllable_index].phonemes[:phoneme_index]
-    after = root.syllables[syllable_index].phonemes[phoneme_index + 1 :]
-    root.syllables[syllable_index].phonemes = before + replacements + after
+    before = root.syllables[si].phonemes[:pi]
+    after = root.syllables[si].phonemes[pi + 1 :]
+    root.syllables[si].phonemes = before + replacements + after
 
 
 def devoicing(lang: Language) -> Tuple[str, List[str]]:
@@ -59,23 +56,21 @@ def devoicing(lang: Language) -> Tuple[str, List[str]]:
         "at the end of words or next to voiceless consonants."
     )
 
-    new_words: List[str] = []
-    for original in lang.words:
-        root = Root(original)
-        for syllable_index, phoneme_index, phoneme in root.phoneme_index:
-            p = root.syllables[syllable_index].phonemes[phoneme_index]
-            if isinstance(p, Consonant) and p.voiced is True:
-                following = root.following(syllable_index, phoneme_index)
-                neighbors = [root.preceding(syllable_index, phoneme_index), following]
-                voiceless_neighbors = [
-                    isinstance(n, Consonant) and n.voiced is False for n in neighbors
-                ]
-                if any(voiceless_neighbors) or following is None:
-                    voiceless = find_similar_consonant(p, voiced=False)
-                    root.syllables[syllable_index].phonemes[phoneme_index] = voiceless
-        root.rebuild()
-        new_words.append(root.ipa)
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        is_consonant = isinstance(phoneme, Consonant)
+        if not is_consonant or phoneme.voiced is False:
+            return False
 
+        following = root.following(si, pi)
+        voiceless_neighbors = [
+            isinstance(n, Consonant) and not n.voiced for n in root.neighbors(si, pi)
+        ]
+        return any(voiceless_neighbors) or following is None
+
+    def transformer(phoneme: Consonant) -> List[Consonant]:
+        return [find_similar_consonant(phoneme, voiced=False)]
+
+    new_words = apply_change(lang, evaluator, transformer)
     return description, new_words
 
 
@@ -99,19 +94,19 @@ def erosion_coda_stops_followed_by_consonant(lang: Language) -> Tuple[str, List[
         "by a consonant."
     )
 
-    new_words: List[str] = []
-    for original in lang.words:
-        root = Root(original)
-        for syllable_index, syllable in enumerate(root.syllables):
-            final_index = len(syllable.phonemes) - 1
-            final = syllable.phonemes[final_index]
-            if isinstance(final, Consonant) and final.manner == "stop":
-                followed = root.following(syllable_index, final_index)
-                if isinstance(followed, Consonant):
-                    replace(root, syllable_index, final_index, [])
-        root.rebuild()
-        new_words.append(root.ipa)
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        is_consonant = isinstance(phoneme, Consonant)
+        is_stop = is_consonant and phoneme.manner == "stop"
+        if not is_stop or pi < len(root.syllables[si].phonemes) - 1:
+            return False
 
+        following = root.following(si, pi)
+        return isinstance(following, Consonant)
+
+    def transformer(phoneme: Consonant) -> List[Consonant]:
+        return []
+
+    new_words = apply_change(lang, evaluator, transformer)
     return description, new_words
 
 
@@ -121,51 +116,42 @@ def erosion_voiceless_obstruents(lang: Language) -> Tuple[str, List[str]]:
         "in unstressed syllables."
     )
 
-    new_words: List[str] = []
-    for original in lang.words:
-        root = Root(original)
-        for syllable_index, syllable in enumerate(root.syllables):
-            stressed = syllable.stressed or len(root.syllables) < 2
-            if not stressed:
-                for phoneme_index, phoneme in enumerate(syllable.phonemes):
-                    if isinstance(phoneme, Vowel):
-                        neighbors = [
-                            root.preceding(syllable_index, phoneme_index),
-                            root.following(syllable_index, phoneme_index),
-                        ]
-                        obs = [
-                            isinstance(n, Consonant)
-                            and n.voiced is False
-                            and n.category == "obstruent"
-                            for n in neighbors
-                        ]
-                        if all(obs):
-                            replace(root, syllable_index, phoneme_index, [])
-        root.rebuild()
-        new_words.append(root.ipa)
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        is_vowel = isinstance(phoneme, Vowel)
+        is_unstressed = root.stresses(si) is False
+        if not is_vowel or not is_unstressed:
+            return False
 
+        return all(
+            [
+                isinstance(n, Consonant)
+                and n.category == "obstruent"
+                and n.voiced is False
+                for n in root.neighbors(si, pi)
+            ]
+        )
+
+    def transformer(phoneme: Consonant) -> List[Consonant]:
+        return []
+
+    new_words = apply_change(lang, evaluator, transformer)
     return description, new_words
 
 
 def erosion_h_between_vowels(lang: Language) -> Tuple[str, List[str]]:
     description = "**Phonetic Erosion:** /h/ was dropped between vowels."
 
-    new_words: List[str] = []
-    for original in lang.words:
-        root = Root(original)
-        for syllable_index, syllable in enumerate(root.syllables):
-            for phoneme_index, phoneme in enumerate(syllable.phonemes):
-                if phoneme.symbol == "h":
-                    neighbors = [
-                        root.preceding(syllable_index, phoneme_index),
-                        root.following(syllable_index, phoneme_index),
-                    ]
-                    vowels = [isinstance(n, Vowel) for n in neighbors]
-                    if all(vowels):
-                        replace(root, syllable_index, phoneme_index, [])
-        root.rebuild()
-        new_words.append(root.ipa)
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        if phoneme.symbol != "h":
+            return False
 
+        neighbors = root.neighbors(si, pi)
+        return all([isinstance(n, Vowel) for n in neighbors])
+
+    def transformer(phoneme: Consonant) -> List[Consonant]:
+        return []
+
+    new_words = apply_change(lang, evaluator, transformer)
     return description, new_words
 
 
@@ -230,22 +216,16 @@ def erosion_word_final_shortening(lang: Language) -> Tuple[str, List[str]]:
 def voicing(lang: Language) -> Tuple[str, List[str]]:
     description = "**Voicing:** Unvoiced consonants became voiced between vowels."
 
-    new_words: List[str] = []
-    for original in lang.words:
-        root = Root(original)
-        for syllable_index, phoneme_index, phoneme in root.phoneme_index:
-            p = root.syllables[syllable_index].phonemes[phoneme_index]
-            if isinstance(p, Consonant) and p.voiced is False:
-                preceding = root.preceding(syllable_index, phoneme_index)
-                vowel_preceding = isinstance(preceding, Vowel)
-                following = root.following(syllable_index, phoneme_index)
-                vowel_following = isinstance(following, Vowel)
-                if vowel_preceding and vowel_following:
-                    voiced = find_similar_consonant(p, voiced=True)
-                    root.syllables[syllable_index].phonemes[phoneme_index] = voiced
-        root.rebuild()
-        new_words.append(root.ipa)
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        is_consonant = isinstance(phoneme, Consonant)
+        if not is_consonant or phoneme.voiced is True:
+            return False
+        return all([isinstance(n, Vowel) for n in root.neighbors(si, pi)])
 
+    def transformer(phoneme: Consonant) -> List[Consonant]:
+        return [find_similar_consonant(phoneme, voiced=True)]
+
+    new_words = apply_change(lang, evaluator, transformer)
     return description, new_words
 
 
@@ -345,20 +325,16 @@ def vowel_splitting_palatalization(lang: Language) -> Tuple[str, List[str]]:
         "**Vowel Splitting:** /a/ became /æ/ when followed by a palatal consonant."
     )
 
-    ae = get_vowel("æ")
-    new_words: List[str] = []
-    for original in lang.words:
-        root = Root(original)
-        for item in root.phoneme_index:
-            is_a = item[2].symbol == "a"
-            following = root.following(item[0], item[1])
-            following_consonant = isinstance(following, Consonant)
-            following_palatal = following_consonant and following.place == "palatal"
-            if is_a and following_palatal:
-                root.syllables[item[0]].phonemes[item[1]] = ae
-        root.rebuild()
-        new_words.append(root.ipa)
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        if not isinstance(phoneme, Vowel) or phoneme.symbol != "a":
+            return False
+        following = root.following(si, pi)
+        return isinstance(following, Consonant) and following.place == "palatal"
 
+    def transformer(phoneme: Consonant) -> List[Vowel]:
+        return [get_vowel("æ")]
+
+    new_words = apply_change(lang, evaluator, transformer)
     return description, new_words
 
 
@@ -380,24 +356,19 @@ def vowel_splitting_stress_diphthongization(
         if target is not None and target in options[original_symbol]
         else random.choice(options[original_symbol])
     )
-    replacements = [get_vowel(character) for character in target_symbols]
 
     description = (
         f"**Vowel Splitting:** /{original_symbol}/ became /{target_symbols}/ "
         "in stressed syllables."
     )
 
-    new_words: List[str] = []
-    for original in lang.words:
-        root = Root(original)
-        for syllable_index, syllable in enumerate(root.syllables):
-            if syllable.stressed:
-                for index, phoneme in enumerate(syllable.phonemes):
-                    if phoneme.symbol == original_symbol:
-                        replace(root, syllable_index, index, replacements)
-        root.rebuild()
-        new_words.append(root.ipa)
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        return root.stresses(si) and phoneme.symbol == original_symbol
 
+    def transformer(phoneme: Consonant) -> List[Vowel]:
+        return [get_vowel(character) for character in target_symbols]
+
+    new_words = apply_change(lang, evaluator, transformer)
     return description, new_words
 
 
