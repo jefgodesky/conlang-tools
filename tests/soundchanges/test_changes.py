@@ -22,6 +22,7 @@ from soundchanges.changes import (
     nasal_assimilation,
     velar_assimilation,
     voicing,
+    voicing_assimilation,
     vowel_backing,
     vowel_fronting,
     vowel_lengthening,
@@ -383,6 +384,30 @@ class TestVoicing:
         )
         assert description == expected_description
         assert words[0] == "/ˈpa.ba/"
+
+
+class TestVoicingAssimilation:
+    @pytest.fixture
+    def example_language(self):
+        consonants = {"p": 1, "b": 1, "t": 1, "d": 1, "k": 1}
+        pt = Phonotactics(onset=consonants, nucleus={"a": 1}, coda=consonants)
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈba.ba/", "/ˈbapd.ab/", "/ba/", "/bapd/", "/babt/", "/bakd/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_voicing_assimilation(self, example_language):
+        description, words = voicing_assimilation(example_language)
+        expected_description = (
+            "**Voicing Assimilation:** Voiceless consonants became voiced "
+            "when they occurred next to voiced consonants."
+        )
+        assert description == expected_description
+        assert words[0] == "/ˈba.ba/"
+        assert words[1] == "/ˈbabd.ab/"
+        assert words[2] == "/ba/"
+        assert words[3] == "/babd/"
+        assert words[4] == "/babd/"
+        assert words[5] == "/bakd/"
 
 
 class TestVowelBacking:

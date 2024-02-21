@@ -340,6 +340,29 @@ def voicing(lang: Language) -> Tuple[str, List[str]]:
     return description, new_words
 
 
+def voicing_assimilation(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Voicing Assimilation:** Voiceless consonants became voiced "
+        "when they occurred next to voiced consonants."
+    )
+
+    consonants, _ = lang.take_inventory()
+
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        if not isinstance(phoneme, Consonant) or phoneme.voiced:
+            return False
+        neighbors = root.neighbors(si, pi)
+        voiced = [isinstance(n, Consonant) and n.voiced for n in neighbors]
+        return any(voiced)
+
+    def transformer(phoneme: Consonant) -> List[Consonant]:
+        voiced = find_similar_consonant(phoneme, voiced=True)
+        return [voiced if voiced is not None and voiced in consonants else phoneme]
+
+    new_words = apply_change(lang, evaluator, transformer)
+    return description, new_words
+
+
 def apply_vowel_change(
     lang: Language, mapping: Dict[str, Vowel], affected: str, affected_keys: List[str]
 ) -> List[str]:
@@ -503,6 +526,7 @@ def change(lang: Language) -> Tuple[str, List[str]]:
             "nasal_assimilation": (5, nasal_assimilation),
             "velar_assimilation": (4, velar_assimilation),
             "voicing": (9, voicing),
+            "voicing_assimilation": (5, voicing_assimilation),
             "vowel_backing": (6, vowel_backing),
             "vowel_fronting": (6, vowel_fronting),
             "vowel_lengthening": (8, vowel_lengthening),
