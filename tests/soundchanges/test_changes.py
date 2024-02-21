@@ -5,6 +5,7 @@ from soundchanges.changes import (
     describe_vowel_change,
     get_affected_syllables,
     devoicing,
+    erosion_voiceless_obstruents,
     voicing,
     vowel_backing,
     vowel_fronting,
@@ -65,6 +66,29 @@ class TestGetAffectedSyllables:
 
     def test_random(self):
         assert get_affected_syllables() in ["all", "stressed"]
+
+
+class TestErosionVoicelessObstruents:
+    @pytest.fixture
+    def example_language(self):
+        consonants = {"b": 1, "p": 1, "m̥": 1}
+        pt = Phonotactics(onset=consonants, nucleus={"a": 1}, coda=consonants)
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈba.pat/", "/pat/", "/ˈba.bat/", "/ˈba.m̥at/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_erosion_voiceless_obstruents(self, example_language):
+        description, words = erosion_voiceless_obstruents(example_language)
+        expected_description = (
+            "**Phonetic Erosion:** Vowels were dropped "
+            "between voiceless obstruents in unstressed "
+            "syllables."
+        )
+        assert description == expected_description
+        assert words[0] == "/ˈba.pt/"
+        assert words[1] == "/pat/"
+        assert words[2] == "/ˈba.bat/"
+        assert words[3] == "/ˈba.m̥at/"
 
 
 class TestDevoicing:

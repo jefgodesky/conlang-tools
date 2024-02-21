@@ -7,8 +7,6 @@ from phonemes.roots import Root
 from phonemes.vowels import Vowel, find_similar_vowel
 from utils.methods import oxford_comma, get_choices
 
-SoundChangeFunction = Callable[[Language, ...], Tuple[str, List[str]]]
-
 
 def describe_vowel_change(
     mapping: Dict[str, Vowel], name: str, syllables: Optional[str] = None
@@ -49,6 +47,49 @@ def devoicing(lang: Language) -> Tuple[str, List[str]]:
                 if any(voiceless_neighbors) or following is None:
                     voiceless = find_similar_consonant(p, voiced=False)
                     root.syllables[syllable_index].phonemes[phoneme_index] = voiceless
+        root.rebuild()
+        new_words.append(root.ipa)
+
+    return description, new_words
+
+
+def phonetic_erosion(lang: Language) -> Tuple[str, List[str]]:
+    return apply_random_change(
+        lang,
+        {
+            "voiceless_obstruents": (1, erosion_voiceless_obstruents),
+        },
+    )
+
+
+def erosion_voiceless_obstruents(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Phonetic Erosion:** Vowels were dropped between voiceless obstruents "
+        "in unstressed syllables."
+    )
+
+    new_words: List[str] = []
+    for original in lang.words:
+        root = Root(original)
+        for syllable_index, syllable in enumerate(root.syllables):
+            stressed = syllable.stressed or len(root.syllables) < 2
+            if not stressed:
+                for phoneme_index, phoneme in enumerate(syllable.phonemes):
+                    if isinstance(phoneme, Vowel):
+                        neighbors = [
+                            root.preceding(syllable_index, phoneme_index),
+                            root.following(syllable_index, phoneme_index),
+                        ]
+                        obs = [
+                            isinstance(n, Consonant)
+                            and n.voiced is False
+                            and n.category == "obstruent"
+                            for n in neighbors
+                        ]
+                        if all(obs):
+                            before = syllable.phonemes[:phoneme_index]
+                            after = syllable.phonemes[phoneme_index + 1 :]
+                            syllable.phonemes = before + after
         root.rebuild()
         new_words.append(root.ipa)
 
@@ -232,7 +273,7 @@ def vowel_splitting_stress_diphthongization(
 
 
 def apply_random_change(
-    lang: Language, choices: Dict[str, Tuple[int, SoundChangeFunction]]
+    lang: Language, choices: Dict[str, Tuple[int, Callable]]
 ) -> Tuple[str, List[str]]:
     weighted = get_choices({key: wgt for key, (wgt, _) in choices.items()})
     chosen = random.choice(weighted)
@@ -248,6 +289,7 @@ def change(lang: Language) -> Tuple[str, List[str]]:
         lang,
         {
             "devoicing": (10, devoicing),
+            "phonetic_erosion": (10, phonetic_erosion),
             "voicing": (9, voicing),
             "vowel_backing": (6, vowel_backing),
             "vowel_fronting": (6, vowel_fronting),
