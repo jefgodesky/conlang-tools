@@ -5,8 +5,8 @@ from soundchanges.changes import (
     describe_vowel_change,
     get_affected_syllables,
     devoicing,
-    erosion_voiceless_obstruents,
     erosion_h_between_vowels,
+    erosion_voiceless_obstruents,
     voicing,
     vowel_backing,
     vowel_fronting,
@@ -69,6 +69,25 @@ class TestGetAffectedSyllables:
         assert get_affected_syllables() in ["all", "stressed"]
 
 
+class TestErosionHBetweenVowels:
+    @pytest.fixture
+    def example_language(self):
+        consonants = {"b": 1, "h": 1}
+        pt = Phonotactics(onset=consonants, nucleus={"a": 1}, coda=consonants)
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈha.ba/", "/ˈba.ha/", "/ba/", "/ha/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_erosion_h_between_vowels(self, example_language):
+        description, words = erosion_h_between_vowels(example_language)
+        expected_description = "**Phonetic Erosion:** /h/ was dropped between vowels."
+        assert description == expected_description
+        assert words[0] == "/ˈha.ba/"
+        assert words[1] == "/ˈba.a/"
+        assert words[2] == "/ba/"
+        assert words[3] == "/ha/"
+
+
 class TestErosionVoicelessObstruents:
     @pytest.fixture
     def example_language(self):
@@ -90,25 +109,6 @@ class TestErosionVoicelessObstruents:
         assert words[1] == "/pat/"
         assert words[2] == "/ˈba.bat/"
         assert words[3] == "/ˈba.m̥at/"
-
-
-class TestErosionHBetweenVowels:
-    @pytest.fixture
-    def example_language(self):
-        consonants = {"b": 1, "h": 1}
-        pt = Phonotactics(onset=consonants, nucleus={"a": 1}, coda=consonants)
-        pl = Phonology(stress="initial", openness=1)
-        words = ["/ˈha.ba/", "/ˈba.ha/", "/ba/", "/ha/"]
-        return Language(phonotactics=pt, phonology=pl, words=words)
-
-    def test_erosion_h_between_vowels(self, example_language):
-        description, words = erosion_h_between_vowels(example_language)
-        expected_description = "**Phonetic Erosion:** /h/ was dropped between vowels."
-        assert description == expected_description
-        assert words[0] == "/ˈha.ba/"
-        assert words[1] == "/ˈba.a/"
-        assert words[2] == "/ba/"
-        assert words[3] == "/ha/"
 
 
 class TestDevoicing:
