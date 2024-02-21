@@ -255,6 +255,29 @@ def erosion_word_final_voiced_consonants(lang: Language) -> Tuple[str, List[str]
     return description, new_words
 
 
+def labial_assimilation(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Labial Assimilation:** Non-labial consonants became labial "
+        "consonants when they occurred next to labial consonants."
+    )
+
+    consonants, _ = lang.take_inventory()
+
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        if not isinstance(phoneme, Consonant) or phoneme.place == "labial":
+            return False
+        neighbors = root.neighbors(si, pi)
+        labials = [isinstance(n, Consonant) and n.place == "labial" for n in neighbors]
+        return any(labials)
+
+    def transformer(phoneme: Consonant) -> List[Consonant]:
+        labial = find_similar_consonant(phoneme, place="labial")
+        return [labial if labial is not None and labial in consonants else phoneme]
+
+    new_words = apply_change(lang, evaluator, transformer)
+    return description, new_words
+
+
 def nasal_assimilation(lang: Language) -> Tuple[str, List[str]]:
     description = (
         "**Nasal Assimilation:** Non-nasal consonants became nasal "
@@ -453,6 +476,7 @@ def change(lang: Language) -> Tuple[str, List[str]]:
         {
             "devoicing": (10, devoicing),
             "phonetic_erosion": (10, phonetic_erosion),
+            "labial_assimilation": (3, labial_assimilation),
             "nasal_assimilation": (5, nasal_assimilation),
             "voicing": (9, voicing),
             "vowel_backing": (6, vowel_backing),
