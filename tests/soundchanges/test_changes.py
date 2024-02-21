@@ -379,7 +379,7 @@ class TestVoicing:
     def test_voicing(self, example_language):
         description, words = voicing(example_language)
         expected_description = (
-            "**Voicing:** Unvoiced consonants became voiced " "between vowels."
+            "**Voicing:** Unvoiced consonants became voiced between vowels."
         )
         assert description == expected_description
         assert words[0] == "/ˈpa.ba/"
