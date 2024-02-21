@@ -1,7 +1,12 @@
+from typing import List
 import pytest
 from language.classes import Phonology, Phonotactics, Language
+from phonemes.consonants import Consonant
+from phonemes.roots import Root
+from phonemes.vowels import Vowel, get_vowel
 from soundchanges.changes import (
     change,
+    apply_change,
     describe_vowel_change,
     get_affected_syllables,
     devoicing,
@@ -22,6 +27,29 @@ from soundchanges.changes import (
     vowel_splitting_palatalization,
     vowel_splitting_stress_diphthongization,
 )
+
+
+class TestApplyChange:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1}, coda={})
+        pl = Phonology(stress="initial", openness=1)
+        return Language(phonotactics=pt, phonology=pl, words=["/ba/"])
+
+    def test_apply_change(self, example_language):
+        def evaluator(
+            root: Root,
+            syllable_index: int,
+            phoneme_index: int,
+            phoneme: Consonant | Vowel,
+        ) -> bool:
+            return phoneme.symbol == "a"
+
+        def transformer(phoneme: Consonant | Vowel) -> List[Consonant | Vowel]:
+            return [get_vowel("a:")]
+
+        new_words = apply_change(example_language, evaluator, transformer)
+        assert new_words[0] == "/ba:/"
 
 
 class TestDescribeVowelChange:

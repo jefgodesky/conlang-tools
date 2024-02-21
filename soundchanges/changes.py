@@ -8,6 +8,21 @@ from phonemes.vowels import Vowel, find_similar_vowel
 from utils.methods import oxford_comma, get_choices
 
 
+def apply_change(
+    lang: Language, evaluator: Callable, transformer: Callable
+) -> List[str]:
+    new_words: List[str] = []
+    for original in lang.words:
+        root = Root(original)
+        for syllable_index, syllable in enumerate(root.syllables):
+            for phoneme_index, phoneme in enumerate(syllable.phonemes):
+                if evaluator(root, syllable_index, phoneme_index, phoneme):
+                    replace(root, syllable_index, phoneme_index, transformer(phoneme))
+        root.rebuild()
+        new_words.append(root.ipa)
+    return new_words
+
+
 def describe_vowel_change(
     mapping: Dict[str, Vowel], name: str, syllables: Optional[str] = None
 ) -> Tuple[str, str, List[str]]:
