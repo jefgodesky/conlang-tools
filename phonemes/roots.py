@@ -20,7 +20,7 @@ class Syllable:
         return self.unbracketed.translate(markings)
 
     @property
-    def nucleus(self) -> Optional[str]:
+    def nucleus_index(self) -> Optional[Tuple[int, int]]:
         start = None
         end = None
         for index in range(len(self.unmarked)):
@@ -29,6 +29,14 @@ class Syllable:
             elif not isinstance(self.phonemes[index], Vowel) and start is not None:
                 end = index - 1
         end = end if end is not None else len(self.phonemes) - 1
+        return None if start is None else (start, end)
+
+    @property
+    def nucleus(self) -> Optional[str]:
+        if self.nucleus_index is None:
+            return None
+
+        start, end = self.nucleus_index
         return self.unmarked[start : end + 1]
 
     def get_phonemes(self) -> List[Consonant | Vowel]:

@@ -122,6 +122,17 @@ class TestRoot:
 
 
 class TestSyllable:
+    @pytest.fixture
+    def syllables(self):
+        return [
+            Syllable("/ba/"),
+            Syllable("/bab/"),
+            Syllable("/boa/"),
+            Syllable("/boab/"),
+            Syllable("/ab/"),
+            Syllable("/b/"),
+        ]
+
     def test_creates_syllable(self):
         syllable = Syllable("/ba/")
         assert isinstance(syllable, Syllable)
@@ -157,12 +168,18 @@ class TestSyllable:
         syllable.rebuild()
         assert syllable.ipa == "/ˈka/"
 
-    def test_nucleus(self):
-        open = Syllable("/ba/")
-        closed = Syllable("/bab/")
-        diphthong_open = Syllable("/boa/")
-        diphthong_closed = Syllable("/boab/")
-        assert open.nucleus == "a"
-        assert closed.nucleus == "a"
-        assert diphthong_open.nucleus == "oa"
-        assert diphthong_closed.nucleus == "oa"
+    def test_nucleus_index(self, syllables):
+        assert syllables[0].nucleus_index == (1, 1)
+        assert syllables[1].nucleus_index == (1, 1)
+        assert syllables[2].nucleus_index == (1, 2)
+        assert syllables[3].nucleus_index == (1, 2)
+        assert syllables[4].nucleus_index == (0, 0)
+        assert syllables[5].nucleus_index is None
+
+    def test_nucleus(self, syllables):
+        assert syllables[0].nucleus == "a"
+        assert syllables[1].nucleus == "a"
+        assert syllables[2].nucleus == "oa"
+        assert syllables[3].nucleus == "oa"
+        assert syllables[4].nucleus == "a"
+        assert syllables[5].nucleus is None
