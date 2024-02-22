@@ -1,9 +1,10 @@
 from typing import List, Optional
+from language.classes import Language
 
 
 class History:
-    def __init__(self, words: Optional[List[str]] = None):
+    def __init__(self, lang: Optional[Language] = None):
         self.log: List[str] = []
         self.stages: List[List[str]] = []
-        if words is not None:
-            self.stages.append(words)
+        if lang is not None:
+            self.stages.append(lang.words)
