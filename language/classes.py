@@ -69,6 +69,11 @@ class Stress:
     def isstress(cls, candidate: str) -> bool:
         return candidate in cls.types()
 
+    @staticmethod
+    def is_initial(word: str) -> bool:
+        root = Root(word)
+        return root.stresses(0)
+
 
 class Language:
     def __init__(

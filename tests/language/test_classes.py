@@ -334,3 +334,8 @@ class TestStress:
 
     def test_isstress_other_false(self):
         assert Stress.isstress("other") is False
+
+    def test_is_initial(self):
+        assert Stress.is_initial("/ba/") is True
+        assert Stress.is_initial("/ˈba.ba/") is True
+        assert Stress.is_initial("/ba.ˈba/") is False
