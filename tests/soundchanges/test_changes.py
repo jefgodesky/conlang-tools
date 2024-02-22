@@ -542,6 +542,11 @@ class TestPalatalization:
         assert words[6] == "/og/"
         assert words[7] == "/od/"
 
+    def test_palatalization_random(self, example_language):
+        description, words = palatalization(example_language)
+        assert "**Palatalization:** Front vowels turned" in description
+        assert len(words) == len(example_language.words)
+
 
 class TestVelarAssimilation:
     @pytest.fixture

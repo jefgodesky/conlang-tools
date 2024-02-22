@@ -411,9 +411,13 @@ def nasal_assimilation(lang: Language) -> Tuple[str, List[str]]:
 
 
 def palatalization(
-    lang: Language, places: List[ConsonantPlaceTypes]
+    lang: Language, places: Optional[List[ConsonantPlaceTypes]] = None
 ) -> Tuple[str, List[str]]:
     possible_places = ["dental", "alveolar-central", "velar"]
+    if places is None:
+        rand_places = random.randint(1, len(possible_places))
+        places = random.sample(possible_places, rand_places)
+
     affected = [place for place in possible_places if place in places]
     readable = [
         "alveolar" if place == "alveolar-central" else place for place in affected
