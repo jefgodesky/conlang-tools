@@ -17,7 +17,7 @@ def apply_change(
         for si, syllable in enumerate(root.syllables):
             for pi, phoneme in enumerate(syllable.phonemes):
                 if evaluator(root, si, pi, phoneme):
-                    replace(root, si, pi, transformer(phoneme))
+                    replace(root, si, pi, transformer(root, si, pi, phoneme))
         root.rebuild()
         new_words.append(root.ipa)
     return new_words
@@ -67,7 +67,9 @@ def devoicing(lang: Language) -> Tuple[str, List[str]]:
         ]
         return any(voiceless_neighbors) or following is None
 
-    def transformer(phoneme: Consonant) -> List[Consonant]:
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
         return [find_similar_consonant(phoneme, voiced=False)]
 
     new_words = apply_change(lang, evaluator, transformer)
@@ -89,7 +91,9 @@ def devoicing_assimilation(lang: Language) -> Tuple[str, List[str]]:
         voiceless = [isinstance(n, Consonant) and n.voiced is False for n in neighbors]
         return any(voiceless)
 
-    def transformer(phoneme: Consonant) -> List[Consonant]:
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
         repl = find_similar_consonant(phoneme, voiced=False)
         return [repl if repl is not None and repl in consonants else phoneme]
 
@@ -128,7 +132,9 @@ def erosion_coda_stops_followed_by_consonant(lang: Language) -> Tuple[str, List[
         following = root.following(si, pi)
         return isinstance(following, Consonant)
 
-    def transformer(phoneme: Consonant) -> List[Consonant]:
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
         return []
 
     new_words = apply_change(lang, evaluator, transformer)
@@ -156,7 +162,9 @@ def erosion_voiceless_obstruents(lang: Language) -> Tuple[str, List[str]]:
             ]
         )
 
-    def transformer(phoneme: Consonant) -> List[Consonant]:
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
         return []
 
     new_words = apply_change(lang, evaluator, transformer)
@@ -173,7 +181,9 @@ def erosion_h_between_vowels(lang: Language) -> Tuple[str, List[str]]:
         neighbors = root.neighbors(si, pi)
         return all([isinstance(n, Vowel) for n in neighbors])
 
-    def transformer(phoneme: Consonant) -> List[Consonant]:
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
         return []
 
     new_words = apply_change(lang, evaluator, transformer)
@@ -193,7 +203,9 @@ def erosion_ui_becomes_jw_vowel_pair(lang: Language) -> Tuple[str, List[str]]:
         following = root.following(si, pi)
         return isinstance(following, Vowel)
 
-    def transformer(phoneme: Consonant) -> List[Consonant]:
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
         symbol = "j" if phoneme.symbol == "i" else "w"
         return [get_consonant(symbol)]
 
@@ -293,9 +305,55 @@ def labial_assimilation(lang: Language) -> Tuple[str, List[str]]:
         labials = [isinstance(n, Consonant) and n.place == "labial" for n in neighbors]
         return any(labials)
 
-    def transformer(phoneme: Consonant) -> List[Consonant]:
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
         labial = find_similar_consonant(phoneme, place="labial")
         return [labial if labial is not None and labial in consonants else phoneme]
+
+    new_words = apply_change(lang, evaluator, transformer)
+    return description, new_words
+
+
+def metathesis(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Metathesis:** Adjacent sibilant and stop consonants swapped "
+        "positions in stressed syllables when they were preceded by "
+        "a vowel."
+    )
+
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        if not root.stresses(si):
+            return False
+
+        this_c = isinstance(phoneme, Consonant)
+        this_stop = this_c and phoneme.manner == "stop"
+        this_sibilant = this_c and phoneme.is_sibilant()
+        if not this_stop and not this_sibilant:
+            return False
+
+        preceding = root.preceding(si, pi)
+        if not isinstance(preceding, Vowel):
+            return False
+
+        following = root.following(si, pi)
+        following_c = isinstance(following, Consonant)
+        following_stop = following_c and following.manner == "stop"
+        follow_sibilant = following_c and following.is_sibilant()
+
+        # If we crossed a syllable boundary, the change doesn't apply.
+        if root.syllables[si].phonemes[pi + 1] != following:
+            return False
+
+        return any([this_stop and follow_sibilant, following_stop and this_sibilant])
+
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
+        first = root.syllables[si].phonemes[pi]
+        second = root.syllables[si].phonemes[pi + 1]
+        replace(root, si, pi + 1, [first])
+        return [second]
 
     new_words = apply_change(lang, evaluator, transformer)
     return description, new_words
@@ -316,7 +374,9 @@ def nasal_assimilation(lang: Language) -> Tuple[str, List[str]]:
         nasals = [isinstance(n, Consonant) and n.manner == "nasal" for n in neighbors]
         return any(nasals)
 
-    def transformer(phoneme: Consonant) -> List[Consonant]:
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
         nasal = find_similar_consonant(phoneme, manner="nasal")
         return [nasal if nasal is not None and nasal in consonants else phoneme]
 
@@ -339,7 +399,9 @@ def velar_assimilation(lang: Language) -> Tuple[str, List[str]]:
         velars = [isinstance(n, Consonant) and n.place == "velar" for n in neighbors]
         return any(velars)
 
-    def transformer(phoneme: Consonant) -> List[Consonant]:
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
         velar = find_similar_consonant(phoneme, place="velar")
         return [velar if velar is not None and velar in consonants else phoneme]
 
@@ -356,7 +418,9 @@ def voicing(lang: Language) -> Tuple[str, List[str]]:
             return False
         return all([isinstance(n, Vowel) for n in root.neighbors(si, pi)])
 
-    def transformer(phoneme: Consonant) -> List[Consonant]:
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
         return [find_similar_consonant(phoneme, voiced=True)]
 
     new_words = apply_change(lang, evaluator, transformer)
@@ -378,7 +442,9 @@ def voicing_assimilation(lang: Language) -> Tuple[str, List[str]]:
         voiced = [isinstance(n, Consonant) and n.voiced for n in neighbors]
         return any(voiced)
 
-    def transformer(phoneme: Consonant) -> List[Consonant]:
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
         voiced = find_similar_consonant(phoneme, voiced=True)
         return [voiced if voiced is not None and voiced in consonants else phoneme]
 
@@ -394,7 +460,7 @@ def apply_vowel_change(
             return False
         return phoneme.symbol in affected_keys
 
-    def transformer(phoneme: Consonant) -> List[Vowel]:
+    def transformer(root: Root, si: int, pi: int, phoneme: Consonant) -> List[Vowel]:
         return [mapping[phoneme.symbol]]
 
     return apply_change(lang, evaluator, transformer)
@@ -486,7 +552,7 @@ def vowel_splitting_palatalization(lang: Language) -> Tuple[str, List[str]]:
         following = root.following(si, pi)
         return isinstance(following, Consonant) and following.place == "palatal"
 
-    def transformer(phoneme: Consonant) -> List[Vowel]:
+    def transformer(root: Root, si: int, pi: int, phoneme: Consonant) -> List[Vowel]:
         return [get_vowel("æ")]
 
     new_words = apply_change(lang, evaluator, transformer)
@@ -520,7 +586,7 @@ def vowel_splitting_stress_diphthongization(
     def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
         return root.stresses(si) and phoneme.symbol == original_symbol
 
-    def transformer(phoneme: Consonant) -> List[Vowel]:
+    def transformer(root: Root, si: int, pi: int, phoneme: Consonant) -> List[Vowel]:
         return [get_vowel(character) for character in target_symbols]
 
     new_words = apply_change(lang, evaluator, transformer)
@@ -547,6 +613,7 @@ def change(lang: Language) -> Tuple[str, List[str]]:
             "devoicing_assimilation": (5, devoicing_assimilation),
             "phonetic_erosion": (10, phonetic_erosion),
             "labial_assimilation": (3, labial_assimilation),
+            "metathesis": (3, metathesis),
             "nasal_assimilation": (5, nasal_assimilation),
             "velar_assimilation": (4, velar_assimilation),
             "voicing": (9, voicing),

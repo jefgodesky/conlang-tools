@@ -20,6 +20,7 @@ from soundchanges.changes import (
     erosion_word_final_short_vowels,
     erosion_word_final_shortening,
     labial_assimilation,
+    metathesis,
     nasal_assimilation,
     velar_assimilation,
     voicing,
@@ -47,7 +48,9 @@ class TestApplyChange:
         def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
             return phoneme.symbol == "a"
 
-        def transformer(phoneme: Consonant | Vowel) -> List[Consonant | Vowel]:
+        def transformer(
+            root: Root, si: int, pi: int, phoneme: Consonant | Vowel
+        ) -> List[Consonant | Vowel]:
             return [get_vowel("a:")]
 
         new_words = apply_change(example_language, evaluator, transformer)
@@ -347,6 +350,29 @@ class TestLabialAssimilation:
         assert words[1] == "/ˈbamp.ab/"
         assert words[2] == "/ba/"
         assert words[3] == "/mabp/"
+
+
+class TestMetathesis:
+    @pytest.fixture
+    def example_language(self):
+        consonants = {"b": 1, "s": 1}
+        pt = Phonotactics(onset=consonants, nucleus={"a": 1}, coda=consonants)
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈba.ba/", "/ˈbabs.abs/", "/ba/", "/babs/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_metathesis(self, example_language):
+        description, words = metathesis(example_language)
+        expected_description = (
+            "**Metathesis:** Adjacent sibilant and stop consonants swapped "
+            "positions in stressed syllables when they were preceded by "
+            "a vowel."
+        )
+        assert description == expected_description
+        assert words[0] == "/ˈba.ba/"
+        assert words[1] == "/ˈbasb.abs/"
+        assert words[2] == "/ba/"
+        assert words[3] == "/basb/"
 
 
 class TestNasalAssimilation:
