@@ -74,6 +74,11 @@ class Stress:
         root = Root(word)
         return root.stresses(0)
 
+    @staticmethod
+    def is_final(word: str) -> bool:
+        root = Root(word)
+        return root.stresses(len(root.syllables) - 1)
+
 
 class Language:
     def __init__(

@@ -339,3 +339,8 @@ class TestStress:
         assert Stress.is_initial("/ba/") is True
         assert Stress.is_initial("/ˈba.ba/") is True
         assert Stress.is_initial("/ba.ˈba/") is False
+
+    def test_is_final(self):
+        assert Stress.is_final("/ba/") is True
+        assert Stress.is_final("/ˈba.ba/") is False
+        assert Stress.is_final("/ba.ˈba/") is True
