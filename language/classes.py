@@ -3,7 +3,7 @@ import random
 import yaml
 from phonemes.consonants import Consonant
 from phonemes.vowels import Vowel, VowelLocation, VowelOpenness
-from phonemes.roots import Syllable
+from phonemes.roots import Root, Syllable
 from utils.methods import get_choices, weigh_syllables
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
@@ -18,6 +18,13 @@ class Phonology:
     def __init__(self, stress: Optional[StressTypes] = None, openness: float = 0.5):
         self.stress = Stress(stress)
         self.openness = openness
+
+    @staticmethod
+    def calculate_openness(words: List[str]):
+        syllables = [syllable for ipa in words for syllable in Root(ipa).syllables]
+        total = len(syllables)
+        open = sum(syllable.is_open() for syllable in syllables)
+        return open / total if total else 0
 
 
 class Phonotactics:

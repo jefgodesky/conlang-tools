@@ -233,6 +233,10 @@ class TestPhonology:
         phones = Phonology(openness=0.75)
         assert phones.openness == 0.75
 
+    def test_calculate_openness(self):
+        words = ["/ba/", "/bab/", "/bwa/", "/ˈbwa.ma/"]
+        assert Phonology.calculate_openness(words) == 0.8
+
 
 class TestPhonotactics:
     def test_creates_phonotactics(self):
