@@ -54,6 +54,11 @@ class Syllable:
 
         return self.unmarked[self.nucleus_index[1] + 1 :]
 
+    def is_open(self) -> bool:
+        index = self.nucleus_index
+        last_index = len(self.phonemes) - 1
+        return index is not None and index[1] >= last_index
+
     def get_phonemes(self) -> List[Consonant | Vowel]:
         phonemes = get_phonemes()
         phonemes.sort(key=lambda p: len(p.symbol), reverse=True)

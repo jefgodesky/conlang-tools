@@ -199,3 +199,11 @@ class TestSyllable:
         assert syllables[3].coda == "b"
         assert syllables[4].coda == "b"
         assert syllables[5].coda is None
+
+    def test_is_open(self, syllables):
+        assert syllables[0].is_open() is True
+        assert syllables[1].is_open() is False
+        assert syllables[2].is_open() is True
+        assert syllables[3].is_open() is False
+        assert syllables[4].is_open() is False
+        assert syllables[5].is_open() is False
