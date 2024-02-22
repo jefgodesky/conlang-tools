@@ -27,3 +27,9 @@ class TestHistory:
         assert len(example_history.stages) == 1
         assert example_history.stages[0][0] == "/ˈba.ba/"
         assert example_history.stages[0][1] == "/ba/"
+
+    def test_step(self, example_history, example_language):
+        example_history.step()
+        assert len(example_history.log) == 1
+        assert len(example_history.stages) == 2
+        assert len(example_history.stages[1]) == len(example_language.words)

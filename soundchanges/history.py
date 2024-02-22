@@ -1,5 +1,6 @@
 from typing import List
 from language.classes import Language
+from soundchanges.changes import change
 
 
 class History:
@@ -9,3 +10,8 @@ class History:
         self.stages: List[List[str]] = []
         if lang is not None:
             self.stages.append(lang.words)
+
+    def step(self):
+        description, words = change(self.language)
+        self.log.append(description)
+        self.stages.append(words)
