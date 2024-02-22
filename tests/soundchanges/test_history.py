@@ -1,3 +1,5 @@
+import csv
+import io
 import pytest
 from language.classes import Language, Phonology, Phonotactics
 from soundchanges.history import History
@@ -33,3 +35,16 @@ class TestHistory:
         assert len(example_history.log) == 1
         assert len(example_history.stages) == 2
         assert len(example_history.stages[1]) == len(example_language.words)
+
+    def test_csv(self, example_history):
+        example_history.step()
+        example_history.step()
+        example_history.step()
+        csv_str = example_history.to_csv()
+        obj = io.StringIO(csv_str)
+        reader = csv.reader(obj)
+        next(reader)
+        first_row = next(reader)
+        assert example_history.stages[3][0] is not None
+        assert first_row[3] == str(example_history.stages[3][0])
+        obj.close()
