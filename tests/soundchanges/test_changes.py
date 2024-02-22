@@ -23,6 +23,7 @@ from soundchanges.changes import (
     labial_assimilation,
     metathesis,
     nasal_assimilation,
+    palatalization,
     velar_assimilation,
     voicing,
     voicing_assimilation,
@@ -415,6 +416,131 @@ class TestNasalAssimilation:
         assert words[1] == "/amn/"
         assert words[2] == "/amk/"
         assert words[3] == "/ba/"
+
+
+class TestPalatalization:
+    @pytest.fixture
+    def example_language(self):
+        consonants = {"ð": 1, "g": 1, "d": 1, "b": 1}
+        pt = Phonotactics(onset=consonants, nucleus={"a": 1, "o": 1}, coda=consonants)
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ab/", "/að/", "/ag/", "/ad/", "/ob/", "/oð/", "/og/", "/od/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_palatalization_dental(self, example_language):
+        description, words = palatalization(example_language, ["dental"])
+        expected_description = (
+            "**Palatalization:** Front vowels turned dental consonants "
+            "that followed them into palatal consonants."
+        )
+        assert description == expected_description
+        assert words[0] == "/ab/"
+        assert words[1] == "/aʝ/"
+        assert words[2] == "/ag/"
+        assert words[3] == "/ad/"
+        assert words[4] == "/ob/"
+        assert words[5] == "/oð/"
+        assert words[6] == "/og/"
+        assert words[7] == "/od/"
+
+    def test_palatalization_velar(self, example_language):
+        description, words = palatalization(example_language, ["velar"])
+        expected_description = (
+            "**Palatalization:** Front vowels turned velar consonants "
+            "that followed them into palatal consonants."
+        )
+        assert description == expected_description
+        assert words[0] == "/ab/"
+        assert words[1] == "/að/"
+        assert words[2] == "/aɟ/"
+        assert words[3] == "/ad/"
+        assert words[4] == "/ob/"
+        assert words[5] == "/oð/"
+        assert words[6] == "/og/"
+        assert words[7] == "/od/"
+
+    def test_palatalization_alveolar(self, example_language):
+        description, words = palatalization(example_language, ["alveolar-central"])
+        expected_description = (
+            "**Palatalization:** Front vowels turned alveolar consonants "
+            "that followed them into palatal consonants."
+        )
+        assert description == expected_description
+        assert words[0] == "/ab/"
+        assert words[1] == "/að/"
+        assert words[2] == "/ag/"
+        assert words[3] == "/aɟ/"
+        assert words[4] == "/ob/"
+        assert words[5] == "/oð/"
+        assert words[6] == "/og/"
+        assert words[7] == "/od/"
+
+    def test_palatalization_dental_velar(self, example_language):
+        description, words = palatalization(example_language, ["dental", "velar"])
+        expected_description = (
+            "**Palatalization:** Front vowels turned dental and velar "
+            "consonants that followed them into palatal consonants."
+        )
+        assert description == expected_description
+        assert words[0] == "/ab/"
+        assert words[1] == "/aʝ/"
+        assert words[2] == "/aɟ/"
+        assert words[3] == "/ad/"
+        assert words[4] == "/ob/"
+        assert words[5] == "/oð/"
+        assert words[6] == "/og/"
+        assert words[7] == "/od/"
+
+    def test_palatalization_dental_alveolar(self, example_language):
+        places = ["dental", "alveolar-central", "labial"]
+        description, words = palatalization(example_language, places)
+        expected_description = (
+            "**Palatalization:** Front vowels turned dental and alveolar "
+            "consonants that followed them into palatal consonants."
+        )
+        assert description == expected_description
+        assert words[0] == "/ab/"
+        assert words[1] == "/aʝ/"
+        assert words[2] == "/ag/"
+        assert words[3] == "/aɟ/"
+        assert words[4] == "/ob/"
+        assert words[5] == "/oð/"
+        assert words[6] == "/og/"
+        assert words[7] == "/od/"
+
+    def test_palatalization_alveolar_velar(self, example_language):
+        places = ["alveolar-central", "velar"]
+        description, words = palatalization(example_language, places)
+        expected_description = (
+            "**Palatalization:** Front vowels turned alveolar and velar "
+            "consonants that followed them into palatal consonants."
+        )
+        assert description == expected_description
+        assert words[0] == "/ab/"
+        assert words[1] == "/að/"
+        assert words[2] == "/aɟ/"
+        assert words[3] == "/aɟ/"
+        assert words[4] == "/ob/"
+        assert words[5] == "/oð/"
+        assert words[6] == "/og/"
+        assert words[7] == "/od/"
+
+    def test_palatalization_dental_alveolar_velar(self, example_language):
+        places = ["dental", "alveolar-central", "velar"]
+        description, words = palatalization(example_language, places)
+        expected_description = (
+            "**Palatalization:** Front vowels turned dental, alveolar, and "
+            "velar consonants that followed them into palatal consonants."
+        )
+        assert description == expected_description
+        assert words[0] == "/ab/"
+        assert words[1] == "/aʝ/"
+        assert words[2] == "/aɟ/"
+        assert words[3] == "/aɟ/"
+        assert words[4] == "/ob/"
+        assert words[5] == "/oð/"
+        assert words[6] == "/og/"
+        assert words[7] == "/od/"
 
 
 class TestVelarAssimilation:

@@ -1,7 +1,12 @@
 from typing import Callable, Dict, List, Optional, Tuple
 import random
 from language.classes import Language
-from phonemes.consonants import Consonant, find_similar_consonant, get_consonant
+from phonemes.consonants import (
+    Consonant,
+    ConsonantPlaceTypes,
+    find_similar_consonant,
+    get_consonant,
+)
 from phonemes.vowels import get_vowel
 from phonemes.roots import Root
 from phonemes.vowels import Vowel, find_similar_vowel
@@ -405,6 +410,38 @@ def nasal_assimilation(lang: Language) -> Tuple[str, List[str]]:
     return description, new_words
 
 
+def palatalization(
+    lang: Language, places: List[ConsonantPlaceTypes]
+) -> Tuple[str, List[str]]:
+    possible_places = ["dental", "alveolar-central", "velar"]
+    affected = [place for place in possible_places if place in places]
+    readable = [
+        "alveolar" if place == "alveolar-central" else place for place in affected
+    ]
+    list_str = oxford_comma(readable)
+    description = (
+        f"**Palatalization:** Front vowels turned {list_str} "
+        "consonants that followed them into palatal consonants."
+    )
+
+    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        if not isinstance(phoneme, Consonant) or phoneme.place not in affected:
+            return False
+
+        preceding = root.preceding(si, pi)
+        return isinstance(preceding, Vowel) and preceding.location == "front"
+
+    def transformer(
+        root: Root, si: int, pi: int, phoneme: Consonant
+    ) -> List[Consonant]:
+        palatal = find_similar_consonant(phoneme, place="palatal")
+        print(f"[{phoneme.symbol}] > [{palatal.symbol}]")
+        return [palatal if palatal is not None else phoneme]
+
+    new_words = apply_change(lang, evaluator, transformer)
+    return description, new_words
+
+
 def velar_assimilation(lang: Language) -> Tuple[str, List[str]]:
     description = (
         "**Velar Assimilation:** Non-velar consonants became velar "
@@ -637,6 +674,7 @@ def change(lang: Language) -> Tuple[str, List[str]]:
             "labial_assimilation": (3, labial_assimilation),
             "metathesis": (3, metathesis),
             "nasal_assimilation": (5, nasal_assimilation),
+            "palatalization": (5, palatalization),
             "velar_assimilation": (4, velar_assimilation),
             "voicing": (9, voicing),
             "voicing_assimilation": (5, voicing_assimilation),
