@@ -19,6 +19,7 @@ from soundchanges.changes import (
     erosion_word_final_diphthongs,
     erosion_word_final_short_vowels,
     erosion_word_final_shortening,
+    haplology,
     labial_assimilation,
     metathesis,
     nasal_assimilation,
@@ -328,6 +329,25 @@ class TestDevoicingAssimilation:
         assert words[3] == "/bapt/"
         assert words[4] == "/bapt/"
         assert words[5] == "/bagt/"
+
+
+class TestHaplology:
+    @pytest.fixture
+    def example_language(self):
+        pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1}, coda={"b": 1})
+        pl = Phonology(stress="initial", openness=1)
+        words = ["/ˈba.ba/", "/ba/"]
+        return Language(phonotactics=pt, phonology=pl, words=words)
+
+    def test_haplology(self, example_language):
+        description, words = haplology(example_language)
+        expected_description = (
+            "**Haplology:** Repeated syllables are reduced to just one "
+            "instance of that syllable."
+        )
+        assert description == expected_description
+        assert words[0] == "/ba/"
+        assert words[1] == "/ba/"
 
 
 class TestLabialAssimilation:

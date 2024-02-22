@@ -290,6 +290,27 @@ def erosion_word_final_voiced_consonants(lang: Language) -> Tuple[str, List[str]
     return description, new_words
 
 
+def haplology(lang: Language) -> Tuple[str, List[str]]:
+    description = (
+        "**Haplology:** Repeated syllables are reduced to just one "
+        "instance of that syllable."
+    )
+
+    new_words: List[str] = []
+    for original in lang.words:
+        root = Root(original)
+        for si, syllable in enumerate(root.syllables):
+            is_last = si == len(root.syllables) - 1
+            if not is_last:
+                next_syllable = root.syllables[si + 1]
+                if next_syllable.unmarked == syllable.unmarked:
+                    root.syllables.remove(next_syllable)
+        root.rebuild()
+        new_words.append(root.ipa)
+
+    return description, new_words
+
+
 def labial_assimilation(lang: Language) -> Tuple[str, List[str]]:
     description = (
         "**Labial Assimilation:** Non-labial consonants became labial "
@@ -612,6 +633,7 @@ def change(lang: Language) -> Tuple[str, List[str]]:
             "devoicing": (10, devoicing),
             "devoicing_assimilation": (5, devoicing_assimilation),
             "phonetic_erosion": (10, phonetic_erosion),
+            "haplology": (3, haplology),
             "labial_assimilation": (3, labial_assimilation),
             "metathesis": (3, metathesis),
             "nasal_assimilation": (5, nasal_assimilation),
