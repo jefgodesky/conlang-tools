@@ -191,3 +191,11 @@ class TestSyllable:
         assert syllables[3].onset == "b"
         assert syllables[4].onset is None
         assert syllables[5].onset is None
+
+    def test_coda(self, syllables):
+        assert syllables[0].coda is None
+        assert syllables[1].coda == "b"
+        assert syllables[2].coda is None
+        assert syllables[3].coda == "b"
+        assert syllables[4].coda == "b"
+        assert syllables[5].coda is None

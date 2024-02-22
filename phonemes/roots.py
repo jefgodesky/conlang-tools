@@ -46,6 +46,14 @@ class Syllable:
 
         return self.unmarked[: self.nucleus_index[0]]
 
+    @property
+    def coda(self) -> Optional[str]:
+        last_index = len(self.phonemes) - 1
+        if self.nucleus_index is None or self.nucleus_index[1] >= last_index:
+            return None
+
+        return self.unmarked[self.nucleus_index[1] + 1 :]
+
     def get_phonemes(self) -> List[Consonant | Vowel]:
         phonemes = get_phonemes()
         phonemes.sort(key=lambda p: len(p.symbol), reverse=True)
