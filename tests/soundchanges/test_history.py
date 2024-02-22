@@ -10,16 +10,20 @@ class TestHistory:
         pl = Phonology(stress="initial", openness=1)
         return Language(phonotactics=pt, phonology=pl, words=["/ˈba.ba/", "/ba/"])
 
-    def test_creates_history(self):
-        history = History()
-        assert isinstance(history, History)
+    @pytest.fixture
+    def example_history(self, example_language):
+        return History(example_language)
 
-    def test_sets_up_log(self):
-        history = History()
-        assert len(history.log) == 0
+    def test_sets_language(self, example_history, example_language):
+        assert example_history.language == example_language
 
-    def test_takes_language(self, example_language):
-        history = History(example_language)
-        assert len(history.stages) == 1
-        assert history.stages[0][0] == "/ˈba.ba/"
-        assert history.stages[0][1] == "/ba/"
+    def test_creates_history(self, example_history):
+        assert isinstance(example_history, History)
+
+    def test_sets_up_log(self, example_history):
+        assert len(example_history.log) == 0
+
+    def test_takes_language(self, example_history):
+        assert len(example_history.stages) == 1
+        assert example_history.stages[0][0] == "/ˈba.ba/"
+        assert example_history.stages[0][1] == "/ba/"
