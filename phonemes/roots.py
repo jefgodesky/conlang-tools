@@ -19,6 +19,18 @@ class Syllable:
         markings = str.maketrans("", "", "ˈ.")
         return self.unbracketed.translate(markings)
 
+    @property
+    def nucleus(self) -> Optional[str]:
+        start = None
+        end = None
+        for index in range(len(self.unmarked)):
+            if isinstance(self.phonemes[index], Vowel) and start is None:
+                start = index
+            elif not isinstance(self.phonemes[index], Vowel) and start is not None:
+                end = index - 1
+        end = end if end is not None else len(self.phonemes) - 1
+        return self.unmarked[start : end + 1]
+
     def get_phonemes(self) -> List[Consonant | Vowel]:
         phonemes = get_phonemes()
         phonemes.sort(key=lambda p: len(p.symbol), reverse=True)

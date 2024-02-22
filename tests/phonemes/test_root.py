@@ -156,3 +156,13 @@ class TestSyllable:
         syllable.phonemes[0] = get_phoneme("k")
         syllable.rebuild()
         assert syllable.ipa == "/ˈka/"
+
+    def test_nucleus(self):
+        open = Syllable("/ba/")
+        closed = Syllable("/bab/")
+        diphthong_open = Syllable("/boa/")
+        diphthong_closed = Syllable("/boab/")
+        assert open.nucleus == "a"
+        assert closed.nucleus == "a"
+        assert diphthong_open.nucleus == "oa"
+        assert diphthong_closed.nucleus == "oa"
