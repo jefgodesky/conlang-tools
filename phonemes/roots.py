@@ -73,6 +73,9 @@ class Root:
 
     def rebuild(self):
         for index, syllable in enumerate(self.syllables):
+            if len(self.syllables) < 2:
+                self.syllables[0].stressed = False
+
             syllable.rebuild()
 
             # If we end up with a syllable that's just consonants and no

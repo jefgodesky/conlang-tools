@@ -51,6 +51,12 @@ class TestRoot:
         assert r1.ipa == "/ˈba.bab/"
         assert r2.ipa == "/bab/"
 
+    def test_rebuild_does_not_mark_sole_syllable(self):
+        root = Root("/ˈba.ba/")
+        root.syllables = [root.syllables[0]]
+        root.rebuild()
+        assert root.ipa == "/ba/"
+
     def test_phonemes(self, example_root):
         symbols = [p.symbol for p in example_root.phonemes]
         assert "".join(symbols) == "baba"
