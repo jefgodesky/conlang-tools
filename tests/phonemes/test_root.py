@@ -183,3 +183,11 @@ class TestSyllable:
         assert syllables[3].nucleus == "oa"
         assert syllables[4].nucleus == "a"
         assert syllables[5].nucleus is None
+
+    def test_onset(self, syllables):
+        assert syllables[0].onset == "b"
+        assert syllables[1].onset == "b"
+        assert syllables[2].onset == "b"
+        assert syllables[3].onset == "b"
+        assert syllables[4].onset is None
+        assert syllables[5].onset is None

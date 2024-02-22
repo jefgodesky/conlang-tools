@@ -39,6 +39,13 @@ class Syllable:
         start, end = self.nucleus_index
         return self.unmarked[start : end + 1]
 
+    @property
+    def onset(self) -> Optional[str]:
+        if self.nucleus_index is None or self.nucleus_index[0] == 0:
+            return None
+
+        return self.unmarked[: self.nucleus_index[0]]
+
     def get_phonemes(self) -> List[Consonant | Vowel]:
         phonemes = get_phonemes()
         phonemes.sort(key=lambda p: len(p.symbol), reverse=True)
