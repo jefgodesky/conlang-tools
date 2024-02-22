@@ -71,6 +71,14 @@ class TestConsonant:
         p = Consonant("p", ConsonantManner("stop"), ConsonantPlace("labial"), False)
         assert str(p) == "[p]"
 
+    def test_is_sibilant(self):
+        sibilants = ["θ", "ð", "s", "z", "t̪θ", "d̪ð", "Ts", "dz", "ʃ", "ʒ"]
+        controls = ["k", "g", "m", "n", "j", "w", "f", "v", "x", "h"]
+        sibilant_instances = [get_consonant(symbol) for symbol in sibilants]
+        control_instances = [get_consonant(symbol) for symbol in controls]
+        assert all([consonant.is_sibilant() for consonant in sibilant_instances])
+        assert not any([consonant.is_sibilant() for consonant in control_instances])
+
 
 class TestConsonantManner:
     def test_creates_consonant_manner(self):

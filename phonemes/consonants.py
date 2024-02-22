@@ -106,6 +106,11 @@ class Consonant:
     def __hash__(self):
         return hash(self.symbol)
 
+    def is_sibilant(self) -> bool:
+        manners = ["fricative", "affricate"]
+        places = ["dental", "alveolar-central", "post-alveolar"]
+        return self.manner in manners and self.place in places
+
 
 def get_consonants() -> List[Consonant]:
     # fmt: off
