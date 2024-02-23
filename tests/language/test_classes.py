@@ -351,3 +351,12 @@ class TestStress:
         assert Stress.is_penultimate("/ba.ˈba/") is False
         assert Stress.is_penultimate("/ˈba.ba.ba/") is False
         assert Stress.is_penultimate("/ba.ˈba.ba/") is True
+
+    def test_is_antepenultimate(self):
+        assert Stress.is_antepenultimate("/ba/") is True
+        assert Stress.is_antepenultimate("/ˈba.ba/") is True
+        assert Stress.is_antepenultimate("/ba.ˈba/") is False
+        assert Stress.is_antepenultimate("/ˈba.ba.ba/") is True
+        assert Stress.is_antepenultimate("/ba.ˈba.ba/") is False
+        assert Stress.is_antepenultimate("/ˈba.ba.ba.ba/") is False
+        assert Stress.is_antepenultimate("/ba.ˈba.ba.ba/") is True

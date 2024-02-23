@@ -85,6 +85,12 @@ class Stress:
         index = max(len(root.syllables) - 2, 0)
         return root.stresses(index)
 
+    @staticmethod
+    def is_antepenultimate(word: str) -> bool:
+        root = Root(word)
+        index = max(len(root.syllables) - 3, 0)
+        return root.stresses(index)
+
 
 class Language:
     def __init__(
