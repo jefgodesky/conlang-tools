@@ -20,6 +20,9 @@ class Phonology:
         self.stress = Stress(stress)
         self.openness = openness
 
+    def to_dict(self) -> Dict[str, float | StressTypes]:
+        return {"stress": self.stress, "openness": self.openness}
+
     @staticmethod
     def calculate_openness(words: List[str]):
         syllables = [syllable for ipa in words for syllable in Root(ipa).syllables]

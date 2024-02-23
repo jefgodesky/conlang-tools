@@ -244,6 +244,11 @@ class TestPhonology:
         phones = Phonology(openness=0.75)
         assert phones.openness == 0.75
 
+    def test_to_dict(self):
+        phones = Phonology(openness=0.6, stress="final")
+        dictionary = phones.to_dict()
+        assert dictionary == {"stress": "final", "openness": 0.6}
+
     def test_calculate_openness(self):
         words = ["/ba/", "/bab/", "/bwa/", "/ˈbwa.ma/"]
         assert Phonology.calculate_openness(words) == 0.8
