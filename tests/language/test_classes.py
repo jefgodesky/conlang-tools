@@ -376,3 +376,147 @@ class TestStress:
         assert Stress.is_heavy("/ba:b.ˈbab.ba:.ba/") is False
         assert Stress.is_heavy("/ba:b.bab.ˈba:.ba/") is False
         assert Stress.is_heavy("/ba:b.bab.ba:.ˈba/") is False
+
+    def test_analyze_stress_monosyllabic(self):
+        analysis = Stress.analyze_stress("/ba/")
+        assert analysis["initial"] is True
+        assert analysis["final"] is True
+        assert analysis["penultimate"] is True
+        assert analysis["antepenultimate"] is True
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_bisyllabic1(self):
+        analysis = Stress.analyze_stress("/ˈba.ba/")
+        assert analysis["initial"] is True
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is True
+        assert analysis["antepenultimate"] is True
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_bisyllabic2(self):
+        analysis = Stress.analyze_stress("/ba.ˈba/")
+        assert analysis["initial"] is False
+        assert analysis["final"] is True
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_trisyllabic1(self):
+        analysis = Stress.analyze_stress("/ˈba.ba.ba/")
+        assert analysis["initial"] is True
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is True
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_trisyllabic2(self):
+        analysis = Stress.analyze_stress("/ba.ˈba.ba/")
+        assert analysis["initial"] is False
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is True
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_trisyllabic3(self):
+        analysis = Stress.analyze_stress("/ba.ba.ˈba/")
+        assert analysis["initial"] is False
+        assert analysis["final"] is True
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_quatrosyllabic1(self):
+        analysis = Stress.analyze_stress("/ˈba.ba.ba.ba/")
+        assert analysis["initial"] is True
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_quatrosyllabic2(self):
+        analysis = Stress.analyze_stress("/ba.ˈba.ba.ba/")
+        assert analysis["initial"] is False
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is True
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_quatrosyllabic3(self):
+        analysis = Stress.analyze_stress("/ba.ba.ˈba.ba/")
+        assert analysis["initial"] is False
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is True
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_quatrosyllabic4(self):
+        analysis = Stress.analyze_stress("/ba.ba.ba.ˈba/")
+        assert analysis["initial"] is False
+        assert analysis["final"] is True
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_heavy_long(self):
+        analysis = Stress.analyze_stress("/ˈba:.ba/")
+        assert analysis["initial"] is True
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is True
+        assert analysis["antepenultimate"] is True
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_not_heavy_long(self):
+        analysis = Stress.analyze_stress("/ba:.ˈba/")
+        assert analysis["initial"] is False
+        assert analysis["final"] is True
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is False
+
+    def test_analyze_stress_heavy_closed(self):
+        analysis = Stress.analyze_stress("/ˈbab.ba/")
+        assert analysis["initial"] is True
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is True
+        assert analysis["antepenultimate"] is True
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_not_heavy_closed(self):
+        analysis = Stress.analyze_stress("/bab.ˈba/")
+        assert analysis["initial"] is False
+        assert analysis["final"] is True
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is False
+
+    def test_analyze_stress_heavy_superheavy(self):
+        analysis = Stress.analyze_stress("/ˈba:b.ba:.bab.ba/")
+        assert analysis["initial"] is True
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is True
+
+    def test_analyze_stress_heavy_superheavy_long(self):
+        analysis = Stress.analyze_stress("/ˈba:.ba:b.bab.ba/")
+        assert analysis["initial"] is True
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is False
+
+    def test_analyze_stress_heavy_superheavy_closed(self):
+        analysis = Stress.analyze_stress("/ˈbab.ba:.ba:b.ba/")
+        assert analysis["initial"] is True
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is False
+
+    def test_analyze_stress_heavy_superheavy_light(self):
+        analysis = Stress.analyze_stress("/ˈba.ba:.bab.ba:b/")
+        assert analysis["initial"] is True
+        assert analysis["final"] is False
+        assert analysis["penultimate"] is False
+        assert analysis["antepenultimate"] is False
+        assert analysis["heavy"] is False

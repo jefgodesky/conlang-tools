@@ -101,6 +101,16 @@ class Stress:
                 return False
         return True
 
+    @staticmethod
+    def analyze_stress(word: str) -> Dict[str, bool]:
+        return {
+            "initial": Stress.is_initial(word),
+            "final": Stress.is_final(word),
+            "penultimate": Stress.is_penultimate(word),
+            "antepenultimate": Stress.is_antepenultimate(word),
+            "heavy": Stress.is_heavy(word),
+        }
+
 
 class Language:
     def __init__(
