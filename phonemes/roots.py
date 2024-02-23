@@ -23,7 +23,7 @@ class Syllable:
     def nucleus_index(self) -> Optional[Tuple[int, int]]:
         start = None
         end = None
-        for index in range(len(self.unmarked)):
+        for index in range(len(self.phonemes)):
             if isinstance(self.phonemes[index], Vowel) and start is None:
                 start = index
             elif not isinstance(self.phonemes[index], Vowel) and start is not None:
