@@ -47,6 +47,12 @@ class Phonology:
             return "random"
         return max_key
 
+    @staticmethod
+    def from_words(words: List[str]) -> "Phonology":
+        openness = Phonology.calculate_openness(words)
+        stress = Phonology.poll_stress(words)
+        return Phonology(openness=openness, stress=stress)
+
 
 class Phonotactics:
     def __init__(

@@ -261,6 +261,13 @@ class TestPhonology:
         words = ["/ba:.ˈba/", "/ˈba.ba:/", "/ba.ˈba.ba:.ba.ba/"]
         assert Phonology.poll_stress(words) == "random"
 
+    def test_from_words(self):
+        words = ["/ba/", "/ˈba.ba/"]
+        phones = Phonology.from_words(words)
+        assert isinstance(phones, Phonology)
+        assert phones.openness == 1
+        assert phones.stress == "initial"
+
 
 class TestPhonotactics:
     def test_creates_phonotactics(self):
