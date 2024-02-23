@@ -67,7 +67,7 @@ if __name__ == "__main__":
                 log_file.writelines([f"* {log}\n" for log in history.log])
                 log_file.close()
 
-            record = f"recorded in {csv_filename} and {log_filename}."
+            record = f"recorded in {csv_filename} and {log_filename}"
             print(f"{args.lang} underwent {num_changes} changes, {record}.")
 
     elif args.tool == "create":
