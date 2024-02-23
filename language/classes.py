@@ -69,6 +69,9 @@ class Phonotactics:
         self.nucleus = nucleus if nucleus is not None else {}
         self.coda = coda if coda is not None else {}
 
+    def to_dict(self) -> Dict[str, Dict[str, int]]:
+        return {"onset": self.onset, "nucleus": self.nucleus, "coda": self.coda}
+
     def choices(self, element: str = "nucleus") -> List[str]:
         if element == "onset":
             return get_choices(self.onset)

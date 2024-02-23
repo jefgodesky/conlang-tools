@@ -314,6 +314,11 @@ class TestPhonotactics:
         phones = Phonotactics(coda={"a": 1})
         assert phones.coda["a"] == 1
 
+    def test_to_dict(self):
+        phones = Phonotactics(onset={"b": 2}, nucleus={"a": 1}, coda={"c": 1})
+        dictionary = phones.to_dict()
+        assert dictionary == {"onset": {"b": 2}, "nucleus": {"a": 1}, "coda": {"c": 1}}
+
     def test_build_choices(self):
         phones = Phonotactics(onset={"b": 2, "c": 1})
         assert ", ".join(phones.choices("onset")) == "b, b, c"
