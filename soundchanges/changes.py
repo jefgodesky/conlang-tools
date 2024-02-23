@@ -440,8 +440,7 @@ def palatalization(
         root: Root, si: int, pi: int, phoneme: Consonant
     ) -> List[Consonant]:
         palatal = find_similar_consonant(phoneme, place="palatal")
-        print(f"[{phoneme.symbol}] > [{palatal.symbol}]")
-        return [palatal if palatal is not None else phoneme]
+        return [palatal or phoneme]
 
     new_words = apply_change(lang, evaluator, transformer)
     return description, new_words
