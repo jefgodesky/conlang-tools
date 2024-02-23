@@ -1,6 +1,6 @@
 import csv
 import io
-from typing import List
+from typing import List, Optional
 from language.classes import Language
 from soundchanges.changes import change
 
@@ -13,11 +13,18 @@ class History:
         if lang is not None:
             self.stages.append(lang.words)
 
-    def step(self):
-        description, words = change(self.language)
+    def step(self, lang: Optional[Language] = None):
+        description, words = change(lang or self.language)
         self.log.append(description)
         self.stages.append(words)
         return description, words
+
+    def steps(self, num_steps: int) -> Language:
+        lang = self.language
+        for _ in range(num_steps):
+            _, words = self.step(lang)
+            lang = Language.from_words(words)
+        return lang
 
     def to_csv(self) -> str:
         headers = ["Original"] + [f"Change {i}" for i in range(1, len(self.stages))]

@@ -37,6 +37,14 @@ class TestHistory:
         assert description == example_history.log[0]
         assert words == example_history.stages[1]
 
+    def test_steps(self, example_history, example_language):
+        new_lang = example_history.steps(3)
+        assert len(example_history.log) == 3
+        assert len(example_history.stages) == 4
+        assert isinstance(new_lang, Language)
+        assert new_lang.words == example_history.stages[3]
+        assert new_lang != example_language
+
     def test_csv(self, example_history):
         example_history.step()
         example_history.step()
