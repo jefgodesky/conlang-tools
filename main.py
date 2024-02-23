@@ -54,8 +54,7 @@ if __name__ == "__main__":
             lang = Language.load(args.lang)
             num_changes = args.changes or 1
             history = History(lang)
-            for _ in range(num_changes):
-                history.step()
+            new_lang = history.steps(num_changes)
             csv_filename = args.csv or "history.csv"
             log_filename = args.log or "history.md"
 
@@ -67,8 +66,16 @@ if __name__ == "__main__":
                 log_file.writelines([f"* {log}\n" for log in history.log])
                 log_file.close()
 
-            record = f"recorded in {csv_filename} and {log_filename}"
-            print(f"{args.lang} underwent {num_changes} changes, {record}.")
+            with open(
+                f"languages/{args.lang}.new.yaml", "w", encoding="utf-8"
+            ) as yaml_file:
+                yaml.safe_dump(new_lang.to_dict(), yaml_file, allow_unicode=True)
+
+            print(
+                f"{args.lang} underwent {num_changes} sound changes, recorded"
+                f"in '{csv_filename}' and '{log_filename}'. The new language "
+                f"file was saved to 'languages/{args.lang}.new.yaml'."
+            )
 
     elif args.tool == "create":
         # Create Language
