@@ -152,5 +152,9 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# Language files
+languages/*.yaml
+!languages/example.yaml
+
 # PyCharm
 .idea
