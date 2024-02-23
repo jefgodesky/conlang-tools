@@ -1,3 +1,4 @@
+from collections import Counter
 from typing import Dict, List, Literal, Optional, Tuple
 import random
 import yaml
@@ -72,6 +73,23 @@ class Phonotactics:
             return get_choices(self.coda)
         else:
             return get_choices(self.nucleus)
+
+    @staticmethod
+    def from_words(words: str) -> "Phonotactics":
+        roots = [Root(word) for word in words]
+        onsets = [
+            s.onset for root in roots for s in root.syllables if s.onset is not None
+        ]
+        nuclei = [
+            s.nucleus for root in roots for s in root.syllables if s.nucleus is not None
+        ]
+        codas = [s.coda for root in roots for s in root.syllables if s.coda is not None]
+
+        onset = dict(Counter(onsets))
+        nucleus = dict(Counter(nuclei))
+        coda = dict(Counter(codas))
+
+        return Phonotactics(onset=onset, nucleus=nucleus, coda=coda)
 
 
 class Stress:

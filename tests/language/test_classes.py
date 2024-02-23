@@ -310,6 +310,14 @@ class TestPhonotactics:
         phones = Phonotactics(nucleus={"a": 2, "e": 1})
         assert ", ".join(phones.choices("other")) == "a, a, e"
 
+    def test_from_words(self):
+        words = ["/ba/", "/ˈba.ba/", "/bab/"]
+        tactics = Phonotactics.from_words(words)
+        assert isinstance(tactics, Phonotactics)
+        assert tactics.onset == {"b": 4}
+        assert tactics.nucleus == {"a": 4}
+        assert tactics.coda == {"b": 1}
+
 
 class TestStress:
     def test_creates_stress(self):
