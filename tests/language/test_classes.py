@@ -360,3 +360,19 @@ class TestStress:
         assert Stress.is_antepenultimate("/ba.ˈba.ba/") is False
         assert Stress.is_antepenultimate("/ˈba.ba.ba.ba/") is False
         assert Stress.is_antepenultimate("/ba.ˈba.ba.ba/") is True
+
+    def test_is_heavy(self):
+        assert Stress.is_heavy("/ba/") is True
+        assert Stress.is_heavy("/ˈba.ba/") is True
+        assert Stress.is_heavy("/ba.ˈba/") is True
+        assert Stress.is_heavy("/ˈbab.ba/") is True
+        assert Stress.is_heavy("/bab.ˈba/") is False
+        assert Stress.is_heavy("/ˈba:.ba/") is True
+        assert Stress.is_heavy("/ba:.ˈba/") is False
+        assert Stress.is_heavy("/ˈbab.ba:.ba/") is True
+        assert Stress.is_heavy("/bab.ˈba:.ba/") is True
+        assert Stress.is_heavy("/bab.ba:.ˈba/") is False
+        assert Stress.is_heavy("/ˈba:b.bab.ba:.ba/") is True
+        assert Stress.is_heavy("/ba:b.ˈbab.ba:.ba/") is False
+        assert Stress.is_heavy("/ba:b.bab.ˈba:.ba/") is False
+        assert Stress.is_heavy("/ba:b.bab.ba:.ˈba/") is False

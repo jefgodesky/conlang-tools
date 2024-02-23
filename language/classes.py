@@ -91,6 +91,16 @@ class Stress:
         index = max(len(root.syllables) - 3, 0)
         return root.stresses(index)
 
+    @staticmethod
+    def is_heavy(word: str) -> bool:
+        root = Root(word)
+        weights = weigh_syllables([syllable.unmarked for syllable in root.syllables])
+        heavyweight = max(weights)
+        for index in range(len(root.syllables)):
+            if root.stresses(index) and weights[index] < heavyweight:
+                return False
+        return True
+
 
 class Language:
     def __init__(
