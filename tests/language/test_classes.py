@@ -59,6 +59,14 @@ class TestLanguage:
         assert len(lang.words) == 1
         assert lang.words[0] == "/ba/"
 
+    def test_to_dict(self, example_language):
+        expected = {
+            "phonotactics": {"onset": {"b": 2}, "nucleus": {"a": 1}, "coda": {"c": 1}},
+            "phonology": {"stress": "initial", "openness": 0.5},
+            "words": ["/ba/"],
+        }
+        assert example_language.to_dict() == expected
+
     def test_load(self):
         lang = Language.load("example")
         assert isinstance(lang, Language)

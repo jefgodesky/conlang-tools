@@ -12,6 +12,9 @@ from utils.methods import get_choices, weigh_syllables
 StressTypes = Literal[
     "initial", "final", "penultimate", "antepenultimate", "heavy", "random"
 ]
+LanguageDictionaryTypes = (
+    Dict[str, Dict[str, int]] | Dict[str, float | StressTypes] | List[str]
+)
 languages_directory = "languages/"
 
 
@@ -174,6 +177,13 @@ class Language:
         self.phonology = phonology if phonology is not None else Phonology()
         self.words: List[str] = words if words is not None else []
         self.generated: List[str] = []
+
+    def to_dict(self) -> Dict[str, LanguageDictionaryTypes]:
+        return {
+            "phonotactics": self.phonotactics.to_dict(),
+            "phonology": self.phonology.to_dict(),
+            "words": self.words,
+        }
 
     def take_inventory(self) -> Tuple[List[Consonant], List[Vowel]]:
         onset = [Syllable(key) for key in self.phonotactics.onset.keys()]
