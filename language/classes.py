@@ -290,3 +290,11 @@ class Language:
             return cls(
                 phonotactics=phonotactics, phonology=phonology, words=data["words"]
             )
+
+    @classmethod
+    def from_words(cls, words: List[str]) -> "Language":
+        return cls(
+            phonotactics=Phonotactics.from_words(words),
+            phonology=Phonology.from_words(words),
+            words=words,
+        )

@@ -187,6 +187,17 @@ class TestLanguage:
         assert consonants[0].symbol == "b"
         assert len(vowels) == 1
 
+    def test_from_words(self):
+        words = ["/ba/", "/ˈba.ba/", "/bab/"]
+        lang = Language.from_words(words)
+        assert isinstance(lang, Language)
+        assert lang.phonology.openness == 0.75
+        assert lang.phonology.stress == "initial"
+        assert lang.phonotactics.onset == {"b": 4}
+        assert lang.phonotactics.nucleus == {"a": 4}
+        assert lang.phonotactics.coda == {"b": 1}
+        assert lang.words == words
+
 
 class TestPhonology:
     def test_creates_phonology(self):
