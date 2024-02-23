@@ -79,6 +79,12 @@ class Stress:
         root = Root(word)
         return root.stresses(len(root.syllables) - 1)
 
+    @staticmethod
+    def is_penultimate(word: str) -> bool:
+        root = Root(word)
+        index = max(len(root.syllables) - 2, 0)
+        return root.stresses(index)
+
 
 class Language:
     def __init__(
