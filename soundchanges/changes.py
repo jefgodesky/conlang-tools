@@ -369,7 +369,8 @@ def metathesis(lang: Language) -> Tuple[str, List[str]]:
         follow_sibilant = following_c and following.is_sibilant()
 
         # If we crossed a syllable boundary, the change doesn't apply.
-        if root.syllables[si].phonemes[pi + 1] != following:
+        phones = root.syllables[si].phonemes
+        if pi + 1 >= len(phones) or phones[pi + 1] != following:
             return False
 
         return any([this_stop and follow_sibilant, following_stop and this_sibilant])
