@@ -293,7 +293,7 @@ class TestDevoicing:
     def example_language(self):
         pt = Phonotactics(onset={"b": 1}, nucleus={"a": 1}, coda={"b": 1, "bt": 1})
         pl = Phonology(stress="initial", openness=1)
-        words = ["/ˈba.ba/", "/bab/", "/babt/"]
+        words = ["/ˈba.ba/", "/bab/", "/babt/", "/bal/"]
         return Language(phonotactics=pt, phonology=pl, words=words)
 
     def test_devoicing(self, example_language):
@@ -306,6 +306,7 @@ class TestDevoicing:
         assert words[0] == "/ˈba.ba/"
         assert words[1] == "/bap/"
         assert words[2] == "/bapt/"
+        assert words[3] == "/bal/"
 
 
 class TestDevoicingAssimilation:
@@ -576,7 +577,7 @@ class TestVoicing:
     def example_language(self):
         pt = Phonotactics(onset={"b": 1, "p": 1}, nucleus={"a": 1}, coda={})
         pl = Phonology(stress="initial", openness=1)
-        words = ["/ˈpa.pa/"]
+        words = ["/ˈpa.pa/", "/ˈpa.ʔa/"]
         return Language(phonotactics=pt, phonology=pl, words=words)
 
     def test_voicing(self, example_language):
@@ -586,6 +587,7 @@ class TestVoicing:
         )
         assert description == expected_description
         assert words[0] == "/ˈpa.ba/"
+        assert words[1] == "/ˈpa.ʔa/"
 
 
 class TestVoicingAssimilation:

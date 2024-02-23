@@ -75,7 +75,8 @@ def devoicing(lang: Language) -> Tuple[str, List[str]]:
     def transformer(
         root: Root, si: int, pi: int, phoneme: Consonant
     ) -> List[Consonant]:
-        return [find_similar_consonant(phoneme, voiced=False)]
+        voiceless = find_similar_consonant(phoneme, voiced=False)
+        return [voiceless or phoneme]
 
     new_words = apply_change(lang, evaluator, transformer)
     return description, new_words
@@ -483,7 +484,8 @@ def voicing(lang: Language) -> Tuple[str, List[str]]:
     def transformer(
         root: Root, si: int, pi: int, phoneme: Consonant
     ) -> List[Consonant]:
-        return [find_similar_consonant(phoneme, voiced=True)]
+        voiced = find_similar_consonant(phoneme, voiced=True)
+        return [voiced or phoneme]
 
     new_words = apply_change(lang, evaluator, transformer)
     return description, new_words
