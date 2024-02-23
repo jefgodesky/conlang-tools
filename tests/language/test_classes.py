@@ -237,6 +237,30 @@ class TestPhonology:
         words = ["/ba/", "/bab/", "/bwa/", "/ˈbwa.ma/"]
         assert Phonology.calculate_openness(words) == 0.8
 
+    def test_poll_stress_initial(self):
+        words = ["/ba/", "/ˈba.ba/", "/ˈba.bab.ba/", "/ba.ba.ba.ˈba/"]
+        assert Phonology.poll_stress(words) == "initial"
+
+    def test_poll_stress_final(self):
+        words = ["/ba/", "/ˈba.ba/", "/bab.ba.ˈba/", "/ba.ba.ba.ˈba/"]
+        assert Phonology.poll_stress(words) == "final"
+
+    def test_poll_stress_penultimate(self):
+        words = ["/ba/", "/ˈba.bab/", "/ba.ba.ˈba/", "/ba.ba.ˈba.ba/"]
+        assert Phonology.poll_stress(words) == "penultimate"
+
+    def test_poll_stress_antepenultimate(self):
+        words = ["/ba/", "/ba.ˈba/", "/ˈba.bab.ba/", "/ba.ˈba.ba.ba/"]
+        assert Phonology.poll_stress(words) == "antepenultimate"
+
+    def test_poll_stress_heavy(self):
+        words = ["/ba/", "/ˈba:.ba/", "/ba.ˈbab/", "/ˈba:b.ba:.bab.ba/", "/ba:.ˈba/"]
+        assert Phonology.poll_stress(words) == "heavy"
+
+    def test_poll_stress_random(self):
+        words = ["/ba:.ˈba/", "/ˈba.ba:/", "/ba.ˈba.ba:.ba.ba/"]
+        assert Phonology.poll_stress(words) == "random"
+
 
 class TestPhonotactics:
     def test_creates_phonotactics(self):

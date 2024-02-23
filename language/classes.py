@@ -26,6 +26,27 @@ class Phonology:
         open = sum(syllable.is_open() for syllable in syllables)
         return open / total if total else 0
 
+    @staticmethod
+    def poll_stress(words: List[str]) -> StressTypes:
+        counter: Dict[StressTypes, int] = {
+            "initial": 0,
+            "final": 0,
+            "penultimate": 0,
+            "antepenultimate": 0,
+            "heavy": 0,
+        }
+
+        for word in words:
+            analysis = Stress.analyze_stress(word)
+            for stress_type in analysis:
+                if analysis[stress_type]:
+                    counter[stress_type] += 1
+
+        max_key = max(counter, key=counter.get)
+        if counter[max_key] < (len(words) / 2):
+            return "random"
+        return max_key
+
 
 class Phonotactics:
     def __init__(
