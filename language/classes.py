@@ -24,7 +24,7 @@ class Phonology:
         self.openness = openness
 
     def to_dict(self) -> Dict[str, float | StressTypes]:
-        return {"stress": self.stress, "openness": self.openness}
+        return {"stress": self.stress.value, "openness": self.openness}
 
     @staticmethod
     def calculate_openness(words: List[str]):
