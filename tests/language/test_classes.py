@@ -186,6 +186,11 @@ class TestLanguage:
         assert len(new_words) == 3
         assert len(example_language.generated) == 3
 
+    def test_generate_new_words_min_syllables(self, example_language):
+        new_words = example_language.generate_new_words(3, num_syllables=2)
+        assert len(new_words) == 3
+        assert all(["." in word for word in new_words])
+
     def test_take_inventory(self):
         tactics = Phonotactics(onset={"bb": 2}, nucleus={"a": 1}, coda={})
         logy = Phonology(stress="initial", openness=1)
