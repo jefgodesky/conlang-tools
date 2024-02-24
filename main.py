@@ -18,6 +18,9 @@ if __name__ == "__main__":
         "log": "[History] Filename to which you’d like to write the history of the "
         "changes that occurred (Markdown format).",
         "name": "[Create Language] The name of the language you would like to create.",
+        "syllables": "[Word Generator] The number of syllables to begin with to "
+        "generate new words. Words with more syllables than this may be returned if "
+        "new words are difficult to find, but not fewer.",
         "wordlist": "[Create Language] Name of a file containing words from which you’d "
         "like to create a new language. This should be a text file with a new word on "
         "each line, spelled in IPA (International Phonetic Alphabet).",
@@ -38,6 +41,7 @@ if __name__ == "__main__":
     parser.add_argument("--csv", type=str, help=desc["csv"])
     parser.add_argument("--log", type=str, help=desc["log"])
     parser.add_argument("--name", "-n", type=str, help=desc["name"])
+    parser.add_argument("--syllables", type=int, help=desc["syllables"])
     parser.add_argument("--wordlist", "-wl", type=str, help=desc["wordlist"])
     parser.add_argument("--words", "-w", type=int, help=desc["words"])
 
@@ -100,6 +104,7 @@ if __name__ == "__main__":
         else:
             lang = Language.load(args.lang)
             num_words = args.words or 10
-            new_words = lang.generate_new_words(num_words)
+            num_syllables = args.syllables or 1
+            new_words = lang.generate_new_words(num_words, num_syllables=num_syllables)
             for word in new_words:
                 print(word)

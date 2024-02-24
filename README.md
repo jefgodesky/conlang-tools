@@ -83,10 +83,10 @@ phonological rules of your language, that aren’t used by any of the words in
 your word list so far.
 
 ```bash
-python main.py -t words --name <LANGUAGE_NAME> --words <NUM_WORDS>
+python main.py -t words --language <LANGUAGE_NAME> --words <NUM_WORDS> --syllables <NUM_SYLLABLES>
 ```
 
-#### `--name` or `-n`
+#### `--lang` or `-l`
 
 **Required.**
 
@@ -101,6 +101,17 @@ perhaps the **Create a Language** tool (above) can help.
 **Default:** 10
 
 The number of random words that you would like to generate.
+
+#### `--syllables`
+
+**Default:** 1
+
+The number of syllables you’d like the generated words to have. The script
+prioritizes adding _new_ words, so if the space is densely populated and it
+can’t find a word that doesn’t already exist in the language with that many
+syllables after ten tries, it will increase the number of syllables and try
+again. This means that you could get words with _more_ syllables than the
+number you specify with this argument, but you’ll never get one with fewer.
 
 ### History
 
