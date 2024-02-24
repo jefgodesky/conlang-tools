@@ -1,4 +1,9 @@
-from utils.methods import get_choices, oxford_comma, weigh_syllable, weigh_syllables
+from conlang_tools.utils.methods import (
+    get_choices,
+    oxford_comma,
+    weigh_syllable,
+    weigh_syllables,
+)
 
 
 class TestGetChoices:

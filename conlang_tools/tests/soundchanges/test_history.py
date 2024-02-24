@@ -1,8 +1,8 @@
 import csv
 import io
 import pytest
-from language.classes import Language, Phonology, Phonotactics
-from soundchanges.history import History
+from conlang_tools.language.classes import Language, Phonology, Phonotactics
+from conlang_tools.soundchanges.history import History
 
 
 class TestHistory:

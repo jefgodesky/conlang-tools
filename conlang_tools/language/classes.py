@@ -2,10 +2,10 @@ from collections import Counter
 from typing import Dict, List, Literal, Optional, Tuple
 import random
 import yaml
-from phonemes.consonants import Consonant
-from phonemes.vowels import Vowel, VowelLocation, VowelOpenness
-from phonemes.roots import Root, Syllable
-from utils.methods import get_choices, weigh_syllables
+from conlang_tools.phonemes.consonants import Consonant
+from conlang_tools.phonemes.vowels import Vowel, VowelLocation, VowelOpenness
+from conlang_tools.phonemes.roots import Root, Syllable
+from conlang_tools.utils.methods import get_choices, weigh_syllables
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
 # sure you update Stress.types to match!

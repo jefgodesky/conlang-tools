@@ -1,5 +1,5 @@
 import pytest
-from language.classes import Language, Phonology, Phonotactics, Stress
+from conlang_tools.language.classes import Language, Phonology, Phonotactics, Stress
 
 
 class TestLanguage:

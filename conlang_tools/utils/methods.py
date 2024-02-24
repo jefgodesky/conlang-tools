@@ -1,7 +1,7 @@
 from typing import Dict, List
-from phonemes.roots import Syllable
-from phonemes.consonants import Consonant
-from phonemes.vowels import Vowel
+from conlang_tools.phonemes.roots import Syllable
+from conlang_tools.phonemes.consonants import Consonant
+from conlang_tools.phonemes.vowels import Vowel
 
 
 def get_choices(dictionary: Dict[str, int]) -> List[str]:

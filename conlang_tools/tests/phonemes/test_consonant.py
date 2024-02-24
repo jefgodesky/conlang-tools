@@ -1,6 +1,6 @@
 from typing import Any
 import pytest
-from phonemes.consonants import (
+from conlang_tools.phonemes.consonants import (
     Consonant,
     ConsonantManner,
     ConsonantPlace,

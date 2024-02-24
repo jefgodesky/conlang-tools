@@ -1,8 +1,8 @@
 import csv
 import io
 from typing import List, Optional
-from language.classes import Language
-from soundchanges.changes import change
+from conlang_tools.language.classes import Language
+from conlang_tools.soundchanges.changes import change
 
 
 class History:

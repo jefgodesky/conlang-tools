@@ -1,6 +1,6 @@
 from typing import List, Optional
-from phonemes.consonants import Consonant, get_consonants, get_consonant
-from phonemes.vowels import Vowel, get_vowels, get_vowel
+from conlang_tools.phonemes.consonants import Consonant, get_consonants, get_consonant
+from conlang_tools.phonemes.vowels import Vowel, get_vowels, get_vowel
 
 
 def get_phonemes() -> List[Consonant | Vowel]:

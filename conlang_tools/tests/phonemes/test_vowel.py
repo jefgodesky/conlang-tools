@@ -1,6 +1,6 @@
 from typing import Any
 import pytest
-from phonemes.vowels import (
+from conlang_tools.phonemes.vowels import (
     Vowel,
     VowelLocation,
     VowelOpenness,

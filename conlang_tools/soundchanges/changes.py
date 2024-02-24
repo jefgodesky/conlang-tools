@@ -1,16 +1,15 @@
 from typing import Callable, Dict, List, Optional, Tuple
 import random
-from language.classes import Language
-from phonemes.consonants import (
+from conlang_tools.language.classes import Language
+from conlang_tools.phonemes.consonants import (
     Consonant,
     ConsonantPlaceTypes,
     find_similar_consonant,
     get_consonant,
 )
-from phonemes.vowels import get_vowel
-from phonemes.roots import Root
-from phonemes.vowels import Vowel, find_similar_vowel
-from utils.methods import oxford_comma, get_choices
+from conlang_tools.phonemes.vowels import Vowel, find_similar_vowel, get_vowel
+from conlang_tools.phonemes.roots import Root
+from conlang_tools.utils.methods import oxford_comma, get_choices
 
 
 def apply_change(

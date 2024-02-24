@@ -1,7 +1,7 @@
 from typing import List, Optional, Tuple
-from phonemes.consonants import Consonant
-from phonemes.vowels import Vowel
-from phonemes.phonemes import get_phonemes
+from conlang_tools.phonemes.consonants import Consonant
+from conlang_tools.phonemes.vowels import Vowel
+from conlang_tools.phonemes.phonemes import get_phonemes
 
 
 class Syllable:

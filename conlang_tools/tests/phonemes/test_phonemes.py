@@ -1,8 +1,8 @@
-from phonemes.consonants import Consonant
-from phonemes.vowels import Vowel
-from tests.phonemes.test_consonant import TestGetConsonant
-from tests.phonemes.test_vowel import TestGetVowel
-from phonemes.phonemes import get_phonemes, get_phoneme
+from conlang_tools.phonemes.consonants import Consonant
+from conlang_tools.phonemes.vowels import Vowel
+from conlang_tools.tests.phonemes.test_consonant import TestGetConsonant
+from conlang_tools.tests.phonemes.test_vowel import TestGetVowel
+from conlang_tools.phonemes.phonemes import get_phonemes, get_phoneme
 
 
 class TestGetPhonemes:

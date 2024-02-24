@@ -2,8 +2,8 @@ import argparse
 import glob
 import os
 import yaml
-from language.classes import Language
-from soundchanges.history import History
+from conlang_tools.language.classes import Language
+from conlang_tools.soundchanges.history import History
 
 if __name__ == "__main__":
     desc = {
