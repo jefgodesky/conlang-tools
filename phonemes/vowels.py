@@ -130,7 +130,7 @@ def get_vowels() -> List[Vowel]:
         Vowel(v.symbol + ":", v.openness, v.location, v.rounded, long=True)
         for v in short
     ]
-    return short + long
+    return long + short
 
 
 def get_vowel(symbol: str) -> Optional[Vowel]:
