@@ -1,65 +1,11 @@
-from typing import Any
 import pytest
 from conlang_tools.phonemes.consonants import (
     Consonant,
     ConsonantManner,
     ConsonantPlace,
-    find_consonant,
-    find_similar_consonant,
-    get_consonants,
-    get_consonant,
 )
-
-
-class TestFindConsonant:
-    def test_find_consonant(self):
-        p = find_consonant(manner="stop", place="labial", voiced=False)
-        ng = find_consonant(manner="nasal", place="velar", voiced=True)
-        nope = find_consonant(manner="stop", place="pharyngeal", voiced=True)
-
-        assert p.symbol == "p"
-        assert ng.symbol == "ŋ"
-        assert nope is None
-
-
-class TestFindSimilarConsonant:
-    def test_find_similar_consonant(self):
-        p = get_consonant("p")
-        b = find_similar_consonant(p, voiced=True)
-        t = find_similar_consonant(p, place="alveolar-central")
-        f = find_similar_consonant(p, manner="fricative")
-        nope = find_similar_consonant(p, manner="liquid")
-
-        assert b.symbol == "b"
-        assert t.symbol == "t"
-        assert f.symbol == "f"
-        assert nope is None
-
-
-class TestGetConsonants:
-    def test_get_vowels(self):
-        consonants = get_consonants()
-        assert len(consonants) == 72
-        assert all(isinstance(consonant, Consonant) for consonant in consonants)
-
-
-class TestGetConsonant:
-    @staticmethod
-    def isp(candidate: Any):
-        assert isinstance(candidate, Consonant)
-        assert candidate.symbol == "p"
-        assert candidate.manner == "stop"
-        assert isinstance(candidate.manner, ConsonantManner)
-        assert candidate.place == "labial"
-        assert isinstance(candidate.place, ConsonantPlace)
-        assert candidate.voiced is False
-        assert candidate.category == "obstruent"
-
-    def test_get_consonant(self):
-        TestGetConsonant.isp(get_consonant("p"))
-
-    def test_returns_none_if_not_found(self):
-        assert get_consonant("@") is None
+from conlang_tools.phonemes.collections import get_consonant
+from conlang_tools.tests.phonemes.test_collections import TestGetConsonant
 
 
 class TestConsonant:

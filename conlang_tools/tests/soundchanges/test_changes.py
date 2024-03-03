@@ -1,9 +1,10 @@
 from typing import List
 import pytest
 from conlang_tools.language.classes import Phonology, Phonotactics, Language
+from conlang_tools.phonemes.collections import get_vowel
 from conlang_tools.phonemes.consonants import Consonant
 from conlang_tools.phonemes.roots import Root
-from conlang_tools.phonemes.vowels import Vowel, get_vowel
+from conlang_tools.phonemes.vowels import Vowel
 from conlang_tools.soundchanges.changes import (
     change,
     apply_change,

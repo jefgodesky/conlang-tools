@@ -2,7 +2,7 @@ import pytest
 
 from conlang_tools.phonemes.consonants import Consonant
 from conlang_tools.phonemes.vowels import Vowel
-from conlang_tools.phonemes.phonemes import get_phoneme
+from conlang_tools.phonemes.collections import get_phoneme
 from conlang_tools.phonemes.roots import Root, Syllable
 
 

@@ -1,13 +1,17 @@
 from typing import Callable, Dict, List, Optional, Tuple
 import random
 from conlang_tools.language.classes import Language
+from conlang_tools.phonemes.collections import (
+    find_similar_consonant,
+    find_similar_vowel,
+    get_consonant,
+    get_vowel,
+)
 from conlang_tools.phonemes.consonants import (
     Consonant,
     ConsonantPlaceTypes,
-    find_similar_consonant,
-    get_consonant,
 )
-from conlang_tools.phonemes.vowels import Vowel, find_similar_vowel, get_vowel
+from conlang_tools.phonemes.vowels import Vowel
 from conlang_tools.phonemes.roots import Root
 from conlang_tools.utils.methods import oxford_comma, get_choices
 
