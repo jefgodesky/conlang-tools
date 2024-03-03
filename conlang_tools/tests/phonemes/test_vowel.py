@@ -134,17 +134,17 @@ class TestVowelLocation:
         expected = "front, central, back"
         assert ", ".join(VowelLocation.types()) == expected
 
-    def test_islocation_front_true(self):
-        assert VowelLocation.islocation("front") is True
+    def test_is_valid_front_true(self):
+        assert VowelLocation.is_valid("front") is True
 
-    def test_islocation_central_true(self):
-        assert VowelLocation.islocation("central") is True
+    def test_is_valid_central_true(self):
+        assert VowelLocation.is_valid("central") is True
 
-    def test_islocation_back_true(self):
-        assert VowelLocation.islocation("back") is True
+    def test_is_valid_back_true(self):
+        assert VowelLocation.is_valid("back") is True
 
-    def test_islocation_other_false(self):
-        assert VowelLocation.islocation("other") is False
+    def test_is_valid_other_false(self):
+        assert VowelLocation.is_valid("other") is False
 
     def test_forward_back(self):
         assert VowelLocation.forward("back") == "central"
@@ -202,29 +202,29 @@ class TestVowelOpenness:
         expected = "close, near-close, close-mid, mid, open-mid, near-open, open"
         assert ", ".join(VowelOpenness.types()) == expected
 
-    def test_isopenness_close_true(self):
-        assert VowelOpenness.isopenness("close") is True
+    def test_is_valid_close_true(self):
+        assert VowelOpenness.is_valid("close") is True
 
-    def test_isopenness_near_close_true(self):
-        assert VowelOpenness.isopenness("near-close") is True
+    def test_is_valid_near_close_true(self):
+        assert VowelOpenness.is_valid("near-close") is True
 
-    def test_isopenness_close_mid_true(self):
-        assert VowelOpenness.isopenness("close-mid") is True
+    def test_is_valid_close_mid_true(self):
+        assert VowelOpenness.is_valid("close-mid") is True
 
-    def test_isopenness_mid_true(self):
-        assert VowelOpenness.isopenness("mid") is True
+    def test_is_valid_mid_true(self):
+        assert VowelOpenness.is_valid("mid") is True
 
-    def test_isopenness_open_mid_true(self):
-        assert VowelOpenness.isopenness("open-mid") is True
+    def test_is_valid_open_mid_true(self):
+        assert VowelOpenness.is_valid("open-mid") is True
 
-    def test_isopenness_near_open_true(self):
-        assert VowelOpenness.isopenness("near-open") is True
+    def test_is_valid_near_open_true(self):
+        assert VowelOpenness.is_valid("near-open") is True
 
-    def test_isopenness_open_true(self):
-        assert VowelOpenness.isopenness("open") is True
+    def test_is_valid_open_true(self):
+        assert VowelOpenness.is_valid("open") is True
 
-    def test_isopenness_other_false(self):
-        assert VowelOpenness.isopenness("other") is False
+    def test_is_valid_other_false(self):
+        assert VowelOpenness.is_valid("other") is False
 
     def test_higher_open(self):
         assert VowelOpenness.higher("open") == "near-open"

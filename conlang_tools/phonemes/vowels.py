@@ -50,10 +50,6 @@ class VowelLocation(VowelAttribute[VowelLocationTypes]):
         return ["front", "central", "back"]
 
     @classmethod
-    def islocation(cls, candidate: str) -> bool:
-        return cls.is_valid(candidate)
-
-    @classmethod
     def forward(cls, ref: VowelLocationTypes) -> VowelLocationTypes:
         return cls.adjacent(ref, -1)
 
@@ -76,10 +72,6 @@ class VowelOpenness(VowelAttribute[VowelOpennessTypes]):
             "near-open",
             "open",
         ]
-
-    @classmethod
-    def isopenness(cls, candidate: str) -> bool:
-        return cls.is_valid(candidate)
 
     @classmethod
     def higher(cls, ref: VowelOpennessTypes) -> VowelOpennessTypes:
