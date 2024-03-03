@@ -5,6 +5,7 @@ from conlang_tools.phonemes.vowels import (
     VowelLocation,
     VowelOpenness,
     find_vowel,
+    find_forward_vowel,
     find_higher_vowel,
     find_lower_vowel,
     find_similar_vowel,
@@ -94,6 +95,27 @@ class TestFindLowerVowel:
         actual = find_lower_vowel(i, [a, i])
         assert isinstance(actual, Vowel)
         assert actual.symbol == "a"
+
+
+class TestFindForwardVowel:
+    def test_find_forward_vowel(self):
+        w = Vowel("ɯ", VowelOpenness("close"), VowelLocation("back"), False, False)
+        actual = find_forward_vowel(w)
+        assert isinstance(actual, Vowel)
+        assert actual.symbol == "ɨ"
+
+    def test_find_forward_vowel_no_forward(self):
+        i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False, False)
+        actual = find_forward_vowel(i)
+        assert isinstance(actual, Vowel)
+        assert actual.symbol == "i"
+
+    def test_find_forward_vowel_within_set(self):
+        w = Vowel("ɯ", VowelOpenness("close"), VowelLocation("back"), False, False)
+        i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False, False)
+        actual = find_forward_vowel(w, [w, i])
+        assert isinstance(actual, Vowel)
+        assert actual.symbol == "i"
 
 
 class TestGetVowels:
