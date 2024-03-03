@@ -32,7 +32,7 @@ def describe_vowel_change(
 ) -> Tuple[str, str, List[str]]:
     affected = get_affected_syllables(syllables)
     affected_keys = [key for key in mapping.keys() if key != mapping[key].symbol]
-    changes = [f"/{key}/ became /{mapping[key].symbol}/" for key in affected_keys]
+    changes = [f"[{key}] > [{mapping[key].symbol}]" for key in affected_keys]
     title = f"**Vowel {name}:**"
     affects_desc = f"{oxford_comma(changes)} in {affected} syllables."
     no_changes = len(affected_keys) < 1
@@ -177,7 +177,7 @@ def erosion_voiceless_obstruents(lang: Language) -> Tuple[str, List[str]]:
 
 
 def erosion_h_between_vowels(lang: Language) -> Tuple[str, List[str]]:
-    description = "**Phonetic Erosion:** /h/ was dropped between vowels."
+    description = "**Phonetic Erosion:** [h] was dropped between vowels."
 
     def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
         if phoneme.symbol != "h":
@@ -197,7 +197,7 @@ def erosion_h_between_vowels(lang: Language) -> Tuple[str, List[str]]:
 
 def erosion_ui_becomes_jw_vowel_pair(lang: Language) -> Tuple[str, List[str]]:
     description = (
-        "**Phonetic Erosion:** /i/ became /j/ and /u/ became /w/ "
+        "**Phonetic Erosion:** [i] > [j] and [u] > [w] "
         "when followed by another vowel."
     )
 
@@ -605,9 +605,7 @@ def vowel_splitting(lang: Language) -> Tuple[str, List[str]]:
 
 
 def vowel_splitting_palatalization(lang: Language) -> Tuple[str, List[str]]:
-    description = (
-        "**Vowel Splitting:** /a/ became /æ/ when followed by a palatal consonant."
-    )
+    description = "**Vowel Splitting:** [a] > [æ] when followed by a palatal consonant."
 
     def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
         if not isinstance(phoneme, Vowel) or phoneme.symbol != "a":
@@ -642,7 +640,7 @@ def vowel_splitting_stress_diphthongization(
     )
 
     description = (
-        f"**Vowel Splitting:** /{original_symbol}/ became /{target_symbols}/ "
+        f"**Vowel Splitting:** [{original_symbol}] > [{target_symbols}] "
         "in stressed syllables."
     )
 
