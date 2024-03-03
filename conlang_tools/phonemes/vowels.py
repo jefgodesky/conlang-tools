@@ -31,6 +31,12 @@ class VowelLocation:
     def islocation(cls, candidate: str) -> bool:
         return candidate in cls.types()
 
+    @classmethod
+    def forward(cls, ref: VowelLocationTypes) -> VowelLocationTypes:
+        types = cls.types()
+        index = types.index(ref)
+        return types[max(index - 1, 0)]
+
 
 class VowelOpenness:
     def __init__(self, value: Optional[VowelOpennessTypes] = None):

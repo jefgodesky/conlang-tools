@@ -146,6 +146,15 @@ class TestVowelLocation:
     def test_islocation_other_false(self):
         assert VowelLocation.islocation("other") is False
 
+    def test_forward_back(self):
+        assert VowelLocation.forward("back") == "central"
+
+    def test_forward_central(self):
+        assert VowelLocation.forward("central") == "front"
+
+    def test_forward_front(self):
+        assert VowelLocation.forward("front") == "front"
+
 
 class TestVowelOpenness:
     def test_creates_vowel_openness(self):
