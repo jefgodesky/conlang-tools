@@ -198,3 +198,19 @@ def find_similar_vowel(
         rounded=rounded_arg,
         long=long_arg,
     )
+
+
+def find_higher_vowel(vowel: Vowel, vowels: Optional[List[Vowel]] = None) -> Vowel:
+    vowels = vowels if vowels is not None else get_vowels()
+    higher = None
+    height = vowel.openness.value
+    while higher is None:
+        next_height = VowelOpenness.higher(height)
+        terminus = height == next_height
+        height = next_height
+        higher = find_similar_vowel(vowel, openness=height)
+        if higher not in vowels:
+            higher = None
+        elif terminus:
+            higher = vowel
+    return higher
