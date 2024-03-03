@@ -235,3 +235,7 @@ def find_lower_vowel(vowel: Vowel, vowels: Optional[List[Vowel]] = None) -> Vowe
 
 def find_forward_vowel(vowel: Vowel, vowels: Optional[List[Vowel]] = None) -> Vowel:
     return find_next_vowel(vowel, VowelLocation.forward, "location", vowels)
+
+
+def find_backward_vowel(vowel: Vowel, vowels: Optional[List[Vowel]] = None) -> Vowel:
+    return find_next_vowel(vowel, VowelLocation.backward, "location", vowels)
