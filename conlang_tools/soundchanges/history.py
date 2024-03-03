@@ -23,7 +23,9 @@ class History:
         lang = self.language
         for _ in range(num_steps):
             _, words = self.step(lang)
+            conservatism = lang.calculate_conservatism_after_change(words)
             lang = Language.from_words(words)
+            lang.phonology.conservatism = conservatism
         return lang
 
     def to_csv(self) -> str:
