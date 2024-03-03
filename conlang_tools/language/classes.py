@@ -1,6 +1,7 @@
 from collections import Counter
 from typing import Dict, List, Literal, Optional, Tuple
 import random
+from statistics import mean
 import yaml
 from conlang_tools.phonemes.consonants import Consonant
 from conlang_tools.phonemes.vowels import Vowel, VowelLocation, VowelOpenness
@@ -302,6 +303,11 @@ class Language:
             if word not in self.words:
                 changed += 1
         return changed / len(after)
+
+    def calculate_conservatism_after_change(self, after: List[str]) -> float:
+        c = self.phonology.conservatism
+        c1 = 1 - self.measure_change(after)
+        return mean([c, c, c, c1])
 
     @classmethod
     def load(cls, name: str) -> "Language":

@@ -198,6 +198,16 @@ class TestLanguage:
         after = ["/ba/", "/ca/", "/da/", "/ga/"]
         assert example_language.measure_change(after) == 0.25
 
+    def test_calculate_conservatism_after_change_more(self, example_language):
+        example_language.words = ["/ba/", "/ca/", "/da/", "/fa/"]
+        after = ["/ba/", "/ca/", "/da/", "/ga/"]
+        assert example_language.calculate_conservatism_after_change(after) == 0.5625
+
+    def test_calculate_conservatism_after_change_less(self, example_language):
+        example_language.words = ["/ba/", "/ca/", "/da/", "/fa/"]
+        after = ["/ba/", "/ka/", "/ta/", "/ga/"]
+        assert example_language.calculate_conservatism_after_change(after) == 0.4375
+
     def test_take_inventory(self):
         tactics = Phonotactics(onset={"bb": 2}, nucleus={"a": 1}, coda={})
         logy = Phonology(stress="initial", openness=1)
