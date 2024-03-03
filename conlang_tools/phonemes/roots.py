@@ -1,4 +1,5 @@
 from typing import List, Optional, Tuple
+from conlang_tools.phonemes.phonemes import Phoneme
 from conlang_tools.phonemes.consonants import Consonant
 from conlang_tools.phonemes.vowels import Vowel
 from conlang_tools.phonemes.collections import get_phonemes
@@ -59,10 +60,10 @@ class Syllable:
         last_index = len(self.phonemes) - 1
         return index is not None and index[1] >= last_index
 
-    def get_phonemes(self) -> List[Consonant | Vowel]:
+    def get_phonemes(self) -> List[Phoneme]:
         phonemes = get_phonemes()
         phonemes.sort(key=lambda p: len(p.symbol), reverse=True)
-        breakdown: List[Consonant | Vowel] = []
+        breakdown: List[Phoneme] = []
         working = self.unmarked
 
         while working:
@@ -95,12 +96,12 @@ class Root:
         return self.ipa.strip("/[]")
 
     @property
-    def phonemes(self) -> List[Consonant | Vowel]:
+    def phonemes(self) -> List[Phoneme]:
         return [phoneme for syllable in self.syllables for phoneme in syllable.phonemes]
 
     @property
-    def phoneme_index(self) -> List[Tuple[int, int, Consonant | Vowel]]:
-        index: List[Tuple[int, int, Consonant | Vowel]] = []
+    def phoneme_index(self) -> List[Tuple[int, int, Phoneme]]:
+        index: List[Tuple[int, int, Phoneme]] = []
         for syllable_index, syllable in enumerate(self.syllables):
             for phoneme_index, phoneme in enumerate(syllable.phonemes):
                 index.append((syllable_index, phoneme_index, phoneme))
@@ -134,23 +135,21 @@ class Root:
         syllables = [s.unbracketed for s in self.syllables]
         self.ipa = f"/{'.'.join(syllables)}/"
 
-    def preceding(self, syllable: int, phoneme: int) -> Optional[Consonant | Vowel]:
+    def preceding(self, syllable: int, phoneme: int) -> Optional[Phoneme]:
         p = self.syllables[syllable].phonemes[phoneme]
         index = self.phoneme_index.index((syllable, phoneme, p))
         if index < 1:
             return None
         return self.phoneme_index[index - 1][2]
 
-    def following(self, syllable: int, phoneme: int) -> Optional[Consonant | Vowel]:
+    def following(self, syllable: int, phoneme: int) -> Optional[Phoneme]:
         p = self.syllables[syllable].phonemes[phoneme]
         index = self.phoneme_index.index((syllable, phoneme, p))
         if index > len(self.phonemes) - 2:
             return None
         return self.phoneme_index[index + 1][2]
 
-    def neighbors(
-        self, syllable: int, phoneme: int
-    ) -> List[Optional[Consonant | Vowel]]:
+    def neighbors(self, syllable: int, phoneme: int) -> List[Optional[Phoneme]]:
         return [
             self.preceding(syllable, phoneme),
             self.following(syllable, phoneme),

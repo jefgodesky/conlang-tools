@@ -2,9 +2,8 @@ from typing import List
 import pytest
 from conlang_tools.language.classes import Phonology, Phonotactics, Language
 from conlang_tools.phonemes.collections import get_vowel
-from conlang_tools.phonemes.consonants import Consonant
+from conlang_tools.phonemes.phonemes import Phoneme
 from conlang_tools.phonemes.roots import Root
-from conlang_tools.phonemes.vowels import Vowel
 from conlang_tools.soundchanges.changes import (
     change,
     apply_change,
@@ -48,12 +47,12 @@ class TestApplyChange:
         return Language(phonotactics=pt, phonology=pl, words=["/ba/"])
 
     def test_apply_change(self, example_language):
-        def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+        def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
             return phoneme.symbol == "a"
 
         def transformer(
-            root: Root, si: int, pi: int, phoneme: Consonant | Vowel
-        ) -> List[Consonant | Vowel]:
+            root: Root, si: int, pi: int, phoneme: Phoneme
+        ) -> List[Phoneme]:
             return [get_vowel("a:")]
 
         new_words = apply_change(example_language, evaluator, transformer)

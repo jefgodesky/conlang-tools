@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Generic, List, Literal, Optional, TypeVar
+from conlang_tools.phonemes.phonemes import Phoneme
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
 # sure you update VowelOpenness.types and/or VowelLocation.types to match!
@@ -22,6 +23,9 @@ class VowelAttribute(ABC, Generic[VowelAttributeTypes]):
 
     def __eq__(self, other):
         return self.value == other
+
+    def __hash__(self):
+        return hash(self.value)
 
     @classmethod
     @abstractmethod
@@ -83,8 +87,7 @@ class VowelOpenness(VowelAttribute[VowelOpennessTypes]):
 
 
 @dataclass(frozen=True, order=True)
-class Vowel:
-    symbol: str
+class Vowel(Phoneme):
     openness: VowelOpenness
     location: VowelLocation
     rounded: bool
@@ -92,9 +95,6 @@ class Vowel:
 
     def __repr__(self):
         return f"[{self.symbol}:]" if self.long else f"[{self.symbol}]"
-
-    def __hash__(self):
-        return hash(self.symbol)
 
     def same_except(self, other: "Vowel", criterion: str = "height") -> bool:
         comparisons = {

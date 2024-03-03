@@ -12,6 +12,7 @@ from conlang_tools.phonemes.consonants import (
     ConsonantPlaceTypes,
 )
 from conlang_tools.phonemes.vowels import Vowel
+from conlang_tools.phonemes.phonemes import Phoneme
 from conlang_tools.phonemes.roots import Root
 from conlang_tools.utils.methods import oxford_comma, get_choices
 
@@ -50,9 +51,7 @@ def get_affected_syllables(syllables: Optional[str] = None) -> str:
     return syllables if syllables is not None else rand_all
 
 
-def replace(
-    root: Root, si: int, pi: int, replacements: List[Consonant | Vowel]
-) -> None:
+def replace(root: Root, si: int, pi: int, replacements: List[Phoneme]) -> None:
     before = root.syllables[si].phonemes[:pi]
     after = root.syllables[si].phonemes[pi + 1 :]
     root.syllables[si].phonemes = before + replacements + after
@@ -64,7 +63,7 @@ def devoicing(lang: Language) -> Tuple[str, List[str]]:
         "at the end of words or next to voiceless consonants."
     )
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         is_consonant = isinstance(phoneme, Consonant)
         if not is_consonant or phoneme.voiced is False:
             return False
@@ -93,7 +92,7 @@ def devoicing_assimilation(lang: Language) -> Tuple[str, List[str]]:
 
     consonants, _ = lang.take_inventory()
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         if not isinstance(phoneme, Consonant) or phoneme.voiced is False:
             return False
         neighbors = root.neighbors(si, pi)
@@ -132,7 +131,7 @@ def erosion_coda_stops_followed_by_consonant(lang: Language) -> Tuple[str, List[
         "by a consonant."
     )
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         is_consonant = isinstance(phoneme, Consonant)
         is_stop = is_consonant and phoneme.manner == "stop"
         if not is_stop or pi < len(root.syllables[si].phonemes) - 1:
@@ -156,7 +155,7 @@ def erosion_voiceless_obstruents(lang: Language) -> Tuple[str, List[str]]:
         "in unstressed syllables."
     )
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         is_vowel = isinstance(phoneme, Vowel)
         is_unstressed = root.stresses(si) is False
         if not is_vowel or not is_unstressed:
@@ -183,7 +182,7 @@ def erosion_voiceless_obstruents(lang: Language) -> Tuple[str, List[str]]:
 def erosion_h_between_vowels(lang: Language) -> Tuple[str, List[str]]:
     description = "**Phonetic Erosion:** [h] was dropped between vowels."
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         if phoneme.symbol != "h":
             return False
 
@@ -205,7 +204,7 @@ def erosion_ui_becomes_jw_vowel_pair(lang: Language) -> Tuple[str, List[str]]:
         "when followed by another vowel."
     )
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         if phoneme.symbol != "i" and phoneme.symbol != "u":
             return False
 
@@ -328,7 +327,7 @@ def labial_assimilation(lang: Language) -> Tuple[str, List[str]]:
 
     consonants, _ = lang.take_inventory()
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         if not isinstance(phoneme, Consonant) or phoneme.place == "labial":
             return False
         neighbors = root.neighbors(si, pi)
@@ -352,7 +351,7 @@ def metathesis(lang: Language) -> Tuple[str, List[str]]:
         "a vowel."
     )
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         if not root.stresses(si):
             return False
 
@@ -398,7 +397,7 @@ def nasal_assimilation(lang: Language) -> Tuple[str, List[str]]:
 
     consonants, _ = lang.take_inventory()
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         if not isinstance(phoneme, Consonant) or phoneme.place == "nasal":
             return False
         neighbors = root.neighbors(si, pi)
@@ -433,7 +432,7 @@ def palatalization(
         "consonants that followed them into palatal consonants."
     )
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         if not isinstance(phoneme, Consonant) or phoneme.place not in affected:
             return False
 
@@ -458,7 +457,7 @@ def velar_assimilation(lang: Language) -> Tuple[str, List[str]]:
 
     consonants, _ = lang.take_inventory()
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         if not isinstance(phoneme, Consonant) or phoneme.place == "velar":
             return False
         neighbors = root.neighbors(si, pi)
@@ -478,7 +477,7 @@ def velar_assimilation(lang: Language) -> Tuple[str, List[str]]:
 def voicing(lang: Language) -> Tuple[str, List[str]]:
     description = "**Voicing:** Unvoiced consonants became voiced between vowels."
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         is_consonant = isinstance(phoneme, Consonant)
         if not is_consonant or phoneme.voiced is True:
             return False
@@ -502,7 +501,7 @@ def voicing_assimilation(lang: Language) -> Tuple[str, List[str]]:
 
     consonants, _ = lang.take_inventory()
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         if not isinstance(phoneme, Consonant) or phoneme.voiced:
             return False
         neighbors = root.neighbors(si, pi)
@@ -522,7 +521,7 @@ def voicing_assimilation(lang: Language) -> Tuple[str, List[str]]:
 def apply_vowel_change(
     lang: Language, mapping: Dict[str, Vowel], affected: str, affected_keys: List[str]
 ) -> List[str]:
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         if affected != "all" and not root.stresses(si):
             return False
         return phoneme.symbol in affected_keys
@@ -611,7 +610,7 @@ def vowel_splitting(lang: Language) -> Tuple[str, List[str]]:
 def vowel_splitting_palatalization(lang: Language) -> Tuple[str, List[str]]:
     description = "**Vowel Splitting:** [a] > [æ] when followed by a palatal consonant."
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         if not isinstance(phoneme, Vowel) or phoneme.symbol != "a":
             return False
         following = root.following(si, pi)
@@ -648,7 +647,7 @@ def vowel_splitting_stress_diphthongization(
         "in stressed syllables."
     )
 
-    def evaluator(root: Root, si: int, pi: int, phoneme: Consonant | Vowel) -> bool:
+    def evaluator(root: Root, si: int, pi: int, phoneme: Phoneme) -> bool:
         return root.stresses(si) and phoneme.symbol == original_symbol
 
     def transformer(root: Root, si: int, pi: int, phoneme: Consonant) -> List[Vowel]:

@@ -57,23 +57,23 @@ class TestConsonantManner:
         expected = "stop, fricative, affricate, nasal, liquid"
         assert ", ".join(ConsonantManner.types()) == expected
 
-    def test_ismanner_stop_true(self):
-        assert ConsonantManner.ismanner("stop") is True
+    def test_is_valid_stop_true(self):
+        assert ConsonantManner.is_valid("stop") is True
 
-    def test_ismanner_fricative_true(self):
-        assert ConsonantManner.ismanner("fricative") is True
+    def test_is_valid_fricative_true(self):
+        assert ConsonantManner.is_valid("fricative") is True
 
-    def test_ismanner_affricate_true(self):
-        assert ConsonantManner.ismanner("affricate") is True
+    def test_is_valid_affricate_true(self):
+        assert ConsonantManner.is_valid("affricate") is True
 
-    def test_ismanner_nasal_true(self):
-        assert ConsonantManner.ismanner("nasal") is True
+    def test_is_valid_nasal_true(self):
+        assert ConsonantManner.is_valid("nasal") is True
 
-    def test_ismanner_liquid_true(self):
-        assert ConsonantManner.ismanner("liquid") is True
+    def test_is_valid_liquid_true(self):
+        assert ConsonantManner.is_valid("liquid") is True
 
-    def test_ismanner_other_false(self):
-        assert ConsonantManner.ismanner("other") is False
+    def test_is_valid_other_false(self):
+        assert ConsonantManner.is_valid("other") is False
 
     def test_stop_is_obstruent(self):
         assert ConsonantManner.category("stop") == "obstruent"
@@ -152,38 +152,38 @@ class TestConsonantPlace:
         ]
         assert ", ".join(ConsonantPlace.types()) == ", ".join(expected)
 
-    def test_isplace_labial_true(self):
-        assert ConsonantPlace.isplace("labial") is True
+    def test_is_valid_labial_true(self):
+        assert ConsonantPlace.is_valid("labial") is True
 
-    def test_isplace_dental_true(self):
-        assert ConsonantPlace.isplace("dental") is True
+    def test_is_valid_dental_true(self):
+        assert ConsonantPlace.is_valid("dental") is True
 
-    def test_isplace_alveolar_central_true(self):
-        assert ConsonantPlace.isplace("alveolar-central") is True
+    def test_is_valid_alveolar_central_true(self):
+        assert ConsonantPlace.is_valid("alveolar-central") is True
 
-    def test_isplace_alveolar_lateral_true(self):
-        assert ConsonantPlace.isplace("alveolar-lateral") is True
+    def test_is_valid_alveolar_lateral_true(self):
+        assert ConsonantPlace.is_valid("alveolar-lateral") is True
 
-    def test_isplace_retroflex_true(self):
-        assert ConsonantPlace.isplace("retroflex") is True
+    def test_is_valid_retroflex_true(self):
+        assert ConsonantPlace.is_valid("retroflex") is True
 
-    def test_isplace_palatal_true(self):
-        assert ConsonantPlace.isplace("palatal") is True
+    def test_is_valid_palatal_true(self):
+        assert ConsonantPlace.is_valid("palatal") is True
 
-    def test_isplace_post_alveolar_true(self):
-        assert ConsonantPlace.isplace("post-alveolar") is True
+    def test_is_valid_post_alveolar_true(self):
+        assert ConsonantPlace.is_valid("post-alveolar") is True
 
-    def test_isplace_velar_true(self):
-        assert ConsonantPlace.isplace("velar") is True
+    def test_is_valid_velar_true(self):
+        assert ConsonantPlace.is_valid("velar") is True
 
-    def test_isplace_uvular_true(self):
-        assert ConsonantPlace.isplace("uvular") is True
+    def test_is_valid_uvular_true(self):
+        assert ConsonantPlace.is_valid("uvular") is True
 
-    def test_isplace_pharyngeal_true(self):
-        assert ConsonantPlace.isplace("pharyngeal") is True
+    def test_is_valid_pharyngeal_true(self):
+        assert ConsonantPlace.is_valid("pharyngeal") is True
 
-    def test_isplace_glottal_true(self):
-        assert ConsonantPlace.isplace("glottal") is True
+    def test_is_valid_glottal_true(self):
+        assert ConsonantPlace.is_valid("glottal") is True
 
-    def test_isplace_other_false(self):
-        assert ConsonantPlace.isplace("other") is False
+    def test_is_valid_other_false(self):
+        assert ConsonantPlace.is_valid("other") is False

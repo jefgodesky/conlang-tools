@@ -1,4 +1,5 @@
 from typing import Callable, List, Optional
+from conlang_tools.phonemes.phonemes import Phoneme
 from conlang_tools.phonemes.consonants import (
     Consonant,
     ConsonantManner,
@@ -277,11 +278,11 @@ def find_backward_vowel(vowel: Vowel, vowels: Optional[List[Vowel]] = None) -> V
     return find_next_vowel(vowel, VowelLocation.backward, "location", vowels)
 
 
-def get_phonemes() -> List[Consonant | Vowel]:
+def get_phonemes() -> List[Phoneme]:
     return get_consonants() + get_vowels()
 
 
-def get_phoneme(symbol: str) -> Optional[Consonant | Vowel]:
+def get_phoneme(symbol: str) -> Optional[Phoneme]:
     consonant = get_consonant(symbol)
     if consonant is not None:
         return consonant
