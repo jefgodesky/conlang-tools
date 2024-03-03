@@ -296,6 +296,13 @@ class Language:
             for _ in range(num_words)
         ]
 
+    def measure_change(self, after: List[str]) -> float:
+        changed = 0
+        for word in after:
+            if word not in self.words:
+                changed += 1
+        return changed / len(after)
+
     @classmethod
     def load(cls, name: str) -> "Language":
         with open(f"{languages_directory}{name}.yaml", "r") as yaml_file:

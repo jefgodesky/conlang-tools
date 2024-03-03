@@ -193,6 +193,11 @@ class TestLanguage:
         assert len(new_words) == 3
         assert all(["." in word for word in new_words])
 
+    def test_measure_change(self, example_language):
+        example_language.words = ["/ba/", "/ca/", "/da/", "/fa/"]
+        after = ["/ba/", "/ca/", "/da/", "/ga/"]
+        assert example_language.measure_change(after) == 0.25
+
     def test_take_inventory(self):
         tactics = Phonotactics(onset={"bb": 2}, nucleus={"a": 1}, coda={})
         logy = Phonology(stress="initial", openness=1)
