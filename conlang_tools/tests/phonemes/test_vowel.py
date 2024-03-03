@@ -225,3 +225,45 @@ class TestVowelOpenness:
 
     def test_isopenness_other_false(self):
         assert VowelOpenness.isopenness("other") is False
+
+    def test_higher_open(self):
+        assert VowelOpenness.higher("open") == "near-open"
+
+    def test_higher_near_open(self):
+        assert VowelOpenness.higher("near-open") == "open-mid"
+
+    def test_higher_open_mid(self):
+        assert VowelOpenness.higher("open-mid") == "mid"
+
+    def test_higher_mid(self):
+        assert VowelOpenness.higher("mid") == "close-mid"
+
+    def test_higher_closer_mid(self):
+        assert VowelOpenness.higher("close-mid") == "near-close"
+
+    def test_higher_near_close(self):
+        assert VowelOpenness.higher("near-close") == "close"
+
+    def test_higher_close(self):
+        assert VowelOpenness.higher("close") == "close"
+
+    def test_lower_open(self):
+        assert VowelOpenness.lower("open") == "open"
+
+    def test_lower_near_open(self):
+        assert VowelOpenness.lower("near-open") == "open"
+
+    def test_lower_open_mid(self):
+        assert VowelOpenness.lower("open-mid") == "near-open"
+
+    def test_lower_mid(self):
+        assert VowelOpenness.lower("mid") == "open-mid"
+
+    def test_lower_close_mid(self):
+        assert VowelOpenness.lower("close-mid") == "mid"
+
+    def test_lower_near_close(self):
+        assert VowelOpenness.lower("near-close") == "close-mid"
+
+    def test_lower_close(self):
+        assert VowelOpenness.lower("close") == "near-close"
