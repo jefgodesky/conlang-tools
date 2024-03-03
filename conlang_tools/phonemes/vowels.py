@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Generic, List, Literal, Optional, TypeVar
+from typing import Callable, Generic, List, Literal, Optional, TypeVar
 
 # Sadly, we can't automate literal-to-list, so if you update this list, make
 # sure you update VowelOpenness.types and/or VowelLocation.types to match!
@@ -200,17 +200,30 @@ def find_similar_vowel(
     )
 
 
-def find_higher_vowel(vowel: Vowel, vowels: Optional[List[Vowel]] = None) -> Vowel:
+def find_next_vowel(
+    vowel: Vowel,
+    fn: Callable,
+    attribute: str = "openness",
+    vowels: Optional[List[Vowel]] = None,
+) -> Vowel:
     vowels = vowels if vowels is not None else get_vowels()
-    higher = None
-    height = vowel.openness.value
-    while higher is None:
-        next_height = VowelOpenness.higher(height)
-        terminus = height == next_height
-        height = next_height
-        higher = find_similar_vowel(vowel, openness=height)
-        if higher not in vowels:
-            higher = None
+    next_vowel = None
+    value = vowel.openness.value if attribute == "openness" else vowel.location.value
+    while next_vowel is None:
+        next_value = fn(value)
+        terminus = value == next_value
+        value = next_value
+        next_vowel = (
+            find_similar_vowel(vowel, openness=value)
+            if attribute == "openness"
+            else find_similar_vowel(vowel, location=value)
+        )
+        if next_vowel not in vowels:
+            next_vowel = None
         elif terminus:
-            higher = vowel
-    return higher
+            next_vowel = vowel
+    return next_vowel
+
+
+def find_higher_vowel(vowel: Vowel, vowels: Optional[List[Vowel]] = None) -> Vowel:
+    return find_next_vowel(vowel, VowelOpenness.higher, "openness", vowels)
