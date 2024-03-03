@@ -19,7 +19,13 @@ languages_directory = "languages/"
 
 
 class Phonology:
-    def __init__(self, stress: Optional[StressTypes] = None, openness: float = 0.5):
+    def __init__(
+        self,
+        conservatism: float = 0.5,
+        stress: Optional[StressTypes] = None,
+        openness: float = 0.5,
+    ):
+        self.conservatism = conservatism
         self.stress = Stress(stress)
         self.openness = openness
 
@@ -300,6 +306,7 @@ class Language:
                 coda=data["phonotactics"]["coda"],
             )
             phonology = Phonology(
+                conservatism=data["phonology"]["conservatism"],
                 stress=data["phonology"]["stress"],
                 openness=data["phonology"]["openness"],
             )

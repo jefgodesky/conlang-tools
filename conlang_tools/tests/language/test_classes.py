@@ -71,7 +71,9 @@ class TestLanguage:
         lang = Language.load("example")
         assert isinstance(lang, Language)
         assert lang.phonotactics.onset["b"] == 1
+        assert lang.phonology.conservatism == 1
         assert lang.phonology.stress == "initial"
+        assert lang.phonology.openness == 0.5
         assert "/ba/" in lang.words
 
     def test_load_fail(self):
@@ -256,6 +258,14 @@ class TestPhonology:
     def test_can_set_openness(self):
         phones = Phonology(openness=0.75)
         assert phones.openness == 0.75
+
+    def test_defaults_conservatism_50(self):
+        phones = Phonology()
+        assert phones.conservatism == 0.5
+
+    def test_can_set_conservatism(self):
+        phones = Phonology(conservatism=0.75)
+        assert phones.conservatism == 0.75
 
     def test_to_dict(self):
         phones = Phonology(openness=0.6, stress="final")

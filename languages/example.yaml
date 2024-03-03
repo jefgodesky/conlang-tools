@@ -6,6 +6,7 @@ phonotactics:
   coda:
     c: 1
 phonology:
+  conservatism: 1
   stress: initial
   openness: 0.5
 words:
