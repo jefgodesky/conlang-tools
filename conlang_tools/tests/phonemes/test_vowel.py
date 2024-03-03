@@ -6,6 +6,7 @@ from conlang_tools.phonemes.vowels import (
     VowelOpenness,
     find_vowel,
     find_higher_vowel,
+    find_lower_vowel,
     find_similar_vowel,
     get_vowels,
     get_vowel,
@@ -69,9 +70,30 @@ class TestFindHigherVowel:
     def test_find_higher_vowel_within_set(self):
         a = Vowel("a", VowelOpenness("open"), VowelLocation("front"), False, False)
         i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False, False)
-        actual = find_higher_vowel(i, [a, i])
+        actual = find_higher_vowel(a, [a, i])
         assert isinstance(actual, Vowel)
         assert actual.symbol == "i"
+
+
+class TestFindLowerVowel:
+    def test_find_lower_vowel(self):
+        i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False, False)
+        actual = find_lower_vowel(i)
+        assert isinstance(actual, Vowel)
+        assert actual.symbol == "ɪ"
+
+    def test_find_lower_vowel_no_lower(self):
+        a = Vowel("a", VowelOpenness("open"), VowelLocation("front"), False, False)
+        actual = find_lower_vowel(a)
+        assert isinstance(actual, Vowel)
+        assert actual.symbol == "a"
+
+    def test_find_lower_vowel_within_set(self):
+        a = Vowel("a", VowelOpenness("open"), VowelLocation("front"), False, False)
+        i = Vowel("i", VowelOpenness("close"), VowelLocation("front"), False, False)
+        actual = find_lower_vowel(i, [a, i])
+        assert isinstance(actual, Vowel)
+        assert actual.symbol == "a"
 
 
 class TestGetVowels:

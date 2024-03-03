@@ -227,3 +227,7 @@ def find_next_vowel(
 
 def find_higher_vowel(vowel: Vowel, vowels: Optional[List[Vowel]] = None) -> Vowel:
     return find_next_vowel(vowel, VowelOpenness.higher, "openness", vowels)
+
+
+def find_lower_vowel(vowel: Vowel, vowels: Optional[List[Vowel]] = None) -> Vowel:
+    return find_next_vowel(vowel, VowelOpenness.lower, "openness", vowels)
