@@ -32,10 +32,22 @@ class VowelLocation:
         return candidate in cls.types()
 
     @classmethod
-    def forward(cls, ref: VowelLocationTypes) -> VowelLocationTypes:
+    def adjacent(
+        cls, ref: VowelLocationTypes, direction: int = -1
+    ) -> VowelLocationTypes:
         types = cls.types()
-        index = types.index(ref)
-        return types[max(index - 1, 0)]
+        clamp = max if direction == -1 else min
+        limit = 0 if direction == -1 else len(types) - 1
+        index = clamp(types.index(ref) + direction, limit)
+        return types[index]
+
+    @classmethod
+    def forward(cls, ref: VowelLocationTypes) -> VowelLocationTypes:
+        return cls.adjacent(ref, -1)
+
+    @classmethod
+    def backward(cls, ref: VowelLocationTypes) -> VowelLocationTypes:
+        return cls.adjacent(ref, 1)
 
 
 class VowelOpenness:
